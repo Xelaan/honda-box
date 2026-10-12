@@ -2,7 +2,7 @@
 
 An Android companion for Honda's original audio and climate system on FYT head units with a BSJ CAN adapter. Native Java, built without Gradle or a cloud service. [Русский](README.ru.md).
 
-Developed against **Honda Accord VIII / Spirior 2009–2013**, FYT profile **6291908**, and BSJ V704. Compatibility with other profiles is not assumed. Requires **Android 7.0 / API 24+**. The main package is `dev.alex.fyt.probe`; the historical package name is retained for upgrades.
+Developed against **Honda Accord VIII / Spirior 2009–2013**, FYT profile **6291908**, and BSJ V704. Compatibility with other profiles is not assumed. Requires **Android 7.0 / API 24+**. The main package is `com.crewbeat.hondabox`.
 
 ![Honda Box selector with compact climate](docs/images/selector.png)
 
@@ -40,6 +40,18 @@ Build or obtain the main APK and companion launchers from a release you trust. T
 
 The service icon starts headlessly. The separate Honda Box launcher opens the selector. Location is only needed for sunrise/sunset setup. Logging is off by default and can be enabled/reset in Debug. The app cannot guarantee survival of vendor task killers.
 
+## Package identifiers
+
+| App | Android package |
+| --- | --- |
+| Honda Box Service | `com.crewbeat.hondabox` |
+| Honda Box selector launcher | `com.crewbeat.hondabox.launcher` |
+| Radio launcher | `com.crewbeat.hondabox.radio` |
+| CD launcher | `com.crewbeat.hondabox.cd` |
+| USB/iPod launcher | `com.crewbeat.hondabox.usb` |
+
+The new identifiers install separately from the old `dev.alex.fyt.probe` app and its launchers. This is not an in-place upgrade; Android does not transfer the old app's preferences or permissions automatically. The optional legacy iPod launcher source is not part of the standard build; the shared USB launcher is sufficient.
+
 ## Build
 
 Python 3.9+, a JDK (17+ recommended), and an installed Android SDK are required. The build uses **platform android-33** and **Build Tools 36.0.0**. Install those SDK packages with Android Studio or `sdkmanager`; no dependency downloads occur during the build. Shizuku/AndroidX libraries are vendored with their licenses and checksums.
@@ -62,7 +74,7 @@ On macOS, the scripts also detect Android Studio's bundled JDK. Other systems ca
 | `HONDA_BUILD_DIR`, `HONDA_OUTPUT_DIR` | Override build/output locations |
 | `HONDA_KEYSTORE`, `HONDA_KEYSTORE_PASSWORD` | Existing signing key and password |
 
-A fresh checkout creates an ignored local development key under `.local/signing/`. On the owner's migrated working copy, the existing local key is preserved for compatible updates. **An APK signed with a different key cannot update an existing installation.** Keep the original key outside Git and use the signing variables for release builds. Locally generated development builds are not official releases.
+A fresh checkout creates an ignored local development key under `.local/signing/`. The owner's existing local signing key is preserved for future builds. **An APK signed with a different key cannot update an existing installation.** Keep the original key outside Git and use the signing variables for release builds. Locally generated development builds are not official releases.
 
 ## Tests
 

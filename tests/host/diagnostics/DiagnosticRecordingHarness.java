@@ -1,4 +1,4 @@
-package dev.alex.fyt.probe;
+package com.crewbeat.hondabox;
 public final class DiagnosticRecordingHarness {
  private static int checks;private static void check(boolean ok,String message){checks++;if(!ok)throw new AssertionError(message);}
  private static void frame(ProbeState s,int type,int... p){IpodMarkerStateHarness.frame(s,type,p);}

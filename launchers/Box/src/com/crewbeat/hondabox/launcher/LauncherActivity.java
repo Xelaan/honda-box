@@ -1,0 +1,4 @@
+package com.crewbeat.hondabox.launcher;
+public final class LauncherActivity extends android.app.Activity {
+@Override public void onCreate(android.os.Bundle state){super.onCreate(state);try{startActivity(new android.content.Intent().setComponent(new android.content.ComponentName("com.crewbeat.hondabox","com.crewbeat.hondabox.MainActivity")).addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK|android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP));}catch(android.content.ActivityNotFoundException e){android.widget.Toast.makeText(this,getResources().getConfiguration().locale.getLanguage().equals("ru")?"Сначала установите Honda Box Service":"Install Honda Box Service first",android.widget.Toast.LENGTH_LONG).show();}finally{finish();}}
+}

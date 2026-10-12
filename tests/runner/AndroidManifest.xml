@@ -1,16 +1,16 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="dev.alex.fyt.probe.tests">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.crewbeat.hondabox.tests">
     <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="28"/>
     <application android:label="Honda Box emulator tests"/>
-    <instrumentation android:name="dev.alex.fyt.probe.StockOverlayTests" android:targetPackage="dev.alex.fyt.probe"/>
-    <instrumentation android:name="dev.alex.fyt.probe.tests.AudioDebugCommandTests" android:targetPackage="dev.alex.fyt.probe"/>
-    <instrumentation android:name="dev.alex.fyt.probe.tests.AudioForegroundTests" android:targetPackage="dev.alex.fyt.probe"/>
-    <instrumentation android:name="dev.alex.fyt.probe.tests.ClimateSettingsButtonTests" android:targetPackage="dev.alex.fyt.probe"/>
-    <instrumentation android:name="dev.alex.fyt.probe.tests.ClimateSideButtonsTests" android:targetPackage="dev.alex.fyt.probe"/>
-    <instrumentation android:name="dev.alex.fyt.probe.tests.PlayerClimateSpaceTests" android:targetPackage="dev.alex.fyt.probe"/>
-    <instrumentation android:name="dev.alex.fyt.probe.tests.PlayerControlsHelpTests" android:targetPackage="dev.alex.fyt.probe"/>
-    <instrumentation android:name="dev.alex.fyt.probe.tests.ProbeTests" android:targetPackage="dev.alex.fyt.probe"/>
-    <instrumentation android:name="dev.alex.fyt.probe.tests.RadioDebugTests" android:targetPackage="dev.alex.fyt.probe"/>
-    <instrumentation android:name="dev.alex.fyt.probe.tests.SourcePowerOverlayTests" android:targetPackage="dev.alex.fyt.probe"/>
-    <instrumentation android:name="dev.alex.fyt.probe.tests.TitleHelpTests" android:targetPackage="dev.alex.fyt.probe"/>
-    <instrumentation android:name="dev.alex.fyt.probe.tests.TrackTitleCycleTests" android:targetPackage="dev.alex.fyt.probe"/>
+    <instrumentation android:name="com.crewbeat.hondabox.StockOverlayTests" android:targetPackage="com.crewbeat.hondabox"/>
+    <instrumentation android:name="com.crewbeat.hondabox.tests.AudioDebugCommandTests" android:targetPackage="com.crewbeat.hondabox"/>
+    <instrumentation android:name="com.crewbeat.hondabox.tests.AudioForegroundTests" android:targetPackage="com.crewbeat.hondabox"/>
+    <instrumentation android:name="com.crewbeat.hondabox.tests.ClimateSettingsButtonTests" android:targetPackage="com.crewbeat.hondabox"/>
+    <instrumentation android:name="com.crewbeat.hondabox.tests.ClimateSideButtonsTests" android:targetPackage="com.crewbeat.hondabox"/>
+    <instrumentation android:name="com.crewbeat.hondabox.tests.PlayerClimateSpaceTests" android:targetPackage="com.crewbeat.hondabox"/>
+    <instrumentation android:name="com.crewbeat.hondabox.tests.PlayerControlsHelpTests" android:targetPackage="com.crewbeat.hondabox"/>
+    <instrumentation android:name="com.crewbeat.hondabox.tests.ProbeTests" android:targetPackage="com.crewbeat.hondabox"/>
+    <instrumentation android:name="com.crewbeat.hondabox.tests.RadioDebugTests" android:targetPackage="com.crewbeat.hondabox"/>
+    <instrumentation android:name="com.crewbeat.hondabox.tests.SourcePowerOverlayTests" android:targetPackage="com.crewbeat.hondabox"/>
+    <instrumentation android:name="com.crewbeat.hondabox.tests.TitleHelpTests" android:targetPackage="com.crewbeat.hondabox"/>
+    <instrumentation android:name="com.crewbeat.hondabox.tests.TrackTitleCycleTests" android:targetPackage="com.crewbeat.hondabox"/>
 </manifest>

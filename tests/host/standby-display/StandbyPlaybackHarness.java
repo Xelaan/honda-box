@@ -1,4 +1,4 @@
-package dev.alex.fyt.probe;
+package com.crewbeat.hondabox;
 /** Actual model: cached 0C display survives power cycles and fills gaps without becoming a source. */
 public final class StandbyPlaybackHarness {
     static int checks;

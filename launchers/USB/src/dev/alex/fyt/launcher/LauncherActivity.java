@@ -1,4 +1,0 @@
-package dev.alex.fyt.launcher;
-public final class LauncherActivity extends android.app.Activity {
-@Override public void onCreate(android.os.Bundle state){super.onCreate(state);try{startActivity(new android.content.Intent().setComponent(new android.content.ComponentName("dev.alex.fyt.probe","dev.alex.fyt.probe.USB")).addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK));}catch(android.content.ActivityNotFoundException e){android.widget.Toast.makeText(this,(getResources().getConfiguration().locale.getLanguage().equals("ru")?"Сначала установите Honda Box":"Install Honda Box first"),android.widget.Toast.LENGTH_LONG).show();}finally{finish();}}
-}

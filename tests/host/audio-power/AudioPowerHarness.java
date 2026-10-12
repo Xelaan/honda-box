@@ -1,4 +1,4 @@
-package dev.alex.fyt.probe;
+package com.crewbeat.hondabox;
 /** Validated command03 bit7 transitions, independent of source/menu/volume and session state. */
 public final class AudioPowerHarness {
  private static int checks;

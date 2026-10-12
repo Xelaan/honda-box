@@ -1,4 +1,4 @@
-package dev.alex.fyt.probe;
+package com.crewbeat.hondabox;
 public final class StandbyDisplayHarness {
     static int checks;
     static void check(boolean ok,String why){checks++;if(!ok)throw new AssertionError(why);}

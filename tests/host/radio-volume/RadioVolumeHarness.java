@@ -1,4 +1,4 @@
-package dev.alex.fyt.probe;
+package com.crewbeat.hondabox;
 /** Tests FM/AM display state and station announcements around OEM volume blanks. */
 public final class RadioVolumeHarness {
  private static int checks;

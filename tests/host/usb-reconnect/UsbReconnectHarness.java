@@ -1,4 +1,4 @@
-package dev.alex.fyt.probe;
+package com.crewbeat.hondabox;
 /** Exercises validated BSJ packets against the real state model, without USB hardware. */
 public final class UsbReconnectHarness {
     private static int checks;

@@ -1,6 +1,6 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="dev.alex.hondabox.mediausb" android:versionCode="6" android:versionName="1.5">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.crewbeat.hondabox.usb" android:versionCode="6" android:versionName="1.5">
 <uses-sdk android:minSdkVersion="23" android:targetSdkVersion="28"/>
 <application android:label="Honda USB" android:icon="@mipmap/icon" android:allowBackup="false" android:theme="@style/HondaLauncherTheme">
-<activity android:name="dev.alex.fyt.launcher.LauncherActivity" android:label="Honda USB" android:icon="@mipmap/icon" android:exported="true" android:noHistory="true">
+<activity android:name="com.crewbeat.hondabox.launcher.LauncherActivity" android:label="Honda USB" android:icon="@mipmap/icon" android:exported="true" android:noHistory="true">
 <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
 </activity></application></manifest>

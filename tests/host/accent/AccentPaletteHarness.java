@@ -1,4 +1,4 @@
-package dev.alex.fyt.probe;
+package com.crewbeat.hondabox;
 public final class AccentPaletteHarness {
  public static void main(String[] args){int checks=0;
   if(AccentColors.tone(AccentColors.DEFAULT,false)!=0xFF426DC3||AccentColors.tone(AccentColors.DEFAULT,true)!=0xFF8FAFF7)throw new AssertionError("Original palette changed");

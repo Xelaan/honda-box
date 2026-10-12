@@ -18,8 +18,8 @@ python3 build.py
 python3 build_tests.py
 adb -s emulator-5554 install -r dist/Honda-Box-0.8.29.apk
 adb -s emulator-5554 install -r dist/TEST-ONLY-probe-tests.apk
-adb -s emulator-5554 shell appops set dev.alex.fyt.probe SYSTEM_ALERT_WINDOW allow
-adb -s emulator-5554 shell am instrument -w dev.alex.fyt.probe.tests/dev.alex.fyt.probe.tests.RadioDebugTests
+adb -s emulator-5554 shell appops set com.crewbeat.hondabox SYSTEM_ALERT_WINDOW allow
+adb -s emulator-5554 shell am instrument -w com.crewbeat.hondabox.tests/com.crewbeat.hondabox.tests.RadioDebugTests
 ```
 
 Replace the main APK version when the manifest changes. Other existing standalone suites include `TitleHelpTests`, `PlayerControlsHelpTests`, `PlayerClimateSpaceTests`, `ClimateSettingsButtonTests`, `ClimateSideButtonsTests`, `TrackTitleCycleTests`, `AudioForegroundTests` and `SourcePowerOverlayTests`. Registered entry points are listed in `tests/runner/AndroidManifest.xml`.

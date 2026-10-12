@@ -1,4 +1,4 @@
-import dev.alex.fyt.probe.MediaText;
+import com.crewbeat.hondabox.MediaText;
 public final class MediaTextHarness {
  static int checks;
  static void expect(String label,String actual,String expected){checks++;if(!actual.equals(expected))throw new AssertionError(label+": "+actual+" != "+expected);}

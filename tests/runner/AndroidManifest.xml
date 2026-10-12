@@ -13,4 +13,5 @@
     <instrumentation android:name="com.crewbeat.hondabox.tests.SourcePowerOverlayTests" android:targetPackage="com.crewbeat.hondabox"/>
     <instrumentation android:name="com.crewbeat.hondabox.tests.TitleHelpTests" android:targetPackage="com.crewbeat.hondabox"/>
     <instrumentation android:name="com.crewbeat.hondabox.tests.TrackTitleCycleTests" android:targetPackage="com.crewbeat.hondabox"/>
+    <instrumentation android:name="com.crewbeat.hondabox.tests.DocumentationScreenshots" android:targetPackage="com.crewbeat.hondabox"/>
 </manifest>

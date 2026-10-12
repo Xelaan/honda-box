@@ -1,0 +1,30 @@
+name: Checks
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Synthetic host checks
+        run: |
+          python3 -m unittest discover -s tools -p 'test_*.py'
+          python3 tests/run_solar_tests.py
+      - name: Install compile tools
+        run: sdkmanager 'platforms;android-33' 'build-tools;36.0.0'
+      - name: Compile development APKs and emulator tests
+        run: |
+          python3 build.py
+          python3 build_launchers.py
+          python3 build_tests.py

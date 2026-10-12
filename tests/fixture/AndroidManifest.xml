@@ -1,0 +1,7 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.syu.ms" android:versionCode="1" android:versionName="TEST-ONLY">
+    <uses-sdk android:minSdkVersion="23" android:targetSdkVersion="28"/>
+    <application android:label="FYT TEST FIXTURE">
+        <service android:name="app.ToolkitService" android:exported="true"><intent-filter><action android:name="com.syu.ms.toolkit"/></intent-filter></service>
+        <receiver android:name="app.ControlReceiver" android:exported="true"/>
+    <activity android:name="app.OverlayTargetActivity" android:exported="true"/></application>
+</manifest>

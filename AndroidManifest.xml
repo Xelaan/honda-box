@@ -1,0 +1,38 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="dev.alex.fyt.probe" android:versionCode="43" android:versionName="0.8.29">
+    <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="28" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-feature android:name="android.hardware.location" android:required="false" />
+    <uses-feature android:name="android.hardware.location.gps" android:required="false" />
+    <uses-feature android:name="android.hardware.location.network" android:required="false" />
+    <uses-permission android:name="moe.shizuku.manager.permission.API_V23" />
+    <queries><package android:name="com.syu.ms" /><package android:name="com.syu.canbus" /><package android:name="moe.shizuku.privileged.api" /></queries>
+    <application android:name=".ProbeApplication" android:label="Honda Box Service" android:theme="@android:style/Theme.Material.NoActionBar" android:allowBackup="false" android:supportsRtl="true" android:icon="@mipmap/honda_console">
+        <meta-data android:name="moe.shizuku.client.V3_SUPPORT" android:value="true" />
+        <provider android:name="rikka.shizuku.ShizukuProvider" android:authorities="dev.alex.fyt.probe.shizuku" android:multiprocess="false" android:enabled="true" android:exported="true" android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
+        <activity android:name=".MainActivity" android:icon="@mipmap/honda_box_ui" android:label="Honda Box" android:exported="true" android:resizeableActivity="true" />
+        <activity android:name=".BackgroundStartActivity" android:exported="true" android:theme="@android:style/Theme.NoDisplay" android:noHistory="true" android:excludeFromRecents="true">
+            <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
+        </activity>
+        <activity android:name=".CarInfoActivity" android:label="Car Info" android:exported="false" android:resizeableActivity="true" />
+        <activity android:name=".SettingsActivity" android:exported="false" android:resizeableActivity="true" />
+        <activity android:name=".DebugActivity" android:exported="false" android:resizeableActivity="true" />
+        <activity android:name=".AudioPlayerActivity" android:label="Honda Audio" android:taskAffinity="dev.alex.fyt.probe.audio" android:launchMode="singleTask" android:exported="false" android:resizeableActivity="true" />
+        <activity-alias android:name=".Radio" android:label="Radio" android:icon="@drawable/splash_radio" android:targetActivity=".AudioPlayerActivity" android:exported="true">
+        </activity-alias>
+        <activity-alias android:name=".CD" android:label="CD" android:icon="@drawable/splash_cd" android:targetActivity=".AudioPlayerActivity" android:exported="true">
+        </activity-alias>
+        <activity-alias android:name=".USB" android:label="USB" android:icon="@drawable/splash_usb" android:targetActivity=".AudioPlayerActivity" android:exported="true">
+        </activity-alias>
+        <activity-alias android:name=".IPod" android:label="iPod" android:icon="@drawable/splash_ipod" android:targetActivity=".AudioPlayerActivity" android:exported="true">
+        </activity-alias>
+        <activity android:name=".AnalyzerActivity" android:label="BSJ Experiment Analyzer" android:exported="false" android:resizeableActivity="true" />
+        <receiver android:name=".BootReceiver" android:exported="false"><intent-filter><action android:name="android.intent.action.BOOT_COMPLETED"/><action android:name="android.intent.action.MY_PACKAGE_REPLACED"/></intent-filter></receiver>
+        <service android:name=".ProbeService" android:exported="false" android:stopWithTask="false" />
+    </application>
+</manifest>

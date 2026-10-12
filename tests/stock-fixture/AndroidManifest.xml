@@ -1,0 +1,1 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.syu.canbus" android:versionCode="1"><uses-sdk android:minSdkVersion="24" android:targetSdkVersion="28"/><uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/><application android:label="TEST ONLY CANBUS AppOp fixture" /></manifest>

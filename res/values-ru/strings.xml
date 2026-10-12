@@ -1,0 +1,560 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="media_loading">Загрузка</string>
+    <string name="climate_open_settings">Открыть настройки Honda Box</string>
+    <string name="ui_age" formatted="false">" · возраст "</string>
+    <string name="ui_incomplete_2_s_pre_roll" formatted="false">" · неполные 2 с до"</string>
+    <string name="ui_pending_windows" formatted="false">" · ожидают окна "</string>
+    <string name="ui_window_completes_in_5_seconds" formatted="false">" · окно завершится через 5 секунд"</string>
+    <string name="ui_dropped" formatted="false">" · потери "</string>
+    <string name="ui_profile" formatted="false">" · профиль "</string>
+    <string name="ui_frames" formatted="false">" кадров"</string>
+    <string name="ui_s" formatted="false">" с"</string>
+    <string name="ui_s_n" formatted="false">" с\n"</string>
+    <string name="ui_watch_byte_offset_starting_at" formatted="false">"Watch: offset байта, начиная с 0"</string>
+    <string name="ui_nselected" formatted="false">"\nВыбрано "</string>
+    <string name="ui_ncandidates_unverified_n" formatted="false">"\nКАНДИДАТЫ — НЕ ПОДТВЕРЖДЕНО\n"</string>
+    <string name="ui_this_group_is_absent_from" formatted="false">"В выбранных окнах нет этой группы.\n"</string>
+    <string name="ui_group_type_payload_length" formatted="false">"Группа: TYPE / длина payload"</string>
+    <string name="ui_historical_frame_capture_stopped" formatted="false">"Исторический кадр; подписка остановлена"</string>
+    <string name="ui_no_frames_yet_n" formatted="false">"Кадров пока нет.\n"</string>
+    <string name="ui_frames_16" formatted="false">"Кадры"</string>
+    <string name="ui_frames_unknown_types_only" formatted="false">"Кадры: только неизвестные типы"</string>
+    <string name="ui_markers" formatted="false">"Метки"</string>
+    <string name="ui_back" formatted="false">"Назад"</string>
+    <string name="ui_no_unknown_types_received_yet" formatted="false">"Неизвестные типы пока не получены. Снимите фильтр для известных кадров.\n"</string>
+    <string name="ui_unsaved_analysis_windows_will_be" formatted="false">"Несохранённые окна анализа будут удалены. Исходный raw-журнал останется."</string>
+    <string name="ui_no_frames_of_this_group" formatted="false">"Нет кадров выбранной группы в этом подключении."</string>
+    <string name="ui_no_matching_candidates_at_least" formatted="false">"Нет подходящих кандидатов. Нужны ≥3 кадра каждого состояния; готовые окна RPM1500/2000/3000, CENTER/LEFT/RIGHT, ≥3 передачи или ≥3 скорости.\n"</string>
+    <string name="ui_an_active_connection_and_profile" formatted="false">"Нужны активное подключение и профиль 6291908"</string>
+    <string name="ui_waiting_for_frames" formatted="false">"Ожидание кадров…"</string>
+    <string name="ui_windows_span_2_5_seconds" formatted="false">"Окна −2 / +5 секунд. Кнопку нажимайте при соответствующем состоянии.\nБез свежего валидного RAW (≤1 с) метка сохраняется как INVALID_NO_RAW_DATA и не участвует в поиске сигналов.\nЭксперименты разных подключений/профилей не смешиваются.\n\n"</string>
+    <string name="ui_stop" formatted="false">"Остановить"</string>
+    <string name="ui_stopped_historical_data" formatted="false">"Остановлено · исторические данные"</string>
+    <string name="ui_cancel" formatted="false">"Отмена"</string>
+    <string name="ui_clear" formatted="false">"Очистить"</string>
+    <string name="ui_clear_analysis" formatted="false">"Очистить анализ"</string>
+    <string name="ui_clear_frames_and_experiments" formatted="false">"Очистить кадры и эксперименты?"</string>
+    <string name="ui_analysis_error" formatted="false">"Ошибка анализа: "</string>
+    <string name="ui_connected" formatted="false">"Подключено"</string>
+    <string name="ui_connect" formatted="false">"Подключиться"</string>
+    <string name="ui_showing_the_first_100_groups" formatted="false">"Показаны первые 100 групп; все — в JSON.\n"</string>
+    <string name="ui_last_received_frame" formatted="false">"Последний полученный кадр"</string>
+    <string name="ui_different_connections_segments_historical_comparison" formatted="false">"Разные подключения/сегменты: сравнение только историческое.\n"</string>
+    <string name="ui_save_two_experiment_markers_first" formatted="false">"Сначала сохраните две экспериментальные метки.\n"</string>
+    <string name="ui_compare_window_a_window_b" formatted="false">"Сравнение: окно A / окно B"</string>
+    <string name="ui_compare" formatted="false">"Сравнить"</string>
+    <string name="ui_read_only_markers_are_your" formatted="false">"Только чтение · метки — ваши наблюдения. Числа RPM/скорости/руля не подтверждены."</string>
+    <string name="ui_heuristic_search_is_limited_to" formatted="false">"Эвристика ограничена 4096 проверками полей / 40 результатами. Повторите отдельные эксперименты для проверки; подробные наблюдения в JSON."</string>
+    <string name="ui_no_experiments_yet" formatted="false">"Экспериментов ещё нет."</string>
+    <string name="ui_export_json_v2" formatted="false">"Экспорт JSON v2"</string>
+    <string name="ui_complete" formatted="false">"готово"</string>
+    <string name="ui_remaining" formatted="false">"ещё "</string>
+    <string name="ui_interrupted" formatted="false">"прервано"</string>
+    <string name="ui_gps_unavailable_enter_coordinates_manually" formatted="false">"GPS недоступен · можно задать координаты"</string>
+    <string name="ui_gps_off_saved_location" formatted="false">"GPS отключён · сохранённое место"</string>
+    <string name="ui_gps_location_saved" formatted="false">"GPS: место сохранено"</string>
+    <string name="ui_gps_waiting_for_coordinates" formatted="false">"GPS: ожидаем координаты"</string>
+    <string name="ui_gps_permission_not_granted" formatted="false">"GPS: разрешение не выдано"</string>
+    <string name="ui_auto" formatted="false">"Авто"</string>
+    <string name="ui_day" formatted="false">"День"</string>
+    <string name="ui_enter_coordinates_or_obtain_them" formatted="false">"Для точного времени восхода/заката укажите координаты или получите их с магнитолы. Расчёт офлайн, по дате и часовому поясу Android. GPS обновляется только пока открыт экран Probe; затем используется сохранённое место."</string>
+    <string name="ui_longitude_180_180" formatted="false">"Долгота, −180…180"</string>
+    <string name="ui_source_gps_last_saved_location" formatted="false">"Источник: GPS · последнее сохранённое место"</string>
+    <string name="ui_source_manual" formatted="false">"Источник: вручную"</string>
+    <string name="ui_location" formatted="false">"Место"</string>
+    <string name="ui_location_for_sunrise_and_sunset" formatted="false">"Местоположение для восхода и заката"</string>
+    <string name="ui_theme_location" formatted="false">"Местоположение для темы"</string>
+    <string name="ui_night" formatted="false">"Ночь"</string>
+    <string name="ui_enter_numbers_latitude_90_90" formatted="false">"Нужны числа: широта −90…90, долгота −180…180"</string>
+    <string name="ui_get_gps" formatted="false">"Получить GPS"</string>
+    <string name="ui_save" formatted="false">"Сохранить"</string>
+    <string name="ui_theme" formatted="false">"Тема: "</string>
+    <string name="ui_latitude_90_90" formatted="false">"Широта, −90…90"</string>
+    <string name="ui_car_menu" formatted="false">"Меню автомобиля"</string>
+    <string name="ui_hide_car_menu" formatted="false">"Скрыть меню автомобиля"</string>
+    <string name="ui_use_the_vehicle_controls" formatted="false">"Управление штатными кнопками"</string>
+    <string name="ui_preparing_log" formatted="false">"Журнал готовится…"</string>
+    <string name="ui_log_saved" formatted="false">"Журнал сохранён"</string>
+    <string name="ui_cannot_access_the_file" formatted="false">"Нет доступа к файлу"</string>
+    <string name="ui_preparation_error" formatted="false">"Ошибка подготовки: "</string>
+    <string name="ui_save_error" formatted="false">"Ошибка сохранения: "</string>
+    <string name="ui_preparing_log_77" formatted="false">"Подготовка журнала…"</string>
+    <string name="ui_saving_unavailable_json_copied_to" formatted="false">"Сохранение недоступно. JSON скопирован в буфер обмена."</string>
+    <string name="ui_vehicle_audio" formatted="false">" · штатное аудио"</string>
+    <string name="ui_volume" formatted="false">"ГРОМКОСТЬ"</string>
+    <string name="ui_indicator_off" formatted="false">"Индикатор выключен"</string>
+    <string name="ui_indicator_visible" formatted="false">"Индикатор показан"</string>
+    <string name="ui_fyt_probe_vehicle_volume_indicator" formatted="false">"Индикатор штатной громкости Honda Box"</string>
+    <string name="ui_cannot_display" formatted="false">"Не удалось показать: "</string>
+    <string name="ui_overlay_permission_not_granted" formatted="false">"Нет разрешения поверх окон"</string>
+    <string name="ui_no_can_connection" formatted="false">"Нет связи с CAN"</string>
+    <string name="ui_waiting_for_volume_data" formatted="false">"Ожидаем данные громкости"</string>
+    <string name="ui_waiting_for_a_volume_change" formatted="false">"Ожидает изменения громкости"</string>
+    <string name="ui_waiting_for_can_connection" formatted="false">"Ожидает подключения CAN"</string>
+    <string name="ui_stopped_with_probe" formatted="false">"Остановлен вместе с Probe"</string>
+    <string name="ui_overlay_test" formatted="false">"ТЕСТ OVERLAY"</string>
+    <string name="ui_test_audio_unchanged" formatted="false">"ТЕСТ · звук не изменяется"</string>
+    <string name="ui_test_indicator_15_seconds" formatted="false">"Тестовый индикатор · 15 секунд"</string>
+    <string name="ui_car_menu_5_seconds" formatted="false">"Меню автомобиля · 5 секунд"</string>
+    <string name="ui_car_menu_off" formatted="false">"Меню автомобиля выключено"</string>
+    <string name="ui_menu_hidden" formatted="false">"Меню скрыто"</string>
+    <string name="ui_waiting_for_a_menu_change" formatted="false">"Ожидает изменения меню"</string>
+    <string name="ui_menu_schema_unverified" formatted="false">"Схема меню не подтверждена"</string>
+    <string name="ui_menu_test_15_seconds" formatted="false">"Тест меню · 15 секунд"</string>
+    <string name="ui_album" formatted="false">" · Альбом "</string>
+    <string name="ui_characters_replaced_by_the_can" formatted="false">" · Буквы заменены CAN-блоком"</string>
+    <string name="ui_folder" formatted="false">" · Папка "</string>
+    <string name="ui_split_from_display_text" formatted="false">" · Разделено из текста"</string>
+    <string name="ui_vehicle_display_text" formatted="false">" · Текст штатного дисплея"</string>
+    <string name="ui_ipod_shared_usb_ipod_source" formatted="false">"Значок iPod выбран вручную · тип устройства не определён"</string>
+    <string name="ui_audio_player" formatted="false">"Аудиоплеер "</string>
+    <string name="ui_audio_player_hidden" formatted="false">"Аудиоплеер скрыт"</string>
+    <string name="ui_select" formatted="false">"Включить "</string>
+    <string name="ui_next" formatted="false">"Вперёд  ›"</string>
+    <string name="ui_select_ipod_using_the_vehicle" formatted="false">"Выберите iPod штатной кнопкой"</string>
+    <string name="ui_volume_111" formatted="false">"Громкость "</string>
+    <string name="ui_volume_112" formatted="false">"Громкость —"</string>
+    <string name="ui_disc" formatted="false">"Диск "</string>
+    <string name="ui_artist" formatted="false">"Исполнитель "</string>
+    <string name="ui_settings" formatted="false">"Настройки"</string>
+    <string name="ui_waiting_for_source" formatted="false">"Ожидаем источник"</string>
+    <string name="ui_waiting_for_can_connection_117" formatted="false">"Ожидаем подключение CAN"</string>
+    <string name="ui_received_presets_cache_per_band" formatted="false">"Полученные пресеты · кэш по диапазонам"</string>
+    <string name="ui_next_119" formatted="false">"Следующий  ›"</string>
+    <string name="ui_display_lines" formatted="false">"Строки дисплея: "</string>
+    <string name="ui_current_source" formatted="false">"Текущий источник · "</string>
+    <string name="ui_track" formatted="false">"Трек "</string>
+    <string name="ui_frequency_not_received" formatted="false">"Частота не передана"</string>
+    <string name="ui_vehicle_source" formatted="false">"Штатный источник · "</string>
+    <string name="ui_previous" formatted="false">"‹  Назад"</string>
+    <string name="ui_previous_126" formatted="false">"‹  Предыдущий"</string>
+    <string name="ui_source_indicator_off" formatted="false">"Индикатор источника выключен"</string>
+    <string name="ui_source_visible_hides_after_3" formatted="false">"Источник показан · автоскрытие через 3 секунды"</string>
+    <string name="ui_waiting_for_source_data" formatted="false">"Ожидает данных источника"</string>
+    <string name="ui_waiting_for_a_source_change" formatted="false">"Ожидает смены источника"</string>
+    <string name="ui_fyt_probe_current_vehicle_audio" formatted="false">"Текущий штатный аудиоисточник Honda Box"</string>
+    <string name="ui_vehicle_source_132" formatted="false">"ШТАТНЫЙ ИСТОЧНИК"</string>
+    <string name="ui_after_sending_the_command_this" formatted="false">" после отправки команды. Это наблюдение данных; подтвердите переключение звука."</string>
+    <string name="ui_the_can_source_selection_command" formatted="false">"). CAN-команда выбора источника не отправлена."</string>
+    <string name="ui_check_the_log_the_app" formatted="false">". Проверьте журнал; приложение не получило это разрешение."</string>
+    <string name="ui_sent_to_ipc_execution_by" formatted="false">": передано в IPC. Выполнение магнитолой не подтверждено; проверьте штатный экран."</string>
+    <string name="ui_sent_to_ipc_execution_by_137" formatted="false">": передано в IPC. Выполнение магнитолой не подтверждено; свежий ответ источника не получен. MAIN="</string>
+    <string name="ui_can_reading_continues" formatted="false">"; чтение CAN продолжается."</string>
+    <string name="ui_binder_available_waiting_for_callbacks" formatted="false">"Binder доступен. Ожидаем callbacks — это отдельная проверка доступа к данным."</string>
+    <string name="ui_binder_terminated_retrying_in_5" formatted="false">"Binder завершён. Повтор через 5 секунд."</string>
+    <string name="ui_can_module_disconnected" formatted="false">"CAN-модуль отключился"</string>
+    <string name="ui_fyt_probe_diagnostics_active" formatted="false">"Honda Box · диагностика активна"</string>
+    <string name="ui_toolkitservice_returned_a_null_binder" formatted="false">"ToolkitService вернул пустой Binder."</string>
+    <string name="ui_toolkitservice_is_not_exported_to" formatted="false">"ToolkitService не экспортирован для сторонних приложений."</string>
+    <string name="ui_toolkitservice_is_disabled_in_android" formatted="false">"ToolkitService отключён в Android."</string>
+    <string name="ui_bindservice_returned_false_retrying_in" formatted="false">"bindService вернул false. Повтор через 5 секунд."</string>
+    <string name="ui_com_syu_ms_app_toolkitservice" formatted="false">"com.syu.ms / app.ToolkitService не найден"</string>
+    <string name="ui_fyt_diagnostics" formatted="false">"Диагностика FYT"</string>
+    <string name="ui_additional_audio_module" formatted="false">"Дополнительный аудиомодуль "</string>
+    <string name="ui_access_denied" formatted="false">"Доступ запрещён"</string>
+    <string name="ui_can_access_denied" formatted="false">"Доступ к CAN запрещён"</string>
+    <string name="ui_no_callbacks_within_10_seconds" formatted="false">"За 10 секунд callbacks не пришли. Измените громкость или источник; возможны ограничения службы."</string>
+    <string name="ui_requesting_can_module_7_from" formatted="false">"Запрашиваем CAN-модуль №7 у ToolkitService."</string>
+    <string name="ui_vehicle_audio_channel_13_not" formatted="false">"Канал штатного аудио 13 не подтверждён (MAIN="</string>
+    <string name="ui_commands_are_available_only_for" formatted="false">"Команды доступны только для проверенной схемы профиля 6291908."</string>
+    <string name="ui_this_is_expected_on_a" formatted="false">"На обычном Android-эмуляторе это ожидаемо. На магнитоле проверьте наличие com.syu.ms."</string>
+    <string name="ui_unknown_command_nothing_sent" formatted="false">"Неизвестная команда; ничего не отправлено."</string>
+    <string name="ui_no_service_response" formatted="false">"Нет ответа службы"</string>
+    <string name="ui_not_connected_command_not_sent" formatted="false">"Нет подключения; команда не отправлена."</string>
+    <string name="ui_operation_interrupted_by_disconnect_no" formatted="false">"Операция прервана отключением; автоматического повтора нет."</string>
+    <string name="ui_stopped" formatted="false">"Остановлено"</string>
+    <string name="ui_source_selection_error" formatted="false">"Ошибка выбора источника: "</string>
+    <string name="ui_key_release_error" formatted="false">"Ошибка отпускания кнопки: "</string>
+    <string name="ui_command_transmission_error" formatted="false">"Ошибка передачи команды: "</string>
+    <string name="ui_connection_error" formatted="false">"Ошибка подключения"</string>
+    <string name="ui_service_check_error" formatted="false">"Ошибка проверки службы"</string>
+    <string name="ui_fyt_protocol_error" formatted="false">"Ошибка протокола FYT"</string>
+    <string name="ui_connection_did_not_complete_within" formatted="false">"Подключение не завершилось за 10 секунд. Повтор через 5 секунд."</string>
+    <string name="ui_connection_rejected" formatted="false">"Подключение отклонено"</string>
+    <string name="ui_connecting" formatted="false">"Подключение…"</string>
+    <string name="ui_connected_no_data" formatted="false">"Подключено, данных нет"</string>
+    <string name="ui_reading_vehicle_data_tap_to" formatted="false">"Подписка на данные автомобиля. Нажмите, чтобы открыть журнал."</string>
+    <string name="ui_subscription_sent" formatted="false">"Подписка отправлена"</string>
+    <string name="ui_received_source_state" formatted="false">"Получено состояние "</string>
+    <string name="ui_previous_command_still_in_progress" formatted="false">"Предыдущая команда ещё обрабатывается; повтор пропущен."</string>
+    <string name="ui_connection_lost" formatted="false">"Связь прервана"</string>
+    <string name="ui_fyt_service_not_found" formatted="false">"Служба FYT не найдена"</string>
+    <string name="ui_fyt_service_disconnected_retrying_in" formatted="false">"Служба FYT отключилась. Повтор через 5 секунд."</string>
+    <string name="ui_service_refused_connection" formatted="false">"Служба отказала"</string>
+    <string name="ui_service_disabled" formatted="false">"Служба отключена"</string>
+    <string name="ui_service_permission_required" formatted="false">"Требуется разрешение службы"</string>
+    <string name="ui_background_capture_stopped_you_can" formatted="false">"Фоновая подписка завершена. Журнал можно сохранить."</string>
+    <string name="ui_background_head_unit_data_capture" formatted="false">"Фоновое получение данных магнитолы"</string>
+    <string name="ui_climate_change_5_seconds" formatted="false">"Изменение климата · 5 секунд"</string>
+    <string name="ui_climate_indicator_off" formatted="false">"Климатический индикатор выключен"</string>
+    <string name="ui_waiting_for_a_climate_change" formatted="false">"Ожидает изменения климата"</string>
+    <string name="ui_climate_schema_unverified" formatted="false">"Схема климата не подтверждена"</string>
+    <string name="ui_test" formatted="false">"ТЕСТ · "</string>
+    <string name="ui_climate_test_15_seconds" formatted="false">"Тест климата · 15 секунд"</string>
+    <string name="ui_fan" formatted="false">", вентилятор "</string>
+    <string name="ui_passenger" formatted="false">", пассажир "</string>
+    <string name="ui_display_only_use_the_vehicle" formatted="false">". Только показания; управление штатными кнопками."</string>
+    <string name="ui_climate_driver" formatted="false">"Климат: водитель "</string>
+    <string name="ui_readings_use_the_vehicle_controls" formatted="false">"Показания · управление штатными кнопками"</string>
+    <string name="ui_on" formatted="false">"вкл"</string>
+    <string name="ui_off" formatted="false">"выкл"</string>
+    <string name="ui_band_115" formatted="false">"    Диапазон [115]: "</string>
+    <string name="ui_last_event" formatted="false">"    Последнее событие: "</string>
+    <string name="ui_preset_116" formatted="false">"    Пресет [116]: "</string>
+    <string name="ui_current_values_unavailable" formatted="false">"    Текущие значения недоступны"</string>
+    <string name="ui_raw_frequencies_119_125" formatted="false">"    Частоты raw [119–125]: "</string>
+    <string name="ui_honda_compatible_schema" formatted="false">"  ·  Honda / совместимая схема"</string>
+    <string name="ui_unknown_schema_raw_values" formatted="false">"  ·  неизвестная схема, значения raw"</string>
+    <string name="ui_chunks_evicted" formatted="false">" блоков · вытеснено: "</string>
+    <string name="ui_the_player_will_hide_for" formatted="false">"). К этому источнику будет применяться настройка скрытия при AUX; CAN-профиль и звук не меняются."</string>
+    <string name="ui_these_are_can_adapter_protocol" formatted="false">". Это пакеты протокола CAN-box, не подтверждённые CAN-кадры Honda."</string>
+    <string name="ui_am_fm_selects_the_radio" formatted="false">"AM/FM выбирает радио; диапазон переключайте штатной кнопкой. Стрелки управляют текущим штатным источником. Доступно для профиля 6291908."</string>
+    <string name="ui_aux_saved" formatted="false">"AUX сохранён"</string>
+    <string name="ui_nsource" formatted="false">"\nИсточник: "</string>
+    <string name="ui_added_to_the_log" formatted="false">"» добавлена в журнал"</string>
+    <string name="ui_audio_source" formatted="false">"АУДИОИСТОЧНИК"</string>
+    <string name="ui_audio_off" formatted="false">"Аудио выключено"</string>
+    <string name="ui_fan_21" formatted="false">"Вентилятор [21]: "</string>
+    <string name="ui_fan_214" formatted="false">"Вентилятор: —"</string>
+    <string name="ui_all_received_can_fields" formatted="false">"Все полученные поля CAN"</string>
+    <string name="ui_select_aux_using_the_vehicle" formatted="false">"Выберите AUX штатной кнопкой при активном подключении Probe"</string>
+    <string name="ui_radio_cd_usb_data" formatted="false">"ДАННЫЕ РАДИО / CD / USB"</string>
+    <string name="ui_yes_this_is_aux" formatted="false">"Да, это AUX"</string>
+    <string name="ui_install_the_four_radio_cd" formatted="false">"Для отдельных значков в DUDU установите четыре приложения-ярлыка Radio, CD, USB и iPod из комплекта. Обычные экраны приложений; источник AUX скрывает плеер. Код iPod и отдельная команда выбора пока не подтверждены. Автооткрытие из фона использует разрешение поверх окон."</string>
+    <string name="ui_use_the_current_mode_as" formatted="false">"Запомнить текущий режим как AUX"</string>
+    <string name="ui_connection_results_and_received_events" formatted="false">"Здесь появятся результат подключения и полученные события."</string>
+    <string name="ui_indicators_over_other_apps" formatted="false">"ИНДИКАТОРЫ ПОВЕРХ ПРИЛОЖЕНИЙ"</string>
+    <string name="ui_indicator" formatted="false">"Индикатор: "</string>
+    <string name="ui_source_98" formatted="false">"Источник [98]: "</string>
+    <string name="ui_show_source_on_change_3" formatted="false">"Показывать оверлей источника · 3 секунды"</string>
+    <string name="source_popup_notes">Показывает текущий источник при смене, запуске службы и пробуждении. Если связь ещё не готова, дожидается данных об источнике.</string>
+    <string name="ui_climate_two_zones" formatted="false">"КЛИМАТ · ДВЕ ЗОНЫ"</string>
+    <string name="ui_climate_at_the_bottom" formatted="false">"КЛИМАТ ВНИЗУ ЭКРАНА"</string>
+    <string name="ui_which_source_is_selected_using" formatted="false">"Какой источник выбран штатными кнопками?"</string>
+    <string name="ui_the_head_unit_channel_is" formatted="false">"Канал магнитолы записывается отдельно от источника BSJ. Отсутствие ответа iPod-модуля не означает, что устройство отключено."</string>
+    <string name="ui_codes_3_and_4_show" formatted="false">"Для Honda Accord код 4 — USB/iPod, код 3 по умолчанию — AUX. Если прошивка использует другой код AUX, выберите его штатной кнопкой и сохраните здесь. Значки USB и iPod открывают общий экран. Вид устройства определяется по полученному меню либо явно ручной подсказке iPod."</string>
+    <string name="ui_left" formatted="false">"ЛЕВАЯ"</string>
+    <string name="ui_car_menu_over_other_apps" formatted="false">"МЕНЮ АВТОМОБИЛЯ ПОВЕРХ ОКОН"</string>
+    <string name="ui_menu" formatted="false">"Меню: "</string>
+    <string name="ui_menu_234" formatted="false">"Меню: —"</string>
+    <string name="ui_marker" formatted="false">"Метка «"</string>
+    <string name="ui_does_the_vehicle_display_show" formatted="false">"На штатном дисплее сейчас AUX?"</string>
+    <string name="ui_could_not_start" formatted="false">"Не удалось запустить"</string>
+    <string name="ui_could_not_send_command" formatted="false">"Не удалось передать команду: "</string>
+    <string name="ui_waiting_for_can_event" formatted="false">"Ожидание CAN-события"</string>
+    <string name="ui_open_android_settings_apps_fyt" formatted="false">"Откройте настройки Android → Приложения → Honda Box → Поверх других приложений"</string>
+    <string name="ui_open_player_on_source_change" formatted="false">"Открывать плеер при смене источника"</string>
+    <string name="ui_mark_the_selected_source" formatted="false">"Отметить выбранный источник…"</string>
+    <string name="ui_right" formatted="false">"ПРАВАЯ"</string>
+    <string name="ui_audio_command_check" formatted="false">"ПРОВЕРКА КОМАНД АУДИО"</string>
+    <string name="ui_full_width_panel_5_seconds" formatted="false">"Панель на всю ширину · 5 секунд после изменения. Нажатие скрывает панель. Только показания; управление штатными кнопками. DUAL: отдельное поле, если доступно; иначе разница температур (ΔT). Семь скоростей вентилятора. Рециркуляция и отдельный значок заднего стекла скрыты."</string>
+    <string name="ui_show_climate_on_value_changes" formatted="false">Показывать большую панель при изменении климата</string>
+    <string name="ui_show_on_volume_changes" formatted="false">"Показывать при изменении громкости"</string>
+    <string name="ui_show_the_vehicle_menu" formatted="false">"Показывать штатное меню автомобиля"</string>
+    <string name="ui_after_granting_permission_enable_the" formatted="false">"После разрешения включите индикатор и нажмите «Подключиться». Тест показывает число 17 без изменения звука. Индикатор пропускает касания; остановка Probe убирает его."</string>
+    <string name="ui_always_visible_background_operation_check" formatted="false">"Постоянный индикатор · проверка работы в фоне"</string>
+    <string name="ui_profile_252" formatted="false">"Профиль: "</string>
+    <string name="ui_permission_granted" formatted="false">"Разрешение есть"</string>
+    <string name="ui_permission_not_granted" formatted="false">"Разрешение не выдано"</string>
+    <string name="ui_allow_display_over_other_apps" formatted="false">"Разрешить поверх окон"</string>
+    <string name="ui_events_last_40" formatted="false">"СОБЫТИЯ · ПОСЛЕДНИЕ 40"</string>
+    <string name="ui_reset_aux_assignment" formatted="false">"Вернуть AUX по умолчанию"</string>
+    <string name="ui_vehicle_signals" formatted="false">"Сигналы автомобиля"</string>
+    <string name="ui_connect_first" formatted="false">"Сначала нажмите «Подключиться»"</string>
+    <string name="ui_aux_assignment_reset" formatted="false">"Восстановлен AUX по умолчанию · код 3"</string>
+    <string name="ui_save_log" formatted="false">"Сохранить журнал"</string>
+    <string name="ui_save_the_mapping_for_the" formatted="false">"Сохранить соответствие для текущего источника (код "</string>
+    <string name="ui_last_received_band_115" formatted="false">"Сохранённый диапазон [115]: "</string>
+    <string name="ui_test_for_15_seconds" formatted="false">"Тест на 15 секунд"</string>
+    <string name="ui_three_lines_from_the_vehicle" formatted="false">"Три строки штатного дисплея, включая настройки звука. Показ на 5 секунд после изменения; × скрывает панель. Управление кнопками и ручкой автомобиля. Тема общая с климатом. Старое меню при подключении не открывается."</string>
+    <string name="ui_vehicle_audio_players" formatted="false">"ШТАТНЫЕ АУДИОПЛЕЕРЫ"</string>
+    <string name="ui_oem_radio_cd_usb_selection" formatted="false">"Штатный выбор Radio / CD / USB"</string>
+    <string name="ui_oem_screen_unavailable" formatted="false">"Штатный экран недоступен: "</string>
+    <string name="ui_not_received_yet" formatted="false">"ещё не получен"</string>
+    <string name="ui_album_270" formatted="false">"    Альбом: "</string>
+    <string name="ui_time_99_100" formatted="false">"    Время [99/100]: "</string>
+    <string name="ui_artist_272" formatted="false">"    Исполнитель: "</string>
+    <string name="ui_face" formatted="false">"    Лицо: "</string>
+    <string name="ui_feet" formatted="false">"    Ноги: "</string>
+    <string name="ui_track_101" formatted="false">"    Трек [101]: "</string>
+    <string name="ui_source_unknown" formatted="false">" · источник неизвестен"</string>
+    <string name="ui_bytes" formatted="false">" байт · "</string>
+    <string name="ui_these_fields_may_persist_after" formatted="false">". Эти поля могут сохраняться после смены источника."</string>
+    <string name="ui_sending" formatted="false">": отправка…"</string>
+    <string name="ui_ntitle" formatted="false">"\nНазвание: "</string>
+    <string name="ui_nlast_media_event" formatted="false">"\nПоследнее событие медиа: "</string>
+    <string name="ui_ndisc_mode_114" formatted="false">"\nРежим диска [114]: "</string>
+    <string name="ui_nslots_106_111" formatted="false">"\nСлоты [106–111]: "</string>
+    <string name="ui_nwindshield" formatted="false">"\nСтекло: "</string>
+    <string name="ui_com_syu_ms_not_checked" formatted="false">"com.syu.ms · ещё не проверено"</string>
+    <string name="ui_audio_player_closed" formatted="false">"Аудиоплеер закрыт"</string>
+    <string name="ui_ready_to_check" formatted="false">"Готов к проверке"</string>
+    <string name="ui_data_received" formatted="false">"Данные получены"</string>
+    <string name="ui_disc_113" formatted="false">"Диск [113]: "</string>
+    <string name="ui_code" formatted="false">"Код "</string>
+    <string name="ui_commands_are_sent_only_when" formatted="false">"Команды отправляются только при нажатии кнопки. Реакцию проверяйте по штатному экрану."</string>
+    <string name="ui_connect_on_a_fyt_dudu" formatted="false">"Нажмите «Подключиться» на магнитоле с FYT / DUDU."</string>
+    <string name="ui_not_reported" formatted="false">"Не передан"</string>
+    <string name="ui_power" formatted="false">"Питание: "</string>
+    <string name="ui_capture_is_running_change_source" formatted="false">"Подписка работает. Меняйте источник, громкость и климат штатными органами управления."</string>
+    <string name="ui_current_values_unavailable_296" formatted="false">"Текущие значения недоступны."</string>
+    <string name="ui_invalid_bcd" formatted="false">"некорректный BCD"</string>
+    <string name="ui_device" formatted="false">" · устройство: "</string>
+    <string name="ui_audio_route_diagnostics_stopped_data" formatted="false">"Диагностика аудиотракта остановлена; данные сохранены в журнале."</string>
+    <string name="ui_head_unit_channel" formatted="false">"Канал магнитолы: "</string>
+    <string name="ui_code_301" formatted="false">"код "</string>
+    <string name="ui_no_main_response" formatted="false">"нет ответа MAIN"</string>
+    <string name="ui_vehicle_audio_13" formatted="false">"штатное аудио [13]"</string>
+    <string name="ui_climate" formatted="false">"Климат: "</string>
+    <string name="debug_climate_field16">"[16] Возможный обогрев заднего стекла: "</string>
+    <string name="debug_climate_field16_notes">"Для этого Honda-профиля не подтверждено; 0 может быть начальным значением службы."</string>
+    <string name="ui_test_vehicle_values_unchanged" formatted="false">"ТЕСТ · показания автомобиля не изменяются"</string>
+    <string name="ui_test_306" formatted="false">"ТЕСТ. "</string>
+    <string name="ui_previous_307" formatted="false">"Предыдущий"</string>
+    <string name="ui_next_308" formatted="false">"Следующий"</string>
+    <string name="ui_auto_309" formatted="false">"Авто · по восходу/закату · "</string>
+    <string name="ui_auto_android_theme_set_a" formatted="false">"Авто · для восхода/заката нужны координаты; пока по теме Android"</string>
+    <string name="ui_day_selected_manually" formatted="false">"День · выбран вручную"</string>
+    <string name="ui_coordinates_out_of_range" formatted="false">"Координаты вне допустимого диапазона"</string>
+    <string name="ui_night_selected_manually" formatted="false">"Ночь · выбрана вручную"</string>
+    <string name="ui_sunrise" formatted="false">"восход "</string>
+    <string name="ui_day_315" formatted="false">"день"</string>
+    <string name="ui_sunset" formatted="false">"закат "</string>
+    <string name="ui_no_sunrise_sunset_near_this" formatted="false">"нет восхода/заката рядом с этой датой"</string>
+    <string name="ui_night_318" formatted="false">"ночь"</string>
+    <string name="ui_events" formatted="false">" событий"</string>
+    <string name="ui_vehicle" formatted="false">"АВТОМОБИЛЬ"</string>
+    <string name="ui_audio_and_climate" formatted="false">"Аудио и климат"</string>
+    <string name="ui_diagnostics" formatted="false">"Диагностика"</string>
+    <string name="ui_waiting_for_data" formatted="false">"Ожидаем данные"</string>
+    <string name="ui_last_band" formatted="false">"Последний диапазон: "</string>
+    <string name="ui_radio_vehicle_source" formatted="false">"Радио · штатный источник"</string>
+    <string name="ui_track_326" formatted="false">"Трек —"</string>
+    <string name="ui_can_connected" formatted="false">"●  CAN подключён · "</string>
+    <string name="ui_source_98_0_means_the" formatted="false">"Источник [98] = 0 — служба не передала режим. Диапазон радио и поля CD могут сохраняться после переключения. По умолчанию AUX — код 3; ручная привязка заменяет это соответствие. Метки — ваши наблюдения, не данные CAN."</string>
+    <string name="language" formatted="false">"Язык"</string>
+    <string name="system_language" formatted="false">"Системный"</string>
+    <string name="audio_home" formatted="false">"Аудио"</string>
+    <string name="choose_source" formatted="false">"Выберите источник"</string>
+    <string name="source_prefix" formatted="false">"Источник: "</string>
+    <string name="audio_unavailable" formatted="false">"Выбор источника недоступен для этого CAN-профиля"</string>
+    <string name="home_hint" formatted="false">"Radio · CD · штатный USB/iPod"</string>
+    <string name="home_select" formatted="false">"Выбрать источник"</string>
+    <string name="background_operation" formatted="false">"Фоновая работа"</string>
+    <string name="start_after_boot" formatted="false">"Запускать после загрузки Android"</string>
+    <string name="battery_settings" formatted="false">"Разрешить фоновую работу Android"</string>
+    <string name="dudu_settings" formatted="false">"Открыть настройки DUDU / Android"</string>
+    <string name="settings_unavailable" formatted="false">"Настройки недоступны"</string>
+    <string name="keep_alive_help" formatted="false">"DUDU: Vehicle → Start up → Keep alive — добавьте Honda Box. Android: разрешите фоновую работу без ограничений. Остановка вручную приостанавливает автозапуск до следующего открытия приложения. Приложение переподключается после пробуждения и не удерживает устройство бодрствующим. Принудительное завершение системой DUDU требует её разрешения на сохранение приложения."</string>
+    <string name="media_by_menu">по меню</string>
+    <string name="media_last_menu">Последние полученные пункты меню</string>
+    <string name="radio_khz">кГц</string>
+    <string name="radio_mhz">МГц</string>
+    <string name="stock_title">Штатные окна CANBUS</string>
+    <string name="stock_hide">Скрыть штатные окна CANBUS</string>
+    <string name="stock_scope">Блокирует разрешение на окна com.syu.canbus: меню, громкость, климат и другие штатные уведомления. Окна Honda Box остаются доступны. Результат нужно проверить на магнитоле.</string>
+    <string name="stock_connect">Подключить / обновить Shizuku</string>
+    <string name="stock_restore">Вернуть исходное разрешение</string>
+    <string name="stock_setup">Настройка Shizuku через ADB</string>
+    <string name="stock_unavailable">Shizuku не запущен. Сначала запустите его через ADB.</string>
+    <string name="stock_missing">Штатное приложение com.syu.canbus не установлено.</string>
+    <string name="stock_permission">Разрешите Honda Box доступ в Shizuku.</string>
+    <string name="stock_unknown">Состояние разрешения ещё не прочитано. Подключите или обновите Shizuku.</string>
+    <string name="stock_blocked">Проверено: разрешение штатных окон заблокировано (ignore).</string>
+    <string name="stock_allowed">Разрешение штатных окон не заблокировано этой настройкой.</string>
+    <string name="stock_working">Чтение / применение разрешения…</string>
+    <string name="stock_backup">Сохранён исходный режим:</string>
+    <string name="stock_external">Заблокировано извне; Honda Box не сохранял исходный режим. Для отката используйте исходную копию ADB-скрипта.</string>
+    <string name="stock_error">Ошибка команды:</string>
+    <string name="stock_denied">Доступ запрещён. Разрешите Honda Box в Shizuku и подключитесь снова.</string>
+    <string name="stock_timeout">Истекло время подключения. Перезапустите Shizuku и повторите.</string>
+    <string name="stock_open">Открыть / установить Shizuku</string>
+    <string name="stock_help">1. Установите Shizuku с официального сайта.\n2. Запустите его через ADB, взяв команду в Shizuku или через беспроводную отладку, если она поддерживается.\n3. Вернитесь сюда, подключите Shizuku и разрешите доступ Honda Box.\n4. Включите скрытие. Отключение вернёт сохранённый исходный режим.\nНа старом Android без root после перезагрузки нужно снова запускать Shizuku через ADB для изменения настройки. Применённый AppOp обычно сохраняется. Приложение CANBUS и данные автомобиля не отключаются. Требуется Android 7+.</string>
+    <string name="stock_command_help">Точную команду запуска показывает Shizuku → запуск через компьютер → показать команду.</string>
+    <string name="headless_launch">Запускать Honda Box без окна (открыть через уведомление)</string>
+    <string name="track_popup">Новые треки и радиостанции, когда приложение в фоне</string>
+<string name="media_no_data">Нет данных</string>
+<string name="track_demo_button">Тест нового трека · 4 секунды</string>
+<string name="track_demo_title">Led Zeppelin — Kashmir</string>
+<string name="track_demo_label">ТЕСТ · Новый трек</string>
+<string name="track_now_playing">СЕЙЧАС ИГРАЕТ</string>
+<string name="media_playing">Воспроизведение</string>
+<string name="media_track_number">Номер трека</string>
+    <string name="media_manual_display">Отображение выбрано вручную</string>
+    <string name="media_switch_display">Сменить отображение USB/iPod</string>
+<string name="unknown_overlay_toggle">Неопознанные сообщения BSJ · диагностика</string>
+<string name="unknown_overlay_title">BSJ · Неопознанные поля</string>
+<string name="unknown_overlay_help">Только неизвестные типы, подтипы текста и неожиданные форматы. Обычные сообщения климата, громкости, радио, плеера и меню исключены.</string>
+<string name="usb_title_artist">Исполнитель</string>
+<string name="usb_title_album">Альбом</string>
+<string name="usb_title_track">Название трека</string>
+<string name="usb_title_folder">Папка</string>
+<string name="usb_title_filename">Имя файла</string>
+<string name="usb_title_unknown">Поле</string>
+<string name="player_title_help_description">О кнопке TITLE</string>
+<string name="player_title_help_close">Закрыть</string>
+<string name="player_title_help_cd">Нажимайте кнопку TITLE в автомобиле, чтобы переключать название диска/альбома, название трека и исполнителя. Honda Box показывает поле, выбранное на штатной аудиосистеме. Доступный текст зависит от диска; NO INFO означает, что для этого поля нет информации.</string>
+<string name="player_title_help_usb">Нажимайте кнопку TITLE в автомобиле, чтобы переключать название папки, имя файла, альбом, название трека и исполнителя. Honda Box показывает поле, выбранное на штатной аудиосистеме. Доступный текст зависит от файлов; NO INFO означает, что для этого поля нет информации.</string>
+<string name="player_title_help_ipod">Нажимайте кнопку TITLE в автомобиле, чтобы переключать альбом, название трека и исполнителя. Honda Box показывает полученный текст. Заголовок iPod остаётся TITLE, поскольку выбранное поле не определяется надёжно.</string>
+<string name="player_controls_help_title">Управление в автомобиле</string>
+<string name="player_controls_help_description">Как пользоваться штатными органами управления аудио</string>
+<string name="player_controls_source">ИСТОЧНИК\nВыбирайте радио, CD, USB/iPod или AUX кнопкой MODE на руле либо кнопками источников на штатной магнитоле.</string>
+<string name="player_controls_radio">РАДИОСТАНЦИИ\nКнопка AM/FM выбирает диапазон, кнопки 1–6 — сохранённые станции, настройка/поиск — частоту. Кнопки CH на руле переключают сохранённые станции. Настройки RDS доступны для FM через MENU.</string>
+<string name="player_controls_cd">ТРЕКИ И ДИСКИ\nПереключайте треки кнопками SKIP или CH на руле. Диск выбирайте на штатной магнитоле. Для MP3/WMA нажмите SEL/ENTER, чтобы открыть папки и файлы; поворачивайте для выбора, нажимайте для подтверждения. MENU → PLAY MODE — повтор, случайный порядок и сканирование. TITLE меняет отображаемый текст.</string>
+<string name="player_controls_usb">ТРЕКИ И ПАПКИ\nПереключайте треки кнопками SKIP или CH на руле. Нажмите SEL/ENTER, чтобы открыть папки и файлы; поворачивайте для выбора, нажимайте для подтверждения. MENU → PLAY MODE — повтор, случайный порядок и сканирование. TITLE меняет отображаемый текст.</string>
+<string name="player_controls_ipod">ПЕСНИ И МЕДИАТЕКА\nПереключайте песни кнопками SKIP или CH на руле. Нажмите SEL/ENTER, чтобы открыть Playlists, Artists, Albums и Songs; поворачивайте для выбора, нажимайте для подтверждения. MENU → PLAY MODE — случайный порядок и повтор. TITLE меняет отображаемый текст.</string>
+<string name="player_controls_settings">НАСТРОЙКИ ЗВУКА\nНажмите MENU на штатной магнитоле. Поворачивайте SEL/ENTER для выбора пункта или изменения значения, нажимайте для выбора/подтверждения. RETURN возвращает назад. Здесь настраиваются бас, высокие частоты, баланс, распределение звука и SVC. Honda Box отображает полученные настройки; изменяйте их штатными органами управления.</string>
+<string name="log_reset_button">Сбросить лог</string>
+<string name="log_reset_done">Лог очищен. Запись продолжается без переподключения.</string>
+<string name="climate_strip_toggle">Включить компактную строку климата</string>
+<string name="climate_strip_help">Нажмите на строку, чтобы свернуть её в полупрозрачную полоску; нажмите на полоску, чтобы развернуть. Большая панель имеет приоритет.</string>
+<string name="car_info_button">Car Info</string>
+<string name="car_info_title">Трип-компьютер</string>
+<string name="car_info_consumption">Средний расход</string>
+<string name="car_info_range">Запас хода</string>
+<string name="car_info_unavailable">Нет подтверждённых данных</string>
+<string name="car_info_unconfirmed">Поля трип-компьютера и единицы пока не определены. Полученные числовые поля показаны ниже без привязки к показаниям поездки.</string>
+<string name="car_info_received_fields">Полученные поля · 140–147</string>
+<string name="car_info_live">FYT подключён · ожидаем подтверждённые данные поездки</string>
+<string name="car_info_disconnected">FYT не подключён · сохранённые значения могут быть устаревшими</string>
+<string name="climate_strip_expand">Развернуть строку климата</string>
+<string name="climate_strip_collapse">Свернуть строку климата</string>
+<string name="hide_player_on_aux">Скрывать плеер при AUX</string>
+    <string name="debug_title">Диагностика</string>
+    <string name="debug_open">Debug · диагностика</string>
+    <string name="debug_help">Подключение, запись логов, сырые данные CAN и тестовые команды.</string>
+    <string name="settings_general">Общие</string>
+    <string name="settings_appearance">Оформление · день / ночь</string>
+    <string name="settings_climate">Климат</string>
+    <string name="settings_audio_overlays">Аудио · оверлеи</string>
+    <string name="settings_car_menu">Меню автомобиля</string>
+    <string name="settings_players">Аудио · экраны плееров</string>
+    <string name="settings_volume_pinned">Показывать громкость постоянно</string>
+    <string name="settings_volume_demo">Пример громкости · 15 секунд</string>
+    <string name="settings_track">Уведомления о треке / станции</string>
+    <string name="settings_climate_help">Панель во всю ширину появляется на 5 секунд после изменения. Нажмите, чтобы скрыть её. Компактная строка остаётся снизу; боковые кнопки открывают полную панель или сворачивают строку.</string>
+    <string name="settings_aux_help">Если AUX определяется неверно, выберите его штатными кнопками и сохраните текущий режим здесь.</string>
+    <string name="settings_strip_demo">Пример компактной строки · 15 секунд</string>
+    <string name="settings_overlay_permission_title">Показ поверх других приложений</string>
+    <string name="settings_overlay_permission_notes">Нужно для панелей климата, громкости, источника, трека и меню автомобиля. Откройте экран разрешения Android, разрешите Honda Box Service показ поверх других приложений и вернитесь сюда. Нужные панели включаются в разделах ниже. Это разрешение не заменяет автостарт и разрешение фоновой работы.</string>
+    <string name="settings_popup_climate_notes">Появляется снизу во всю ширину при изменении показаний климата. Скрывается через 5 секунд после последнего изменения или раньше по нажатию. Шестерёнка справа открывает настройки Honda Box. Этот переключатель включает только автоматическое появление большой панели; компактная строка включается отдельно. Регулировать климат нужно штатными кнопками.</string>
+    <string name="settings_compact_climate_notes">Работает независимо от автоматического появления большой панели. Остаётся по центру снизу, пока климат включён. Если боковые кнопки включены, но скрыты, нажатие на открытую строку показывает их; если видны — нажатие на строку или правую кнопку сворачивает её. Без боковых кнопок строка сворачивается сразу по нажатию. Полупрозрачная полоска остаётся видимой; нажмите на неё, чтобы раскрыть строку. Изменение климата разворачивает свёрнутую строку и сворачивает её обратно через 5 секунд. Пока открыта большая панель, строка ждёт под ней; её таймер начинается после закрытия большой панели. При выключении климата исчезают и строка, и полоска.</string>
+    <string name="settings_climate_preview_notes">Обе панели используют тему приложения. Каждый пример показывает демонстрационные значения на 15 секунд, не меняя настройки климата и включённые опции.</string>
+    <string name="player_select" formatted="false">"Выбрать "</string>
+    <string name="player_select_radio">Выберите Radio</string>
+    <string name="player_selected" formatted="false">" выбран"</string>
+    <string name="player_vehicle_controls" formatted="false">"Используйте штатные органы управления"</string>
+    <string name="diagnostics_record_toggle">Записывать диагностический лог</string>
+    <string name="diagnostics_record_notes">По умолчанию выключено. Включите перед проверкой для записи сырых пакетов BSJ, истории расшифрованных пакетов и событий FYT. Данные автомобиля, распознавание источников и оверлеи работают и без записи. Выключение останавливает запись и сохраняет историю для экспорта; «Сбросить лог» очищает её.</string>
+    <string name="diagnostics_record_off">Запись выключена · текущие данные автомобиля обновляются</string>
+    <string name="aux_name_title">Название AUX</string>
+    <string name="aux_name_notes">Выберите Android, если установленная магнитола передаёт свой звук через штатный AUX. Также доступны AUX и Head Unit. Выберите «Своё название», чтобы ввести подпись до 32 символов. Распознавание источника и управление не меняются.</string>
+    <string name="aux_name_saved">Название AUX сохранено</string>
+    <string name="aux_name_custom">Своё название</string>
+    <string name="accent_title">Акцентный цвет</string>
+    <string name="accent_blue">Синий</string>
+    <string name="accent_teal">Бирюзовый</string>
+    <string name="accent_green">Зелёный</string>
+    <string name="accent_amber">Янтарный</string>
+    <string name="accent_purple">Фиолетовый</string>
+    <string name="accent_custom">Свой цвет</string>
+    <string name="accent_hue">Оттенок</string>
+    <string name="accent_selector">Выбор насыщенности и яркости</string>
+    <string name="accent_rgb_error">Введите значение от 0 до 255</string>
+    <string name="accent_notes">Применяется в приложении и оверлеях. Для готовых цветов подобраны дневные и ночные оттенки; RGB задаёт базовый цвет. Синий сохраняет прежние цвета Honda Box.</string>
+    <string name="theme_system">Системная</string>
+    <string name="theme_system_description">Системная · следует дневной/ночной теме Android</string>
+    <string name="theme_auto_criterion">Авто переключает тему по восходу и закату для сохранённого местоположения. Без координат используется тема Android.</string>
+    <string name="accent_electric">Лазурный</string>
+    <string name="accent_red">Красный</string>
+    <string name="accent_indigo">Индиго</string>
+    <string name="home_current">Сейчас</string>
+    <string name="home_active">Выбран</string>
+    <string name="home_radio_detail">Радио AM / FM</string>
+    <string name="home_cd_detail">CD-чейнджер · 6 дисков</string>
+    <string name="home_usb_detail">Штатный USB / iPod</string>
+    <string name="home_cd_value">6 дисков</string>
+    <string name="home_usb_value">Штатный порт</string>
+<string name="climate_strip_always_hide">Автоматически скрывать компактную строку при ручном открытии</string>
+<string name="climate_strip_always_hide_notes">Сворачивается в полоску через 5 секунд, даже после разворачивания нажатием.</string>
+<string name="climate_strip_button">Боковые кнопки компактной строки климата</string>
+<string name="climate_strip_show_buttons">Показать боковые кнопки климата</string>
+<string name="climate_strip_full_panel">Открыть полную панель климата</string>
+<string name="climate_strip_button_notes">Кнопка слева открывает полную панель на 5 секунд, справа — сворачивает компактную строку. Обе появляются и скрываются вместе. Нажатие на открытую строку показывает скрытые кнопки; если они уже видны — сворачивает строку. Нажатие на полоску раскрывает строку.</string>
+<string name="climate_strip_button_hide">Скрывать боковые кнопки по таймеру</string>
+<string name="climate_strip_button_hide_notes">Обе кнопки появляются при изменении климата, раскрытии компактной строки или нажатии на строку для показа кнопок. Скрываются вместе через 5 секунд; пока видна полная панель, отсчёт приостановлен.</string>
+    <string name="settings_large_climate">Большая панель климата</string>
+    <string name="settings_compact_climate">Компактная строка климата</string>
+    <string name="settings_climate_choices_help">Выберите большую всплывающую панель, компактную строку или обе. Их переключатели работают независимо.</string>
+    <string name="settings_large_climate_demo">Пример большой панели · 15 секунд</string>
+<string name="source_turned_on">Включено</string>
+<string name="source_turned_off">Выключено</string>
+<string name="source_keep_off">Не скрывать источник при выключенном аудио</string>
+<string name="source_keep_off_notes">Оверлей источника остаётся на экране, пока штатное аудио выключено. После включения он скрывается через 3 секунды. Требуется включить оверлей источника выше.</string>
+<string name="source_visible_while_off">Источник показан · пока аудио выключено</string>
+    <string name="debug_standby_title">"ЭКРАН В РЕЖИМЕ OFF · 0x0C"</string>
+    <string name="debug_standby_notes">"Предположительная расшифровка. Последние текст и трек/время заполняют отсутствующие данные плеера. Обычные данные воспроизведения имеют приоритет. Кэш сохраняется при выключении/включении отдельно для CD, USB и iPod. Хранится несколько последних значений, даже без записи лога."</string>
+    <string name="debug_standby_waiting">"В этой сессии пакет 0x0C ещё не получен."</string>
+    <string name="debug_standby_received">"Получен: "</string>
+    <string name="debug_standby_age">" с назад"</string>
+    <string name="debug_standby_raw">"Сырые байты: "</string>
+    <string name="debug_standby_byte0">"Байт 0 (назначение неизвестно): "</string>
+    <string name="debug_standby_empty">"Пустые данные; текста и счётчиков нет."</string>
+    <string name="debug_standby_text">"Возможный текст экрана: "</string>
+    <string name="debug_standby_playback">"Возможные сохранённые трек / время: "</string>
+    <string name="debug_standby_tail">"Возможный остаток старого текста: "</string>
+    <string name="debug_standby_unknown">"Неизвестный формат; расшифровки нет."</string>
+    <string name="debug_standby_hypotheses_title">"ГИПОТЕЗЫ · ПРОВЕРКА АРХИВА 12.10.2026"</string>
+    <string name="debug_standby_hypothesis_cache">"Сохранённое воспроизведение — поддерживается логами. В 25 из 26 числовых пакетов байты 1–7 совпали с предыдущим TYPE 05, устаревшим на 4–27 секунд. Это не подтверждает текущее воспроизведение."</string>
+    <string name="debug_standby_hypothesis_buffer">"Повторно используемый буфер экрана — вероятно. Байты 8–16 числового пакета могут сохранять хвост предыдущего текста. Рассматриваем его отдельно, а не как новое название."</string>
+    <string name="debug_standby_hypothesis_family">"Семейство медиа в байте 3 — не подтверждено. В числовом варианте 01/02 могут означать семейство CD/USB, как в TYPE 05. Во всех 26 архивных числовых пакетах было 01; нужно сравнение разных устройств. Назначение байтов 1–2 тоже неизвестно."</string>
+    <string name="debug_standby_hypothesis_source">"Текущий источник / маркер состояния — не подтверждено. Байт 0 равен 00 во всех 41 уникальном архивном пакете. Перед 35 непустыми пакетами приходил код источника 2, который сам по себе не доказывает физический источник. После шести пустых пакетов приходили разные источники. Приложение не выбирает источник по байтам 0C."</string>
+    <string name="debug_standby_control_prefix">"Возможные служебные байты 1–3 (hex): "</string>
+    <string name="debug_standby_family_candidate">"Возможный байт семейства медиа 3 (не подтверждено, hex): "</string>
+    <string name="standby_display_field">Экран</string>
+    <string name="debug_vehicle_packets_title">"ПАКЕТЫ АВТОМОБИЛЯ · 0x0E / 0x10"</string>
+    <string name="debug_vehicle_packets_notes">"Наблюдение работает без записи лога. Сброс лога обнуляет эти счётчики. Для полного прогона с заведённым двигателем включите запись. Эти типы скрыты фильтром анализатора «только неизвестные». Связь D0E → 0x0E и принадлежность к trip computer пока не подтверждены."</string>
+    <string name="debug_vehicle_0e_notes">"0x0E: ровно 13 байт данных раскладываются в штатные поля 140–147. Назначение полей и единицы неизвестны. Другие длины сохраняются сырыми."</string>
+    <string name="debug_vehicle_10_notes">"0x10: байт 0 раскладывается в [133] = (байт &gt;&gt; 5) &amp; 7 и [134] = байт &amp; 31. Назначение не подтверждено."</string>
+    <string name="debug_vehicle_not_received">"Не получен после сброса"</string>
+    <string name="debug_vehicle_received">"Пакетов: "</string>
+    <string name="debug_vehicle_mapped">"С известной раскладкой: "</string>
+    <string name="debug_vehicle_unexpected">"Неожиданная длина данных; байты сохранены без расшифровки."</string>
+    <string name="debug_vehicle_fields">"Штатные поля (единицы неизвестны):\n"</string>
+    <string name="debug_vehicle_extra_byte">"Назначение байта 1 неизвестно; он виден в сырых данных."</string>
+    <string name="debug_steering_title">"РУЛЬ · CAN CALLBACK [1049]"</string>
+    <string name="debug_steering_notes">"Это расшифрованный callback FYT, отдельный от сырого TYPE 0F. В штатном коде ints=[0, значение] передаёт нормализованное положение руля для парковочных линий; это не физические градусы. Другие подтипы не интерпретируем. Ноль может быть начальным значением, прямым рулём или статическими линиями. Приём работает без записи; для сохранения истории callback в логе включите запись."</string>
+    <string name="debug_steering_waiting">"Callback [1049] ещё не получен в этой сессии."</string>
+    <string name="debug_steering_normalized">"Нормализованное положение руля (подтип 0, не градусы): "</string>
+    <string name="debug_steering_unassigned">"В этом формате callback нет значения руля; полные массивы показаны выше."</string>
+    <string name="debug_steering_disconnected">"Соединение закрыто; показаны последние полученные данные."</string>
+    <string name="debug_audio_transport">"Отправка"</string>
+    <string name="debug_audio_sequence">"Последовательность"</string>
+    <string name="debug_audio_hold">"Нажатие"</string>
+    <string name="debug_audio_transport_profile">"Штатный профиль · cmd 0/1"</string>
+    <string name="debug_audio_transport_raw">"Пакет MCU · cmd 1008"</string>
+    <string name="debug_audio_route_current">"Текущая: источники ждут MAIN 13; кнопки напрямую"</string>
+    <string name="debug_audio_route_oem">"MAIN 13 → отправить сразу"</string>
+    <string name="debug_audio_route_delay">"MAIN 13 → пауза 700 мс → отправить"</string>
+    <string name="debug_audio_route_confirmed">"MAIN 13 → подтверждение + 350 мс → отправить"</string>
+    <string name="debug_audio_route_can">"Только CAN · без изменения MAIN"</string>
+    <string name="debug_audio_options_notes">"Выбор действует только на кнопки Debug ниже. Проверяйте по одному сочетанию; автоматических повторов нет. cmd 1008 отправляет только эквиваленты известных Radio/CD/USB и Previous/Next; совместимость с установленной прошивкой ещё не проверена. Длительность влияет только на стрелки. В лог попадают выбранный вариант, MAIN и байты. Кнопки обычных плееров сохраняют прежнее поведение."</string>
+    <string name="debug_audio_no_send">") Аудиокоманда не отправлена."</string>
+    <string name="debug_audio_target_changed">"Соединение или профиль автомобиля изменился; ожидающая аудиокоманда отменена."</string>
+    <string name="debug_radio_fields_title">РАДИО · CAN 115–125</string>
+    <string name="debug_radio_fields_notes">CAN — исходные callbacks FYT; BSJ — расшифрованные пакеты адаптера. Указано время получения. Частоты расшифровываются по свежим данным текущего источника радио; прежние значения остаются для диагностики.</string>
+    <string name="debug_radio_text_title">ТЕКСТОВЫЕ КАНАЛЫ · RDS НЕ ПОДТВЕРЖДЁН</string>
+    <string name="debug_radio_text_notes">В штатном обработчике 103–105 — текст медиа, 135–137 — строки меню. Поля BSJ 07 показаны отдельно. Проверяйте обновления текста при активном радио. Старый текст CD/USB/iPod не подтверждает RDS. Соответствие PS/названию станции или RadioText пока не найдено.</string>
+    <string name="debug_radio_connected">Подключено · последние полученные значения</string>
+    <string name="debug_radio_history">Отключено · сохранённые значения</string>
+    <string name="debug_radio_before_source">до смены источника</string>
+    <string name="debug_radio_band">Диапазон</string>
+    <string name="debug_radio_preset">Выбранная станция</string>
+    <string name="debug_radio_scan">Настройка / поиск / сканирование</string>
+    <string name="debug_radio_stereo">Стерео</string>
+    <string name="debug_radio_frequency">Текущая частота</string>
+    <string name="debug_radio_saved">Частота сохранённой станции</string>
+    <string name="debug_radio_no_preset">Ручная настройка</string>
+    <string name="debug_radio_menu_row">Строка меню</string>
+</resources>

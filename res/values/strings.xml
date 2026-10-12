@@ -1,0 +1,560 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="media_loading">Loading</string>
+    <string name="climate_open_settings">Open Honda Box settings</string>
+    <string name="ui_age" formatted="false">" · age "</string>
+    <string name="ui_incomplete_2_s_pre_roll" formatted="false">" · incomplete 2 s pre-roll"</string>
+    <string name="ui_pending_windows" formatted="false">" · pending windows "</string>
+    <string name="ui_window_completes_in_5_seconds" formatted="false">" · window completes in 5 seconds"</string>
+    <string name="ui_dropped" formatted="false">" · dropped "</string>
+    <string name="ui_profile" formatted="false">" · profile "</string>
+    <string name="ui_frames" formatted="false">" frames"</string>
+    <string name="ui_s" formatted="false">" s"</string>
+    <string name="ui_s_n" formatted="false">" s\n"</string>
+    <string name="ui_watch_byte_offset_starting_at" formatted="false">"Watch: byte offset, starting at 0"</string>
+    <string name="ui_nselected" formatted="false">"\nSelected "</string>
+    <string name="ui_ncandidates_unverified_n" formatted="false">"\nCANDIDATES — UNVERIFIED\n"</string>
+    <string name="ui_this_group_is_absent_from" formatted="false">"This group is absent from the selected windows.\n"</string>
+    <string name="ui_group_type_payload_length" formatted="false">"Group: TYPE / payload length"</string>
+    <string name="ui_historical_frame_capture_stopped" formatted="false">"Historical frame; capture stopped"</string>
+    <string name="ui_no_frames_yet_n" formatted="false">"No frames yet.\n"</string>
+    <string name="ui_frames_16" formatted="false">"Frames"</string>
+    <string name="ui_frames_unknown_types_only" formatted="false">"Frames: unknown types only"</string>
+    <string name="ui_markers" formatted="false">"Markers"</string>
+    <string name="ui_back" formatted="false">"Back"</string>
+    <string name="ui_no_unknown_types_received_yet" formatted="false">"No unknown types received yet. Clear the filter to see known frames.\n"</string>
+    <string name="ui_unsaved_analysis_windows_will_be" formatted="false">"Unsaved analysis windows will be deleted. The original raw log will remain."</string>
+    <string name="ui_no_frames_of_this_group" formatted="false">"No frames of this group in this session."</string>
+    <string name="ui_no_matching_candidates_at_least" formatted="false">"No matching candidates. At least 3 frames per state are required: completed RPM1500/2000/3000 or CENTER/LEFT/RIGHT windows, at least 3 gears or 3 speeds.\n"</string>
+    <string name="ui_an_active_connection_and_profile" formatted="false">"An active connection and profile 6291908 are required"</string>
+    <string name="ui_waiting_for_frames" formatted="false">"Waiting for frames…"</string>
+    <string name="ui_windows_span_2_5_seconds" formatted="false">"Windows span −2 / +5 seconds. Press a marker in the corresponding state.\nWithout a recent valid RAW frame (≤1 s), the marker is saved as INVALID_NO_RAW_DATA and excluded from signal search.\nDifferent connection/profile experiments are kept separate.\n\n"</string>
+    <string name="ui_stop" formatted="false">"Stop"</string>
+    <string name="ui_stopped_historical_data" formatted="false">"Stopped · historical data"</string>
+    <string name="ui_cancel" formatted="false">"Cancel"</string>
+    <string name="ui_clear" formatted="false">"Clear"</string>
+    <string name="ui_clear_analysis" formatted="false">"Clear analysis"</string>
+    <string name="ui_clear_frames_and_experiments" formatted="false">"Clear frames and experiments?"</string>
+    <string name="ui_analysis_error" formatted="false">"Analysis error: "</string>
+    <string name="ui_connected" formatted="false">"Connected"</string>
+    <string name="ui_connect" formatted="false">"Connect"</string>
+    <string name="ui_showing_the_first_100_groups" formatted="false">"Showing the first 100 groups; all are in JSON.\n"</string>
+    <string name="ui_last_received_frame" formatted="false">"Last received frame"</string>
+    <string name="ui_different_connections_segments_historical_comparison" formatted="false">"Different connections/segments: historical comparison only.\n"</string>
+    <string name="ui_save_two_experiment_markers_first" formatted="false">"Save two experiment markers first.\n"</string>
+    <string name="ui_compare_window_a_window_b" formatted="false">"Compare: window A / window B"</string>
+    <string name="ui_compare" formatted="false">"Compare"</string>
+    <string name="ui_read_only_markers_are_your" formatted="false">"Read only · markers are your observations. RPM/speed/steering values are unverified."</string>
+    <string name="ui_heuristic_search_is_limited_to" formatted="false">"Heuristic search is limited to 4096 field checks / 40 results. Repeat independent experiments to verify; detailed observations are in JSON."</string>
+    <string name="ui_no_experiments_yet" formatted="false">"No experiments yet."</string>
+    <string name="ui_export_json_v2" formatted="false">"Export JSON v2"</string>
+    <string name="ui_complete" formatted="false">"complete"</string>
+    <string name="ui_remaining" formatted="false">"remaining "</string>
+    <string name="ui_interrupted" formatted="false">"interrupted"</string>
+    <string name="ui_gps_unavailable_enter_coordinates_manually" formatted="false">"GPS unavailable · enter coordinates manually"</string>
+    <string name="ui_gps_off_saved_location" formatted="false">"GPS off · saved location"</string>
+    <string name="ui_gps_location_saved" formatted="false">"GPS: location saved"</string>
+    <string name="ui_gps_waiting_for_coordinates" formatted="false">"GPS: waiting for coordinates"</string>
+    <string name="ui_gps_permission_not_granted" formatted="false">"GPS: permission not granted"</string>
+    <string name="ui_auto" formatted="false">"Auto"</string>
+    <string name="ui_day" formatted="false">"Day"</string>
+    <string name="ui_enter_coordinates_or_obtain_them" formatted="false">"Enter coordinates or obtain them from the head unit for accurate sunrise/sunset times. Calculated offline using the Android date and time zone. GPS updates only while Probe settings are visible; the saved location is used afterwards."</string>
+    <string name="ui_longitude_180_180" formatted="false">"Longitude, −180…180"</string>
+    <string name="ui_source_gps_last_saved_location" formatted="false">"Source: GPS · last saved location"</string>
+    <string name="ui_source_manual" formatted="false">"Source: manual"</string>
+    <string name="ui_location" formatted="false">"Location"</string>
+    <string name="ui_location_for_sunrise_and_sunset" formatted="false">"Location for sunrise and sunset"</string>
+    <string name="ui_theme_location" formatted="false">"Theme location"</string>
+    <string name="ui_night" formatted="false">"Night"</string>
+    <string name="ui_enter_numbers_latitude_90_90" formatted="false">"Enter numbers: latitude −90…90, longitude −180…180"</string>
+    <string name="ui_get_gps" formatted="false">"Get GPS"</string>
+    <string name="ui_save" formatted="false">"Save"</string>
+    <string name="ui_theme" formatted="false">"Theme: "</string>
+    <string name="ui_latitude_90_90" formatted="false">"Latitude, −90…90"</string>
+    <string name="ui_car_menu" formatted="false">"Car menu"</string>
+    <string name="ui_hide_car_menu" formatted="false">"Hide car menu"</string>
+    <string name="ui_use_the_vehicle_controls" formatted="false">"Use the vehicle controls"</string>
+    <string name="ui_preparing_log" formatted="false">"Preparing log…"</string>
+    <string name="ui_log_saved" formatted="false">"Log saved"</string>
+    <string name="ui_cannot_access_the_file" formatted="false">"Cannot access the file"</string>
+    <string name="ui_preparation_error" formatted="false">"Preparation error: "</string>
+    <string name="ui_save_error" formatted="false">"Save error: "</string>
+    <string name="ui_preparing_log_77" formatted="false">"Preparing log…"</string>
+    <string name="ui_saving_unavailable_json_copied_to" formatted="false">"Saving unavailable. JSON copied to clipboard."</string>
+    <string name="ui_vehicle_audio" formatted="false">" · vehicle audio"</string>
+    <string name="ui_volume" formatted="false">"VOLUME"</string>
+    <string name="ui_indicator_off" formatted="false">"Indicator off"</string>
+    <string name="ui_indicator_visible" formatted="false">"Indicator visible"</string>
+    <string name="ui_fyt_probe_vehicle_volume_indicator" formatted="false">"Honda Box vehicle volume indicator"</string>
+    <string name="ui_cannot_display" formatted="false">"Cannot display: "</string>
+    <string name="ui_overlay_permission_not_granted" formatted="false">"Overlay permission not granted"</string>
+    <string name="ui_no_can_connection" formatted="false">"No CAN connection"</string>
+    <string name="ui_waiting_for_volume_data" formatted="false">"Waiting for volume data"</string>
+    <string name="ui_waiting_for_a_volume_change" formatted="false">"Waiting for a volume change"</string>
+    <string name="ui_waiting_for_can_connection" formatted="false">"Waiting for CAN connection"</string>
+    <string name="ui_stopped_with_probe" formatted="false">"Stopped with Probe"</string>
+    <string name="ui_overlay_test" formatted="false">"OVERLAY TEST"</string>
+    <string name="ui_test_audio_unchanged" formatted="false">"TEST · audio unchanged"</string>
+    <string name="ui_test_indicator_15_seconds" formatted="false">"Test indicator · 15 seconds"</string>
+    <string name="ui_car_menu_5_seconds" formatted="false">"Car menu · 5 seconds"</string>
+    <string name="ui_car_menu_off" formatted="false">"Car menu off"</string>
+    <string name="ui_menu_hidden" formatted="false">"Menu hidden"</string>
+    <string name="ui_waiting_for_a_menu_change" formatted="false">"Waiting for a menu change"</string>
+    <string name="ui_menu_schema_unverified" formatted="false">"Menu schema unverified"</string>
+    <string name="ui_menu_test_15_seconds" formatted="false">"Menu test · 15 seconds"</string>
+    <string name="ui_album" formatted="false">" · Album "</string>
+    <string name="ui_characters_replaced_by_the_can" formatted="false">" · Characters replaced by the CAN adapter"</string>
+    <string name="ui_folder" formatted="false">" · Folder "</string>
+    <string name="ui_split_from_display_text" formatted="false">" · Split from display text"</string>
+    <string name="ui_vehicle_display_text" formatted="false">" · Vehicle display text"</string>
+    <string name="ui_ipod_shared_usb_ipod_source" formatted="false">"iPod icon selected manually · device type not detected"</string>
+    <string name="ui_audio_player" formatted="false">"Audio player "</string>
+    <string name="ui_audio_player_hidden" formatted="false">"Audio player hidden"</string>
+    <string name="ui_select" formatted="false">"Select "</string>
+    <string name="ui_next" formatted="false">"Next  ›"</string>
+    <string name="ui_select_ipod_using_the_vehicle" formatted="false">"Select iPod using the vehicle button"</string>
+    <string name="ui_volume_111" formatted="false">"Volume "</string>
+    <string name="ui_volume_112" formatted="false">"Volume —"</string>
+    <string name="ui_disc" formatted="false">"Disc "</string>
+    <string name="ui_artist" formatted="false">"Artist "</string>
+    <string name="ui_settings" formatted="false">"Settings"</string>
+    <string name="ui_waiting_for_source" formatted="false">"Waiting for source"</string>
+    <string name="ui_waiting_for_can_connection_117" formatted="false">"Waiting for CAN connection"</string>
+    <string name="ui_received_presets_cache_per_band" formatted="false">"Received presets · cache per band"</string>
+    <string name="ui_next_119" formatted="false">"Next  ›"</string>
+    <string name="ui_display_lines" formatted="false">"Display lines: "</string>
+    <string name="ui_current_source" formatted="false">"Current source · "</string>
+    <string name="ui_track" formatted="false">"Track "</string>
+    <string name="ui_frequency_not_received" formatted="false">"Frequency not received"</string>
+    <string name="ui_vehicle_source" formatted="false">"Vehicle source · "</string>
+    <string name="ui_previous" formatted="false">"‹  Previous"</string>
+    <string name="ui_previous_126" formatted="false">"‹  Previous"</string>
+    <string name="ui_source_indicator_off" formatted="false">"Source indicator off"</string>
+    <string name="ui_source_visible_hides_after_3" formatted="false">"Source visible · hides after 3 seconds"</string>
+    <string name="ui_waiting_for_source_data" formatted="false">"Waiting for source data"</string>
+    <string name="ui_waiting_for_a_source_change" formatted="false">"Waiting for a source change"</string>
+    <string name="ui_fyt_probe_current_vehicle_audio" formatted="false">"Honda Box current vehicle audio source"</string>
+    <string name="ui_vehicle_source_132" formatted="false">"VEHICLE SOURCE"</string>
+    <string name="ui_after_sending_the_command_this" formatted="false">" after sending the command. This is a data observation; check the audio change."</string>
+    <string name="ui_the_can_source_selection_command" formatted="false">"). The CAN source selection command was not sent."</string>
+    <string name="ui_check_the_log_the_app" formatted="false">". Check the log; the app has not been granted this permission."</string>
+    <string name="ui_sent_to_ipc_execution_by" formatted="false">": sent to IPC. Execution by the head unit is unverified; check the vehicle display."</string>
+    <string name="ui_sent_to_ipc_execution_by_137" formatted="false">": sent to IPC. Execution by the head unit is unverified; no fresh source reply received. MAIN="</string>
+    <string name="ui_can_reading_continues" formatted="false">"; CAN reading continues."</string>
+    <string name="ui_binder_available_waiting_for_callbacks" formatted="false">"Binder available. Waiting for callbacks to verify data access separately."</string>
+    <string name="ui_binder_terminated_retrying_in_5" formatted="false">"Binder terminated. Retrying in 5 seconds."</string>
+    <string name="ui_can_module_disconnected" formatted="false">"CAN module disconnected"</string>
+    <string name="ui_fyt_probe_diagnostics_active" formatted="false">"Honda Box · diagnostics active"</string>
+    <string name="ui_toolkitservice_returned_a_null_binder" formatted="false">"ToolkitService returned a null Binder."</string>
+    <string name="ui_toolkitservice_is_not_exported_to" formatted="false">"ToolkitService is not exported to other apps."</string>
+    <string name="ui_toolkitservice_is_disabled_in_android" formatted="false">"ToolkitService is disabled in Android."</string>
+    <string name="ui_bindservice_returned_false_retrying_in" formatted="false">"bindService returned false. Retrying in 5 seconds."</string>
+    <string name="ui_com_syu_ms_app_toolkitservice" formatted="false">"com.syu.ms / app.ToolkitService not found"</string>
+    <string name="ui_fyt_diagnostics" formatted="false">"FYT diagnostics"</string>
+    <string name="ui_additional_audio_module" formatted="false">"Additional audio module "</string>
+    <string name="ui_access_denied" formatted="false">"Access denied"</string>
+    <string name="ui_can_access_denied" formatted="false">"CAN access denied"</string>
+    <string name="ui_no_callbacks_within_10_seconds" formatted="false">"No callbacks within 10 seconds. Change the volume or source; the service may restrict access."</string>
+    <string name="ui_requesting_can_module_7_from" formatted="false">"Requesting CAN module 7 from ToolkitService."</string>
+    <string name="ui_vehicle_audio_channel_13_not" formatted="false">"Vehicle audio channel 13 not confirmed (MAIN="</string>
+    <string name="ui_commands_are_available_only_for" formatted="false">"Commands are available only for the verified schema of profile 6291908."</string>
+    <string name="ui_this_is_expected_on_a" formatted="false">"This is expected on a regular Android emulator. On the head unit, check that com.syu.ms is installed."</string>
+    <string name="ui_unknown_command_nothing_sent" formatted="false">"Unknown command; nothing sent."</string>
+    <string name="ui_no_service_response" formatted="false">"No service response"</string>
+    <string name="ui_not_connected_command_not_sent" formatted="false">"Not connected; command not sent."</string>
+    <string name="ui_operation_interrupted_by_disconnect_no" formatted="false">"Operation interrupted by disconnect; no automatic retry."</string>
+    <string name="ui_stopped" formatted="false">"Stopped"</string>
+    <string name="ui_source_selection_error" formatted="false">"Source selection error: "</string>
+    <string name="ui_key_release_error" formatted="false">"Key release error: "</string>
+    <string name="ui_command_transmission_error" formatted="false">"Command transmission error: "</string>
+    <string name="ui_connection_error" formatted="false">"Connection error"</string>
+    <string name="ui_service_check_error" formatted="false">"Service check error"</string>
+    <string name="ui_fyt_protocol_error" formatted="false">"FYT protocol error"</string>
+    <string name="ui_connection_did_not_complete_within" formatted="false">"Connection did not complete within 10 seconds. Retrying in 5 seconds."</string>
+    <string name="ui_connection_rejected" formatted="false">"Connection rejected"</string>
+    <string name="ui_connecting" formatted="false">"Connecting…"</string>
+    <string name="ui_connected_no_data" formatted="false">"Connected, no data"</string>
+    <string name="ui_reading_vehicle_data_tap_to" formatted="false">"Reading vehicle data. Tap to open Probe."</string>
+    <string name="ui_subscription_sent" formatted="false">"Subscription sent"</string>
+    <string name="ui_received_source_state" formatted="false">"Received source state "</string>
+    <string name="ui_previous_command_still_in_progress" formatted="false">"Previous command still in progress; repeated request skipped."</string>
+    <string name="ui_connection_lost" formatted="false">"Connection lost"</string>
+    <string name="ui_fyt_service_not_found" formatted="false">"FYT service not found"</string>
+    <string name="ui_fyt_service_disconnected_retrying_in" formatted="false">"FYT service disconnected. Retrying in 5 seconds."</string>
+    <string name="ui_service_refused_connection" formatted="false">"Service refused connection"</string>
+    <string name="ui_service_disabled" formatted="false">"Service disabled"</string>
+    <string name="ui_service_permission_required" formatted="false">"Service permission required"</string>
+    <string name="ui_background_capture_stopped_you_can" formatted="false">"Background capture stopped. You can save the log."</string>
+    <string name="ui_background_head_unit_data_capture" formatted="false">"Background head unit data capture"</string>
+    <string name="ui_climate_change_5_seconds" formatted="false">"Climate change · 5 seconds"</string>
+    <string name="ui_climate_indicator_off" formatted="false">"Climate indicator off"</string>
+    <string name="ui_waiting_for_a_climate_change" formatted="false">"Waiting for a climate change"</string>
+    <string name="ui_climate_schema_unverified" formatted="false">"Climate schema unverified"</string>
+    <string name="ui_test" formatted="false">"TEST · "</string>
+    <string name="ui_climate_test_15_seconds" formatted="false">"Climate test · 15 seconds"</string>
+    <string name="ui_fan" formatted="false">", fan "</string>
+    <string name="ui_passenger" formatted="false">", passenger "</string>
+    <string name="ui_display_only_use_the_vehicle" formatted="false">". Display only; use the vehicle controls."</string>
+    <string name="ui_climate_driver" formatted="false">"Climate: driver "</string>
+    <string name="ui_readings_use_the_vehicle_controls" formatted="false">"Readings · use the vehicle controls"</string>
+    <string name="ui_on" formatted="false">"on"</string>
+    <string name="ui_off" formatted="false">"off"</string>
+    <string name="ui_band_115" formatted="false">"    Band [115]: "</string>
+    <string name="ui_last_event" formatted="false">"    Last event: "</string>
+    <string name="ui_preset_116" formatted="false">"    Preset [116]: "</string>
+    <string name="ui_current_values_unavailable" formatted="false">"    Current values unavailable"</string>
+    <string name="ui_raw_frequencies_119_125" formatted="false">"    Raw frequencies [119–125]: "</string>
+    <string name="ui_honda_compatible_schema" formatted="false">"  ·  Honda / compatible schema"</string>
+    <string name="ui_unknown_schema_raw_values" formatted="false">"  ·  unknown schema, raw values"</string>
+    <string name="ui_chunks_evicted" formatted="false">" chunks · evicted: "</string>
+    <string name="ui_the_player_will_hide_for" formatted="false">"). The hide-on-AUX setting will apply to this source; CAN profile and audio will not change."</string>
+    <string name="ui_these_are_can_adapter_protocol" formatted="false">". These are CAN adapter protocol packets, not confirmed Honda CAN-ID frames."</string>
+    <string name="ui_am_fm_selects_the_radio" formatted="false">"AM/FM selects the radio; use the vehicle button to change bands. Arrows control the current vehicle source. Available for profile 6291908."</string>
+    <string name="ui_aux_saved" formatted="false">"AUX saved"</string>
+    <string name="ui_nsource" formatted="false">"\nSource: "</string>
+    <string name="ui_added_to_the_log" formatted="false">"” added to the log"</string>
+    <string name="ui_audio_source" formatted="false">"AUDIO SOURCE"</string>
+    <string name="ui_audio_off" formatted="false">"Audio off"</string>
+    <string name="ui_fan_21" formatted="false">"Fan [21]: "</string>
+    <string name="ui_fan_214" formatted="false">"Fan: —"</string>
+    <string name="ui_all_received_can_fields" formatted="false">"All received CAN fields"</string>
+    <string name="ui_select_aux_using_the_vehicle" formatted="false">"Select AUX using the vehicle button while Probe is connected"</string>
+    <string name="ui_radio_cd_usb_data" formatted="false">"RADIO / CD / USB DATA"</string>
+    <string name="ui_yes_this_is_aux" formatted="false">"Yes, this is AUX"</string>
+    <string name="ui_install_the_four_radio_cd" formatted="false">"Install the four Radio, CD, USB and iPod launcher apps for separate DUDU icons. These are normal app screens; AUX hides the player. The iPod code and a separate selection command are unverified. Automatic opening from the background requires overlay permission."</string>
+    <string name="ui_use_the_current_mode_as" formatted="false">"Use the current mode as AUX"</string>
+    <string name="ui_connection_results_and_received_events" formatted="false">"Connection results and received events will appear here."</string>
+    <string name="ui_indicators_over_other_apps" formatted="false">"INDICATORS OVER OTHER APPS"</string>
+    <string name="ui_indicator" formatted="false">"Indicator: "</string>
+    <string name="ui_source_98" formatted="false">"Source [98]: "</string>
+    <string name="ui_show_source_on_change_3" formatted="false">"Show source overlay · 3 seconds"</string>
+    <string name="source_popup_notes">Shows the current source when it changes, when the service starts, and after wake. Waits for source data if the connection is not ready.</string>
+    <string name="ui_climate_two_zones" formatted="false">"CLIMATE · TWO ZONES"</string>
+    <string name="ui_climate_at_the_bottom" formatted="false">"CLIMATE AT THE BOTTOM"</string>
+    <string name="ui_which_source_is_selected_using" formatted="false">"Which source is selected using the vehicle buttons?"</string>
+    <string name="ui_the_head_unit_channel_is" formatted="false">"The head unit channel is recorded separately from the BSJ source. No iPod module reply does not mean the device is disconnected."</string>
+    <string name="ui_codes_3_and_4_show" formatted="false">"For Honda Accord, source 4 is USB/iPod and source 3 defaults to AUX. If your firmware uses a different AUX code, select it with the vehicle button and save it here. USB and iPod icons open the same media screen. Device presentation follows received menu data or an explicitly manual iPod hint."</string>
+    <string name="ui_left" formatted="false">"LEFT"</string>
+    <string name="ui_car_menu_over_other_apps" formatted="false">"CAR MENU OVER OTHER APPS"</string>
+    <string name="ui_menu" formatted="false">"Menu: "</string>
+    <string name="ui_menu_234" formatted="false">"Menu: —"</string>
+    <string name="ui_marker" formatted="false">"Marker “"</string>
+    <string name="ui_does_the_vehicle_display_show" formatted="false">"Does the vehicle display show AUX now?"</string>
+    <string name="ui_could_not_start" formatted="false">"Could not start"</string>
+    <string name="ui_could_not_send_command" formatted="false">"Could not send command: "</string>
+    <string name="ui_waiting_for_can_event" formatted="false">"Waiting for CAN event"</string>
+    <string name="ui_open_android_settings_apps_fyt" formatted="false">"Open Android Settings → Apps → Honda Box → Display over other apps"</string>
+    <string name="ui_open_player_on_source_change" formatted="false">"Open player on source change"</string>
+    <string name="ui_mark_the_selected_source" formatted="false">"Mark the selected source…"</string>
+    <string name="ui_right" formatted="false">"RIGHT"</string>
+    <string name="ui_audio_command_check" formatted="false">"AUDIO COMMAND CHECK"</string>
+    <string name="ui_full_width_panel_5_seconds" formatted="false">"Full-width panel · 5 seconds after a change. Tap to dismiss. Readings only; use the vehicle controls. DUAL uses a separate state if available, otherwise the temperature difference (ΔT). Seven fan speeds. Recirculation and the separate rear-defrost icon are hidden."</string>
+    <string name="ui_show_climate_on_value_changes" formatted="false">Show large panel on climate changes</string>
+    <string name="ui_show_on_volume_changes" formatted="false">"Show on volume changes"</string>
+    <string name="ui_show_the_vehicle_menu" formatted="false">"Show the vehicle menu"</string>
+    <string name="ui_after_granting_permission_enable_the" formatted="false">"After granting permission, enable the indicator and connect. The test displays 17 without changing audio. Touches pass through the indicator; stopping Probe removes it."</string>
+    <string name="ui_always_visible_background_operation_check" formatted="false">"Always visible · background operation check"</string>
+    <string name="ui_profile_252" formatted="false">"Profile: "</string>
+    <string name="ui_permission_granted" formatted="false">"Permission granted"</string>
+    <string name="ui_permission_not_granted" formatted="false">"Permission not granted"</string>
+    <string name="ui_allow_display_over_other_apps" formatted="false">"Allow display over other apps"</string>
+    <string name="ui_events_last_40" formatted="false">"EVENTS · LAST 40"</string>
+    <string name="ui_reset_aux_assignment" formatted="false">"Restore default AUX"</string>
+    <string name="ui_vehicle_signals" formatted="false">"Vehicle signals"</string>
+    <string name="ui_connect_first" formatted="false">"Connect first"</string>
+    <string name="ui_aux_assignment_reset" formatted="false">"Default AUX restored · source 3"</string>
+    <string name="ui_save_log" formatted="false">"Save log"</string>
+    <string name="ui_save_the_mapping_for_the" formatted="false">"Save the mapping for the current source (code "</string>
+    <string name="ui_last_received_band_115" formatted="false">"Last received band [115]: "</string>
+    <string name="ui_test_for_15_seconds" formatted="false">"Test for 15 seconds"</string>
+    <string name="ui_three_lines_from_the_vehicle" formatted="false">"Three lines from the vehicle display, including audio settings. Visible for 5 seconds after changes; × hides the panel. Use the vehicle buttons and dial. Shares the climate theme. An old menu does not open on connection."</string>
+    <string name="ui_vehicle_audio_players" formatted="false">"VEHICLE AUDIO PLAYERS"</string>
+    <string name="ui_oem_radio_cd_usb_selection" formatted="false">"OEM Radio / CD / USB selection"</string>
+    <string name="ui_oem_screen_unavailable" formatted="false">"OEM screen unavailable: "</string>
+    <string name="ui_not_received_yet" formatted="false">"not received yet"</string>
+    <string name="ui_album_270" formatted="false">"    Album: "</string>
+    <string name="ui_time_99_100" formatted="false">"    Time [99/100]: "</string>
+    <string name="ui_artist_272" formatted="false">"    Artist: "</string>
+    <string name="ui_face" formatted="false">"    Face: "</string>
+    <string name="ui_feet" formatted="false">"    Feet: "</string>
+    <string name="ui_track_101" formatted="false">"    Track [101]: "</string>
+    <string name="ui_source_unknown" formatted="false">" · source unknown"</string>
+    <string name="ui_bytes" formatted="false">" bytes · "</string>
+    <string name="ui_these_fields_may_persist_after" formatted="false">". These fields may persist after a source change."</string>
+    <string name="ui_sending" formatted="false">": sending…"</string>
+    <string name="ui_ntitle" formatted="false">"\nTitle: "</string>
+    <string name="ui_nlast_media_event" formatted="false">"\nLast media event: "</string>
+    <string name="ui_ndisc_mode_114" formatted="false">"\nDisc mode [114]: "</string>
+    <string name="ui_nslots_106_111" formatted="false">"\nSlots [106–111]: "</string>
+    <string name="ui_nwindshield" formatted="false">"\nWindshield: "</string>
+    <string name="ui_com_syu_ms_not_checked" formatted="false">"com.syu.ms · not checked yet"</string>
+    <string name="ui_audio_player_closed" formatted="false">"Audio player closed"</string>
+    <string name="ui_ready_to_check" formatted="false">"Ready to check"</string>
+    <string name="ui_data_received" formatted="false">"Data received"</string>
+    <string name="ui_disc_113" formatted="false">"Disc [113]: "</string>
+    <string name="ui_code" formatted="false">"Code "</string>
+    <string name="ui_commands_are_sent_only_when" formatted="false">"Commands are sent only when you press a button. Check the response on the vehicle display."</string>
+    <string name="ui_connect_on_a_fyt_dudu" formatted="false">"Connect on a FYT / DUDU head unit."</string>
+    <string name="ui_not_reported" formatted="false">"Not reported"</string>
+    <string name="ui_power" formatted="false">"Power: "</string>
+    <string name="ui_capture_is_running_change_source" formatted="false">"Capture is running. Change source, volume and climate using the vehicle controls."</string>
+    <string name="ui_current_values_unavailable_296" formatted="false">"Current values unavailable."</string>
+    <string name="ui_invalid_bcd" formatted="false">"invalid BCD"</string>
+    <string name="ui_device" formatted="false">" · device: "</string>
+    <string name="ui_audio_route_diagnostics_stopped_data" formatted="false">"Audio route diagnostics stopped; data retained in the log."</string>
+    <string name="ui_head_unit_channel" formatted="false">"Head unit channel: "</string>
+    <string name="ui_code_301" formatted="false">"code "</string>
+    <string name="ui_no_main_response" formatted="false">"no MAIN response"</string>
+    <string name="ui_vehicle_audio_13" formatted="false">"vehicle audio [13]"</string>
+    <string name="ui_climate" formatted="false">"Climate: "</string>
+    <string name="debug_climate_field16">"[16] Possible rear-window defrost: "</string>
+    <string name="debug_climate_field16_notes">"Unconfirmed for this Honda profile; 0 may be the service’s initial value."</string>
+    <string name="ui_test_vehicle_values_unchanged" formatted="false">"TEST · vehicle values unchanged"</string>
+    <string name="ui_test_306" formatted="false">"TEST. "</string>
+    <string name="ui_previous_307" formatted="false">"Previous"</string>
+    <string name="ui_next_308" formatted="false">"Next"</string>
+    <string name="ui_auto_309" formatted="false">"Auto · sunrise/sunset · "</string>
+    <string name="ui_auto_android_theme_set_a" formatted="false">"Auto · sunrise/sunset needs a location; using Android theme"</string>
+    <string name="ui_day_selected_manually" formatted="false">"Day · selected manually"</string>
+    <string name="ui_coordinates_out_of_range" formatted="false">"Coordinates out of range"</string>
+    <string name="ui_night_selected_manually" formatted="false">"Night · selected manually"</string>
+    <string name="ui_sunrise" formatted="false">"sunrise "</string>
+    <string name="ui_day_315" formatted="false">"day"</string>
+    <string name="ui_sunset" formatted="false">"sunset "</string>
+    <string name="ui_no_sunrise_sunset_near_this" formatted="false">"no sunrise/sunset near this date"</string>
+    <string name="ui_night_318" formatted="false">"night"</string>
+    <string name="ui_events" formatted="false">" events"</string>
+    <string name="ui_vehicle" formatted="false">"VEHICLE"</string>
+    <string name="ui_audio_and_climate" formatted="false">"Audio and climate"</string>
+    <string name="ui_diagnostics" formatted="false">"Diagnostics"</string>
+    <string name="ui_waiting_for_data" formatted="false">"Waiting for data"</string>
+    <string name="ui_last_band" formatted="false">"Last band: "</string>
+    <string name="ui_radio_vehicle_source" formatted="false">"Radio · vehicle source"</string>
+    <string name="ui_track_326" formatted="false">"Track —"</string>
+    <string name="ui_can_connected" formatted="false">"●  CAN connected · "</string>
+    <string name="ui_source_98_0_means_the" formatted="false">"Source [98] = 0 means the service has not reported a mode. Radio band and CD fields may persist after switching. AUX defaults to source 3; a manual assignment overrides it. Markers are your observations, not CAN data."</string>
+    <string name="language" formatted="false">"Language"</string>
+    <string name="system_language" formatted="false">"System"</string>
+    <string name="audio_home" formatted="false">"Audio"</string>
+    <string name="choose_source" formatted="false">"Select a source"</string>
+    <string name="source_prefix" formatted="false">"Source: "</string>
+    <string name="audio_unavailable" formatted="false">"Source selection is unavailable for this CAN profile"</string>
+    <string name="home_hint" formatted="false">"Radio · CD · vehicle USB/iPod"</string>
+    <string name="home_select" formatted="false">"Select source"</string>
+    <string name="background_operation" formatted="false">"Background operation"</string>
+    <string name="start_after_boot" formatted="false">"Start after Android boot"</string>
+    <string name="battery_settings" formatted="false">"Allow background operation in Android"</string>
+    <string name="dudu_settings" formatted="false">"Open DUDU / Android settings"</string>
+    <string name="settings_unavailable" formatted="false">"Settings unavailable"</string>
+    <string name="keep_alive_help" formatted="false">"DUDU: Vehicle → Start up → Keep alive — add Honda Box. Android: allow unrestricted background operation. A manual stop pauses autostart until you open the app again. The app reconnects after wake and does not keep the device awake. DUDU can still terminate it unless its keep-alive setting permits it."</string>
+    <string name="media_by_menu">menu</string>
+    <string name="media_last_menu">Previously received menu</string>
+    <string name="radio_khz">kHz</string>
+    <string name="radio_mhz">MHz</string>
+    <string name="stock_title">Stock CANBUS windows</string>
+    <string name="stock_hide">Hide stock CANBUS popups</string>
+    <string name="stock_scope">Blocks overlay permission for com.syu.canbus: menu, volume, climate and other stock popups. Honda Box windows remain available. Verify the result on the head unit.</string>
+    <string name="stock_connect">Connect / refresh Shizuku</string>
+    <string name="stock_restore">Restore original permission</string>
+    <string name="stock_setup">Shizuku setup via ADB</string>
+    <string name="stock_unavailable">Shizuku is not running. Start it through ADB first.</string>
+    <string name="stock_missing">Stock com.syu.canbus app is not installed.</string>
+    <string name="stock_permission">Allow Honda Box access in Shizuku.</string>
+    <string name="stock_unknown">Permission state has not been read. Connect or refresh Shizuku.</string>
+    <string name="stock_blocked">Verified: stock overlay permission is blocked (ignore).</string>
+    <string name="stock_allowed">Stock overlay permission is not blocked by this setting.</string>
+    <string name="stock_working">Reading / applying permission…</string>
+    <string name="stock_backup">Saved original mode:</string>
+    <string name="stock_external">Blocked externally; no original mode saved by Honda Box. Restore using the original ADB backup.</string>
+    <string name="stock_error">Command failed:</string>
+    <string name="stock_denied">Access was denied. Allow Honda Box in Shizuku, then reconnect.</string>
+    <string name="stock_timeout">Shizuku connection timed out. Restart Shizuku and retry.</string>
+    <string name="stock_open">Open / install Shizuku</string>
+    <string name="stock_help">1. Install Shizuku from its official site.\n2. Start Shizuku using its View command button and ADB, or its wireless debugging setup if supported.\n3. Return here, connect, and allow Honda Box access.\n4. Enable hiding. Disabling restores the saved original mode.\nOn older Android without root, restart Shizuku through ADB after each reboot to change this setting. The applied AppOp normally persists. This does not disable the CANBUS app or stop vehicle data. Android 7+ is required.</string>
+    <string name="stock_command_help">The exact startup command is shown in Shizuku → Start by connecting to a computer → View command.</string>
+    <string name="headless_launch">Start Honda Box without a window (open from its notification)</string>
+    <string name="track_popup">Show new tracks and radio stations in background</string>
+<string name="media_no_data">No data</string>
+<string name="track_demo_button">Test new track overlay · 4 seconds</string>
+<string name="track_demo_title">Led Zeppelin — Kashmir</string>
+<string name="track_demo_label">TEST · New track</string>
+<string name="track_now_playing">NOW PLAYING</string>
+<string name="media_playing">Playing</string>
+<string name="media_track_number">Track number</string>
+    <string name="media_manual_display">Display selected manually</string>
+    <string name="media_switch_display">Switch USB/iPod display</string>
+<string name="unknown_overlay_toggle">Unknown BSJ messages · diagnostics</string>
+<string name="unknown_overlay_title">BSJ · Unidentified fields</string>
+<string name="unknown_overlay_help">Only unknown message types, text subtypes or unexpected formats. Routine climate, volume, radio, media and menu packets are excluded.</string>
+<string name="usb_title_artist">Artist</string>
+<string name="usb_title_album">Album</string>
+<string name="usb_title_track">Track title</string>
+<string name="usb_title_folder">Folder</string>
+<string name="usb_title_filename">File name</string>
+<string name="usb_title_unknown">Field</string>
+<string name="player_title_help_description">About the TITLE button</string>
+<string name="player_title_help_close">Close</string>
+<string name="player_title_help_cd">Press the TITLE button in your car to switch between disc/album name, track title and artist. Honda Box shows the field selected on the original audio system. Available text depends on the disc; NO INFO means that field has no information.</string>
+<string name="player_title_help_usb">Press the TITLE button in your car to switch between folder name, file name, album, track title and artist. Honda Box shows the field selected on the original audio system. Available text depends on the files; NO INFO means that field has no information.</string>
+<string name="player_title_help_ipod">Press the TITLE button in your car to switch between album, track title and artist. Honda Box shows the received text. The iPod header stays TITLE because the selected field is not reliably identified.</string>
+<string name="player_controls_help_title">Car controls</string>
+<string name="player_controls_help_description">How to use the original audio controls</string>
+<string name="player_controls_source">SOURCE\nUse MODE on the steering wheel or the source buttons on the original head unit to choose radio, CD, USB/iPod or AUX.</string>
+<string name="player_controls_radio">STATIONS\nUse AM/FM to choose a band, presets 1–6 to recall saved stations, and the tuning/seek controls to find a station. The steering-wheel CH buttons change presets. RDS settings are available for FM in MENU.</string>
+<string name="player_controls_cd">TRACKS AND DISCS\nUse SKIP/track buttons or steering-wheel CH to change tracks. Select the disc on the original head unit. For MP3/WMA discs, press SEL/ENTER to browse folders and files; turn to select, press to confirm. MENU → PLAY MODE offers repeat, random and scan. TITLE changes the displayed text.</string>
+<string name="player_controls_usb">TRACKS AND FOLDERS\nUse SKIP/track buttons or steering-wheel CH to change tracks. Press SEL/ENTER to browse folders and files; turn to select, press to confirm. MENU → PLAY MODE offers repeat, random and scan. TITLE changes the displayed text.</string>
+<string name="player_controls_ipod">SONGS AND LIBRARY\nUse SKIP/track buttons or steering-wheel CH to change songs. Press SEL/ENTER to browse Playlists, Artists, Albums and Songs; turn to select, press to confirm. MENU → PLAY MODE offers shuffle and repeat. TITLE changes the displayed text.</string>
+<string name="player_controls_settings">AUDIO SETTINGS\nPress MENU on the original head unit. Turn SEL/ENTER to choose an item or change its value, and press to select/confirm. Use RETURN to go back. This includes bass, treble, balance/fader and SVC. Honda Box displays the received settings; use the car controls to adjust them.</string>
+<string name="log_reset_button">Reset log</string>
+<string name="log_reset_done">Log cleared. Recording continues without reconnecting.</string>
+<string name="climate_strip_toggle">Enable compact climate bar</string>
+<string name="climate_strip_help">Tap the strip to fold it into a translucent handle; tap the handle to expand. The full climate popup has priority.</string>
+<string name="car_info_button">Car Info</string>
+<string name="car_info_title">Trip computer</string>
+<string name="car_info_consumption">Average fuel consumption</string>
+<string name="car_info_range">Remaining range</string>
+<string name="car_info_unavailable">No confirmed data</string>
+<string name="car_info_unconfirmed">Trip fields and units have not been identified yet. Received numeric fields are shown below without assigning them to trip values.</string>
+<string name="car_info_received_fields">Received fields · 140–147</string>
+<string name="car_info_live">FYT connected · waiting for confirmed trip data</string>
+<string name="car_info_disconnected">FYT disconnected · retained values may be outdated</string>
+<string name="climate_strip_expand">Expand climate strip</string>
+<string name="climate_strip_collapse">Collapse climate strip</string>
+<string name="hide_player_on_aux">Hide player when source is AUX</string>
+    <string name="debug_title">Debug</string>
+    <string name="debug_open">Debug · diagnostics</string>
+    <string name="debug_help">Connection, log recording, raw CAN data and test commands.</string>
+    <string name="settings_general">General</string>
+    <string name="settings_appearance">Appearance · day / night</string>
+    <string name="settings_climate">Climate</string>
+    <string name="settings_audio_overlays">Audio · overlays</string>
+    <string name="settings_car_menu">Vehicle menu</string>
+    <string name="settings_players">Audio · player screens</string>
+    <string name="settings_volume_pinned">Keep volume overlay visible</string>
+    <string name="settings_volume_demo">Volume preview · 15 seconds</string>
+    <string name="settings_track">Track / station announcements</string>
+    <string name="settings_climate_help">The full-width panel appears for 5 seconds after a change. Tap to dismiss. The compact strip stays at the bottom; its side buttons can open the full panel or minimize the strip.</string>
+    <string name="settings_aux_help">If AUX is not recognized correctly, select it using the vehicle controls and save the current mode here.</string>
+    <string name="settings_strip_demo">Compact bar preview · 15 seconds</string>
+    <string name="settings_overlay_permission_title">Display over other apps</string>
+    <string name="settings_overlay_permission_notes">Needed for climate panels, volume, source, track and vehicle menu overlays. Open the Android permission screen, allow Honda Box Service to display over other apps, then return here. Enable the panels you want in the sections below. This permission is separate from autostart and background operation.</string>
+    <string name="settings_popup_climate_notes">Appears across the bottom of the screen when climate values change. Hides 5 seconds after the last change; tap to dismiss sooner. The gear on the right opens Honda Box settings. This switch only controls automatic large popups; it does not enable the compact bar. Use the vehicle controls to adjust the climate.</string>
+    <string name="settings_compact_climate_notes">Works independently of automatic large popups. Stays centered at the bottom while the climate is on. If side buttons are enabled but hidden, tapping the open bar reveals them; when visible, tapping the bar or the right button minimizes it. Without side buttons, tapping the bar minimizes it directly. The translucent handle stays visible; tap it to reopen the bar. A climate change expands a folded bar and folds it again after 5 seconds. While the large panel is open, the compact bar waits underneath and its timer starts after that panel closes. Both bar and handle disappear when the climate is off.</string>
+    <string name="settings_climate_preview_notes">Both panels follow the app theme. Each preview uses sample values for 15 seconds, without changing climate settings or the enabled options.</string>
+    <string name="player_select" formatted="false">"Select "</string>
+    <string name="player_select_radio">Select Radio</string>
+    <string name="player_selected" formatted="false">" selected"</string>
+    <string name="player_vehicle_controls" formatted="false">"Use the vehicle controls"</string>
+    <string name="diagnostics_record_toggle">Record diagnostic log</string>
+    <string name="diagnostics_record_notes">Off by default. Enable before a test to record raw BSJ packets, decoded packet history and FYT events. Vehicle data, source detection and overlays work while recording is off. Turning it off stops recording and keeps the captured history for export; Reset log clears it.</string>
+    <string name="diagnostics_record_off">Recording is off · current vehicle data remains live</string>
+    <string name="aux_name_title">AUX display name</string>
+    <string name="aux_name_notes">Choose Android when the aftermarket head unit sends its sound through the factory AUX input. AUX and Head Unit are also available. Choose Custom to enter your own label (up to 32 characters). Source detection and controls stay the same.</string>
+    <string name="aux_name_saved">AUX name saved</string>
+    <string name="aux_name_custom">Custom</string>
+    <string name="accent_title">Accent colour</string>
+    <string name="accent_blue">Blue</string>
+    <string name="accent_teal">Teal</string>
+    <string name="accent_green">Green</string>
+    <string name="accent_amber">Amber</string>
+    <string name="accent_purple">Purple</string>
+    <string name="accent_custom">Custom colour</string>
+    <string name="accent_hue">Hue</string>
+    <string name="accent_selector">Saturation and brightness selector</string>
+    <string name="accent_rgb_error">Enter a value from 0 to 255</string>
+    <string name="accent_notes">Used throughout the app and overlays. Presets have balanced day and night tones; RGB values define the base colour. Blue keeps the original Honda Box colours.</string>
+    <string name="theme_system">System</string>
+    <string name="theme_system_description">System · follows Android day/night theme</string>
+    <string name="theme_auto_criterion">Auto switches at sunrise and sunset for the saved location. Without coordinates, it follows the Android theme.</string>
+    <string name="accent_electric">Azure</string>
+    <string name="accent_red">Red</string>
+    <string name="accent_indigo">Indigo</string>
+    <string name="home_current">Current</string>
+    <string name="home_active">Selected</string>
+    <string name="home_radio_detail">AM / FM radio</string>
+    <string name="home_cd_detail">6-disc changer</string>
+    <string name="home_usb_detail">Factory USB / iPod</string>
+    <string name="home_cd_value">6 discs</string>
+    <string name="home_usb_value">Factory port</string>
+<string name="climate_strip_always_hide">Auto-hide compact climate after manual opening</string>
+<string name="climate_strip_always_hide_notes">Folds back into the handle after 5 seconds, including when you tap to expand it.</string>
+<string name="climate_strip_button">Compact climate side buttons</string>
+<string name="climate_strip_show_buttons">Show climate side buttons</string>
+<string name="climate_strip_full_panel">Open full climate panel</string>
+<string name="climate_strip_button_notes">The left button opens the full panel for 5 seconds; the right button minimizes the compact bar. Both appear and hide together. Tap the open bar to reveal hidden buttons; when they are visible, tap the bar to minimize it. Tap the handle to reopen the bar.</string>
+<string name="climate_strip_button_hide">Auto-hide the side buttons</string>
+<string name="climate_strip_button_hide_notes">Both buttons appear after climate changes, when you reopen the compact bar, or when you tap the bar to reveal them. They hide together after 5 seconds; the timer waits while the full panel is visible.</string>
+    <string name="settings_large_climate">Large climate panel</string>
+    <string name="settings_compact_climate">Compact climate bar</string>
+    <string name="settings_climate_choices_help">Choose the large popup, the compact bar, or both. Their switches work independently.</string>
+    <string name="settings_large_climate_demo">Large panel preview · 15 seconds</string>
+<string name="source_turned_on">Turned on</string>
+<string name="source_turned_off">Turned off</string>
+<string name="source_keep_off">Keep source overlay visible while audio is off</string>
+<string name="source_keep_off_notes">When enabled, the source overlay stays visible while the car audio is turned off. After turning it on, the overlay hides after 3 seconds. Requires the source overlay above to be enabled.</string>
+<string name="source_visible_while_off">Source visible · stays while audio is off</string>
+    <string name="debug_standby_title">"STANDBY DISPLAY · 0x0C"</string>
+    <string name="debug_standby_notes">"Experimental interpretation. The last text and track/time can fill missing player values. Normal playback data takes priority. Cached data is retained through off/on, separately for CD, USB and iPod. Only a few latest samples are kept, even with recording off."</string>
+    <string name="debug_standby_waiting">"No 0x0C packet received in this session."</string>
+    <string name="debug_standby_received">"Received: "</string>
+    <string name="debug_standby_age">" s ago"</string>
+    <string name="debug_standby_raw">"Raw payload: "</string>
+    <string name="debug_standby_byte0">"Byte 0 (meaning unknown): "</string>
+    <string name="debug_standby_empty">"Empty payload; no usable text or counters."</string>
+    <string name="debug_standby_text">"Possible display text: "</string>
+    <string name="debug_standby_playback">"Possible cached track / time: "</string>
+    <string name="debug_standby_tail">"Possible old text tail: "</string>
+    <string name="debug_standby_unknown">"Unrecognized layout; no interpretation."</string>
+    <string name="debug_standby_hypotheses_title">"WORKING HYPOTHESES · ARCHIVE AUDIT 2026-10-12"</string>
+    <string name="debug_standby_hypothesis_cache">"Cached playback — supported by the captures. In 25 of 26 numeric packets, bytes 1–7 matched an earlier TYPE 05, 4–27 seconds old. This does not establish live playback."</string>
+    <string name="debug_standby_hypothesis_buffer">"Reused display buffer — plausible. Bytes 8–16 of numeric packets can retain a tail of earlier text. Treat this tail separately, not as a new title."</string>
+    <string name="debug_standby_hypothesis_family">"Media family in byte 3 — unconfirmed. In a numeric layout, 01/02 may have the CD/USB-family meaning seen in TYPE 05. All 26 archived numeric packets had 01; comparison across devices is still needed. Bytes 1–2 also remain unassigned."</string>
+    <string name="debug_standby_hypothesis_source">"Current source / status marker — unconfirmed. Byte 0 was 00 in all 41 unique archived packets. The 35 nonempty packets followed source code 2, which does not independently identify the physical device. Six empty packets were followed by different sources. No 0C byte selects a source in the app."</string>
+    <string name="debug_standby_control_prefix">"Possible control bytes 1–3 (hex): "</string>
+    <string name="debug_standby_family_candidate">"Possible media-family byte 3 (unconfirmed, hex): "</string>
+    <string name="standby_display_field">Display</string>
+    <string name="debug_vehicle_packets_title">"VEHICLE PACKETS · 0x0E / 0x10"</string>
+    <string name="debug_vehicle_packets_notes">"Watch works with recording off. Reset log clears these counters. Enable recording for a full engine-on capture. These families are hidden by the analyzer’s Unknown types only filter. The D0E → 0x0E link and trip-computer interpretation remain unconfirmed."</string>
+    <string name="debug_vehicle_0e_notes">"0x0E: exactly 13 payload bytes map to stock fields 140–147. Field meanings and units are unknown. Other lengths are kept raw."</string>
+    <string name="debug_vehicle_10_notes">"0x10: byte 0 maps to [133] = (byte &gt;&gt; 5) &amp; 7 and [134] = byte &amp; 31. Meanings are unconfirmed."</string>
+    <string name="debug_vehicle_not_received">"Not received since reset"</string>
+    <string name="debug_vehicle_received">"Packets: "</string>
+    <string name="debug_vehicle_mapped">"Mapped layouts: "</string>
+    <string name="debug_vehicle_unexpected">"Unexpected payload length; raw bytes preserved without interpretation."</string>
+    <string name="debug_vehicle_fields">"Stock field values (units unknown):\n"</string>
+    <string name="debug_vehicle_extra_byte">"Byte 1 remains unassigned; see raw payload."</string>
+    <string name="debug_steering_title">"STEERING · CAN CALLBACK [1049]"</string>
+    <string name="debug_steering_notes">"This is a decoded FYT callback, separate from raw TYPE 0F. In the stock code, ints=[0, value] carries normalized steering for parking guidelines; it is not physical degrees. Other subtypes remain uninterpreted. Zero can be an initial value, centered steering or static guidelines. Collection works with recording off; enable recording to retain callback history in the log."</string>
+    <string name="debug_steering_waiting">"Callback [1049] has not been received in this session."</string>
+    <string name="debug_steering_normalized">"Normalized steering value (subtype 0, not degrees): "</string>
+    <string name="debug_steering_unassigned">"No steering value in this callback layout; complete arrays are shown above."</string>
+    <string name="debug_steering_disconnected">"Connection closed; this is the last received sample."</string>
+    <string name="debug_audio_transport">"Transport"</string>
+    <string name="debug_audio_sequence">"Sequence"</string>
+    <string name="debug_audio_hold">"Key press"</string>
+    <string name="debug_audio_transport_profile">"Stock profile · cmd 0/1"</string>
+    <string name="debug_audio_transport_raw">"MCU packet · cmd 1008"</string>
+    <string name="debug_audio_route_current">"Current: sources wait for MAIN 13; keys direct"</string>
+    <string name="debug_audio_route_oem">"MAIN 13 → send immediately"</string>
+    <string name="debug_audio_route_delay">"MAIN 13 → wait 700 ms → send"</string>
+    <string name="debug_audio_route_confirmed">"MAIN 13 → confirmation + 350 ms → send"</string>
+    <string name="debug_audio_route_can">"CAN only · keep MAIN unchanged"</string>
+    <string name="debug_audio_options_notes">"These choices apply only to the Debug buttons below. Try one combination at a time. No automatic retries. cmd 1008 sends only the equivalent known Radio/CD/USB and Previous/Next packets; its compatibility with the installed firmware is unverified. Press duration affects arrows only. Every run records the chosen options, MAIN state and bytes. Ordinary player buttons keep their existing behavior."</string>
+    <string name="debug_audio_no_send">") Audio command not sent."</string>
+    <string name="debug_audio_target_changed">"Connection or vehicle profile changed; pending audio command cancelled."</string>
+    <string name="debug_radio_fields_title">RADIO · CAN 115–125</string>
+    <string name="debug_radio_fields_notes">CAN shows original FYT callbacks; BSJ shows decoded adapter packets. Values include receipt times. Frequencies use fresh data for the current radio source; older values remain visible for diagnostics.</string>
+    <string name="debug_radio_text_title">TEXT CHANNELS · RDS UNCONFIRMED</string>
+    <string name="debug_radio_text_notes">Stock fields 103–105 are media text; 135–137 are menu lines. BSJ 07 fields appear separately. Watch for updates while radio is active. Old CD/USB/iPod text is not evidence of RDS. No PS/station-name or RadioText mapping is confirmed.</string>
+    <string name="debug_radio_connected">Connected · latest received values</string>
+    <string name="debug_radio_history">Disconnected · retained values</string>
+    <string name="debug_radio_before_source">before source change</string>
+    <string name="debug_radio_band">Band</string>
+    <string name="debug_radio_preset">Selected preset</string>
+    <string name="debug_radio_scan">Tune / seek / scan</string>
+    <string name="debug_radio_stereo">Stereo</string>
+    <string name="debug_radio_frequency">Current frequency</string>
+    <string name="debug_radio_saved">Preset frequency</string>
+    <string name="debug_radio_no_preset">Manual tuning</string>
+    <string name="debug_radio_menu_row">Menu row</string>
+</resources>

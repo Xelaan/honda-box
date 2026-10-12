@@ -21,6 +21,11 @@ jobs:
         run: |
           python3 -m unittest discover -s tools -p 'test_*.py'
           python3 tests/run_solar_tests.py
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3
+        with:
+          packages: ''
+          log-accepted-android-sdk-licenses: false
       - name: Install compile tools
         run: sdkmanager 'platforms;android-33' 'build-tools;36.0.0'
       - name: Compile development APKs and emulator tests

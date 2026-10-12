@@ -1,6 +1,6 @@
 # Publishing
 
-The working repository is prepared locally. Creating a GitHub repository, pushing source and uploading APKs are separate steps; none is performed by the preparation scripts.
+The source repository is public at [Xelaan/honda-box](https://github.com/Xelaan/honda-box), with `main` as its default branch. Source publication and production APK releases are separate steps; build/preparation scripts do not publish either automatically.
 
 ## First push
 

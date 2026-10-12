@@ -16,7 +16,7 @@ Use an emulator with overlays enabled. Build first:
 ```sh
 python3 build.py
 python3 build_tests.py
-adb -s emulator-5554 install -r dist/Honda-Box-0.8.29.apk
+adb -s emulator-5554 install -r dist/Honda-Box-0.8.30.apk
 adb -s emulator-5554 install -r dist/TEST-ONLY-probe-tests.apk
 adb -s emulator-5554 shell appops set com.crewbeat.hondabox SYSTEM_ALERT_WINDOW allow
 adb -s emulator-5554 shell am instrument -w com.crewbeat.hondabox.tests/com.crewbeat.hondabox.tests.RadioDebugTests

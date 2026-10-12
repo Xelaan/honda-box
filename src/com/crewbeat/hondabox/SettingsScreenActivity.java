@@ -45,7 +45,7 @@ public abstract class SettingsScreenActivity extends Activity {
 
         LinearLayout title = column(); title.addView(label(debugScreen()?"HONDA  /  DEBUG":"HONDA  /  SETTINGS", 11, ACCENT));
         title.addView(label(I18n.t(debugScreen()?R.string.debug_title:R.string.ui_settings), 27, TEXT)); header.addView(title, new LinearLayout.LayoutParams(0,-2,1));
-        TextView version = label("BOX  0.8.29", 12, MUTED); header.addView(version);header.addView(spaceX(16));Button back=button(I18n.t(R.string.ui_back),false);back.setTag("settings-back");back.setOnClickListener(v->finish());header.addView(back,new LinearLayout.LayoutParams(-2,dp(48)));root.addView(header);
+        TextView version = label("BOX  0.8.30", 12, MUTED); header.addView(version);header.addView(spaceX(16));Button back=button(I18n.t(R.string.ui_back),false);back.setTag("settings-back");back.setOnClickListener(v->finish());header.addView(back,new LinearLayout.LayoutParams(-2,dp(48)));root.addView(header);
         root.addView(space(18));
         if(!debugScreen()){
             LinearLayout permissions=card();permissions.addView(label(I18n.t(R.string.settings_overlay_permission_title),14,ACCENT));

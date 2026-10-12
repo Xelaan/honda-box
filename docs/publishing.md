@@ -21,4 +21,6 @@ The local preparation branch is `codex/github-prep`; `HEAD:main` publishes that 
 
 Update the application version/code in AndroidManifest.xml and its displayed/exported version references together. Build with the original release key using HONDA_KEYSTORE/HONDA_KEYSTORE_PASSWORD; fresh development keys cannot produce compatible upgrades. Build companion launchers from their own manifests. Test installation and source/climate/metadata behavior, then attach the intended production APKs and SHA-256 files to a GitHub Release. TEST-ONLY files and keys do not belong in releases.
 
-The current local 0.8.29 release is retained outside Git; later UI edits are in the prepared source tree. No new release/version/tag was created during repository preparation.
+The first public release is **v0.8.30**, with a signed Setup Pack ZIP and standalone Honda Box APKs. The older local 0.8.29 APK is retained outside Git.
+
+Commit the reviewed source/documentation changes first. After building production APKs, run `python3 tools/package_release.py --apks dist --output dist/release --shizuku /path/to/the/official/Shizuku.apk`. Review the generated report and ZIP before publishing. Packaging checks the version/package IDs, signatures, common Honda signing certificate and checksums; it does not install or publish automatically.

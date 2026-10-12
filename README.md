@@ -178,7 +178,7 @@ USB/iPod detection includes observed adapter markers and inference for this prof
 
 ## Install and start
 
-Build or obtain the main APK and companion launchers from a release you trust. This repository does not include release APKs or a signing key.
+Download the complete **Setup Pack ZIP** from [GitHub Releases](https://github.com/Xelaan/honda-box/releases/latest). It contains the main APK, four companion launchers, Russian/English installation guides and SHA-256 checksums. Optional Shizuku is included with its source/license notice. This source tree does not include release APKs or a signing key.
 
 1. Install the main `Honda-Box-<version>.apk`.
 2. Install **Honda Box**, **Radio**, **CD** and **USB** launcher APKs as needed. One USB launcher covers both USB and iPod.
@@ -248,7 +248,7 @@ tools/              Log decoder and stock-overlay ADB helper
 docs/               Architecture, testing and publishing notes
 ```
 
-See [architecture](docs/architecture.md), [publishing](docs/publishing.md), and [contributing](CONTRIBUTING.md). The source currently includes UI changes after the last local 0.8.29 release; no newer release is implied by this repository preparation.
+See [architecture](docs/architecture.md), [publishing](docs/publishing.md), and [contributing](CONTRIBUTING.md). The first public release is **0.8.30**, with the `com.crewbeat.hondabox` identifiers and the current UI. See [installation](docs/install.en.md) and [release notes](docs/releases/v0.8.30.md).
 
 ## License
 

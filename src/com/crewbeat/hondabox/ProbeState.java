@@ -545,7 +545,7 @@ public final class ProbeState {
         JSONObject root=new JSONObject(base);BsjAnalyzer.export(root,analysis,root.getLong("exportedAtMs"));return root.toString(2);
     }
     private String exportBaseJson() throws Exception {
-        JSONObject root = new JSONObject().put("app", "Honda Box 0.8.29").put("exportedAtMs", System.currentTimeMillis())
+        JSONObject root = new JSONObject().put("app", "Honda Box 0.8.30").put("exportedAtMs", System.currentTimeMillis())
             .put("android", Build.VERSION.RELEASE).put("manufacturer", Build.MANUFACTURER).put("model", Build.MODEL)
             .put("backend", backend).put("status", status).put("detail", detail).put("connected", connected)
             .put("callbacksThisSession", count).put("lastCallbackAtMs", lastEvent)

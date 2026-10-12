@@ -46,6 +46,7 @@
 /tools/*
 !/tools/decode_bsj_log.py
 !/tools/test_decode_bsj_log.py
+!/tools/package_release.py
 !/tools/stock_overlay_adb.py
 !/tools/PrepareAppIcons.java
 !/tools/PrepareSplashIcons.java

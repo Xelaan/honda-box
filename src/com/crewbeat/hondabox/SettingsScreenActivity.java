@@ -28,6 +28,7 @@ public abstract class SettingsScreenActivity extends Activity {
     private Button connect, stop;
     private Spinner audioTransport,audioRoute,audioHold;
     private TextView overlayInfo, rawInfo, permissionInfo; private CheckBox overlayEnabled, overlayPinned, sourceOverlayEnabled, climateOverlayEnabled;private TextView climateOverlayInfo,carMenuOverlayInfo;
+    private BackgroundSetupGuide setupGuide;
     private JsonExport jsonExport; private StockOverlaySettings stockOverlays;
     private final Runnable refresh = new Runnable() { @Override public void run() { render(); ui.postDelayed(this, 500); } };
 
@@ -35,6 +36,7 @@ public abstract class SettingsScreenActivity extends Activity {
         super.onCreate(b);ProbeState.INSTANCE.auxName(SourceSettings.auxName(this)); stockOverlays=new StockOverlaySettings(this); jsonExport=new JsonExport(this);themes=new ThemeController(this,()->{buildUi();render();}); buildUi();
     }
     private void buildUi() {
+        if(setupGuide!=null){setupGuide.close();setupGuide=null;}
         languageRevision=I18n.revision(); int previousScroll=scroll==null?0:scroll.getScrollY(); boolean expanded=fields!=null&&fields.getVisibility()==View.VISIBLE;
         commandButtons.clear(); palette=ThemeSettings.resolve(this).palette; BG=palette.bg;CARD=palette.card;TEXT=palette.text;MUTED=palette.muted;ACCENT=palette.accent;
         getWindow().setStatusBarColor(BG);getWindow().setNavigationBarColor(BG);
@@ -45,7 +47,7 @@ public abstract class SettingsScreenActivity extends Activity {
 
         LinearLayout title = column(); title.addView(label(debugScreen()?"HONDA  /  DEBUG":"HONDA  /  SETTINGS", 11, ACCENT));
         title.addView(label(I18n.t(debugScreen()?R.string.debug_title:R.string.ui_settings), 27, TEXT)); header.addView(title, new LinearLayout.LayoutParams(0,-2,1));
-        TextView version = label("BOX  0.8.30", 12, MUTED); header.addView(version);header.addView(spaceX(16));Button back=button(I18n.t(R.string.ui_back),false);back.setTag("settings-back");back.setOnClickListener(v->finish());header.addView(back,new LinearLayout.LayoutParams(-2,dp(48)));root.addView(header);
+        TextView version = label("BOX  0.8.33", 12, MUTED); header.addView(version);header.addView(spaceX(16));Button back=button(I18n.t(R.string.ui_back),false);back.setTag("settings-back");back.setOnClickListener(v->finish());header.addView(back,new LinearLayout.LayoutParams(-2,dp(48)));root.addView(header);
         root.addView(space(18));
         if(!debugScreen()){
             LinearLayout permissions=card();permissions.addView(label(I18n.t(R.string.settings_overlay_permission_title),14,ACCENT));
@@ -60,10 +62,14 @@ public abstract class SettingsScreenActivity extends Activity {
             general.addView(label(I18n.t(R.string.settings_appearance),12,MUTED));general.addView(space(6));general.addView(themes.controls());
             root.addView(general);root.addView(space(16));
             root.addView(permissions);root.addView(space(16));
-            LinearLayout background=card();background.addView(BackgroundSettings.controls(this));root.addView(background);root.addView(space(16));
+            LinearLayout background=card();background.addView(BackgroundSettings.controls(this));background.addView(space(12));setupGuide=new BackgroundSetupGuide(this);background.addView(setupGuide.controls());root.addView(background);root.addView(space(16));
         }
         if(debugScreen()){
         root.addView(label(I18n.t(R.string.debug_help),12,MUTED));root.addView(space(10));
+        LinearLayout experiments=card();experiments.addView(label(I18n.t(R.string.debug_overlay_experiments),14,ACCENT));
+        CheckBox extendClimate=new CheckBox(this);extendClimate.setTag("debug-climate-navigation");extendClimate.setText(I18n.t(R.string.debug_climate_extend_navigation));extendClimate.setTextColor(TEXT);extendClimate.setChecked(ClimateStripOverlay.extendToSystemNavigation(this));experiments.addView(extendClimate);
+        extendClimate.setOnCheckedChangeListener((v,on)->ClimateStripOverlay.extendToSystemNavigation(this,on));
+        experiments.addView(label(I18n.t(R.string.debug_climate_extend_navigation_notes),12,MUTED));root.addView(experiments);root.addView(space(14));
         CheckBox recording=new CheckBox(this);recording.setText(I18n.t(R.string.diagnostics_record_toggle));recording.setTextColor(TEXT);recording.setChecked(DiagnosticSettings.enabled(this));root.addView(recording);
         recording.setOnCheckedChangeListener((v,on)->{DiagnosticSettings.enabled(this,on);render();});root.addView(label(I18n.t(R.string.diagnostics_record_notes),12,MUTED));root.addView(space(10));
         Button analyzer=button("BSJ Experiment Analyzer",false);analyzer.setOnClickListener(v->startActivity(new Intent(this,AnalyzerActivity.class)));root.addView(analyzer);
@@ -398,7 +404,7 @@ public abstract class SettingsScreenActivity extends Activity {
     }
     @Override protected void onStart() { super.onStart();if(!debugScreen()){stockOverlays.start();themes.start();}ui.removeCallbacks(refresh);ui.post(refresh); }
     @Override protected void onStop() { ui.removeCallbacks(refresh);themes.stop();super.onStop(); }
-    @Override protected void onDestroy(){stockOverlays.close();super.onDestroy();}
+    @Override protected void onDestroy(){if(setupGuide!=null)setupGuide.close();stockOverlays.close();super.onDestroy();}
     @Override public void onRequestPermissionsResult(int code,String[] permissions,int[] grants){super.onRequestPermissionsResult(code,permissions,grants);themes.permissionResult(code);}
     private void compactButtons(View view){
         if(!(view instanceof ViewGroup))return;ViewGroup parent=(ViewGroup)view;

@@ -21,6 +21,7 @@ public final class AudioPlayerActivity extends Activity {
     private static WeakReference<AudioPlayerActivity> current=new WeakReference<>(null);private static boolean visible;
     private final Handler ui=new Handler(Looper.getMainLooper());private AudioMode mode;private ProbeState.MediaDevice shownDevice=ProbeState.MediaDevice.UNKNOWN;private int languageRevision=-1;private ThemeSettings.Palette palette;
     private TextView titleField,heading,sourceInfo,primary,secondary,details,elapsed,volume;private TextView[] presets;private View[] presetCards;
+    private LinearLayout playerRoot,information,metadata,choiceGrid;private boolean singleDiscRow;private View illustrationPanel,illustrationGap,headerGap,footerGap,climateSpace;private LinearLayout header;private Button settingsButton;private int layoutWidthPx;private boolean compactLayout;
     private LinearLayout titleRow;private ImageButton titleInfo,playerInfo;private AlertDialog titleHelp,playerHelp;
     private TextView select;private Button previous,next;private GradientDrawable sourceIndicator;private long session=-1,sequence=-1,deviceRevision=-1;
     private final Runnable refresh=new Runnable(){public void run(){render();if(!isFinishing())ui.postDelayed(this,200);}};
@@ -76,42 +77,114 @@ public final class AudioPlayerActivity extends Activity {
         startService(new Intent(this,ProbeService.class).setAction(ProbeService.COMMAND).putExtra("command",command.name()));}
     private void buildUi(){dismissHelp();languageRevision=I18n.revision();palette=ThemeSettings.resolve(this).palette;setTitle(screenTitle());getWindow().setStatusBarColor(palette.bg);getWindow().setNavigationBarColor(palette.bg);
         getWindow().getDecorView().setSystemUiVisibility(palette.night?0:View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR|View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
-        boolean wide=getResources().getConfiguration().screenWidthDp>=650;
-        LinearLayout root=column();root.setPadding(dp(28),dp(18),dp(28),dp(14));root.setBackgroundColor(palette.bg);setContentView(root);
-        LinearLayout header=row();header.setGravity(Gravity.CENTER_VERTICAL);heading=text(screenTitle(),28,palette.text);heading.setTypeface(Typeface.create("sans-serif-medium",0));heading.setContentDescription(I18n.t(R.string.ui_audio_player)+screenTitle());header.addView(heading,new LinearLayout.LayoutParams(0,dp(48),1));
+        boolean wide=getResources().getConfiguration().screenWidthDp>=650;layoutWidthPx=0;
+        LinearLayout root=column();playerRoot=root;root.setPadding(dp(28),dp(18),dp(28),dp(14));root.setBackgroundColor(palette.bg);setContentView(root);
+        header=row();header.setGravity(Gravity.CENTER_VERTICAL);heading=text(screenTitle(),28,palette.text);heading.setTypeface(Typeface.create("sans-serif-medium",0));heading.setContentDescription(I18n.t(R.string.ui_audio_player)+screenTitle());header.addView(heading,new LinearLayout.LayoutParams(0,dp(48),1));
         volume=text(I18n.t(R.string.ui_volume_112),14,palette.muted);volume.setGravity(Gravity.CENTER_VERTICAL);
         android.graphics.drawable.Drawable volumeIcon=getDrawable(R.drawable.ic_volume_speaker).mutate();volumeIcon.setTint(palette.accent);volumeIcon.setBounds(0,0,dp(24),dp(24));volume.setCompoundDrawablesRelative(volumeIcon,null,null,null);volume.setCompoundDrawablePadding(dp(8));header.addView(volume);header.addView(gap(18,1));
-        Button settings=button(I18n.t(R.string.ui_settings));settings.setTextSize(13);settings.setOnClickListener(v->startActivity(new Intent(this,SettingsActivity.class)));header.addView(settings,new LinearLayout.LayoutParams(-2,dp(48)));root.addView(header);root.addView(gap(1,12));
-        LinearLayout body=wide?row():column();body.setGravity(Gravity.CENTER_VERTICAL);
-        LinearLayout illustration=column();illustration.setPadding(dp(18),dp(12),dp(18),dp(14));illustration.setBackground(illustrationBackground());MediaIllustration art=new MediaIllustration(this,mode==AudioMode.RADIO?0:mode==AudioMode.CD?1:shownDevice==ProbeState.MediaDevice.IPOD?3:2,false);art.night(palette.night);illustration.addView(art,new LinearLayout.LayoutParams(-1,0,1));sourceInfo=text(I18n.t(R.string.ui_waiting_for_source),12,palette.muted);illustration.addView(sourceInfo);body.addView(illustration,new LinearLayout.LayoutParams(wide?dp(300):-1,wide?-1:dp(170)));if(wide)body.addView(gap(18,1));else body.addView(gap(1,12));
+        settingsButton=button(I18n.t(R.string.ui_settings));settingsButton.setTextSize(13);settingsButton.setOnClickListener(v->startActivity(new Intent(this,SettingsActivity.class)));header.addView(settingsButton,new LinearLayout.LayoutParams(-2,dp(48)));root.addView(header);headerGap=gap(1,12);root.addView(headerGap);
+        LinearLayout body=row();body.setGravity(Gravity.CENTER_VERTICAL);
+        LinearLayout illustration=column();illustration.setPadding(dp(18),dp(12),dp(18),dp(14));illustration.setBackground(illustrationBackground());MediaIllustration art=new MediaIllustration(this,mode==AudioMode.RADIO?0:mode==AudioMode.CD?1:shownDevice==ProbeState.MediaDevice.IPOD?3:2,false);art.night(palette.night);illustration.addView(art,new LinearLayout.LayoutParams(-1,0,1));sourceInfo=text(I18n.t(R.string.ui_waiting_for_source),12,palette.muted);illustration.addView(sourceInfo);illustrationPanel=illustration;illustration.setTag("player-illustration-panel");body.addView(illustration,new LinearLayout.LayoutParams(dp(300),-1));illustrationGap=gap(18,1);illustrationGap.setTag("player-illustration-gap");body.addView(illustrationGap);
         FrameLayout informationPanel=new FrameLayout(this);informationPanel.setBackground(shape(palette.card,12));
-        LinearLayout information=column();information.setPadding(dp(24),dp(18),dp(24),dp(18));
-        LinearLayout metadata=column();metadata.setGravity(Gravity.CENTER_VERTICAL);metadata.setPadding(0,0,dp(32),0);
+        information=new InformationLayout();information.setPadding(dp(24),dp(18),dp(24),dp(18));
+        metadata=new MetadataLayout();metadata.setGravity(Gravity.CENTER_VERTICAL);metadata.setPadding(0,0,dp(32),0);
         titleRow=row();titleRow.setGravity(Gravity.CENTER_VERTICAL);titleRow.setVisibility(mode==AudioMode.RADIO?View.GONE:View.VISIBLE);
         titleField=text(mode==AudioMode.USB&&shownDevice==ProbeState.MediaDevice.IPOD?"TITLE":"TITLE"+waitingDots(),12,palette.accent);titleField.setIncludeFontPadding(false);titleField.setMaxWidth(dp(300));
         // Reserve all three dots so the adjacent info button stays still.
         if(!(mode==AudioMode.USB&&shownDevice==ProbeState.MediaDevice.IPOD))titleField.setMinWidth((int)Math.ceil(titleField.getPaint().measureText("TITLE...")));
         titleRow.addView(titleField,new LinearLayout.LayoutParams(-2,-2));
-        titleInfo=infoButton("player-title-info",R.string.player_title_help_description,v->showTitleHelp());titleInfo.setVisibility(mode==AudioMode.RADIO?View.GONE:View.VISIBLE);titleRow.addView(titleInfo,new LinearLayout.LayoutParams(dp(44),dp(44)));metadata.addView(titleRow);metadata.addView(gap(1,6));
-        primary=text(mode==AudioMode.RADIO?"—":waitingDots(),mode==AudioMode.RADIO?54:32,palette.text);primary.setIncludeFontPadding(false);if(mode!=AudioMode.RADIO){primary.setSingleLine(false);primary.setEllipsize(null);}primary.setTypeface(Typeface.create("sans-serif",0));metadata.addView(primary);secondary=text("—",16,palette.muted);secondary.setVisibility(View.GONE);metadata.addView(secondary);
-        elapsed=text("—",24,palette.text);details=text("—",13,palette.muted);elapsed.setIncludeFontPadding(false);details.setIncludeFontPadding(false);details.setSingleLine(false);details.setEllipsize(null);presets=null;LinearLayout choiceGrid=column();
-        if(mode==AudioMode.RADIO||mode==AudioMode.CD){if(mode==AudioMode.RADIO)elapsed.setVisibility(View.GONE);presets=new TextView[6];presetCards=new View[6];LinearLayout grid=choiceGrid;grid.addView(gap(1,10));for(int rowIndex=0;rowIndex<2;rowIndex++){LinearLayout stationRow=row();for(int column=0;column<3;column++){int i=rowIndex*3+column;TextView station=text(mode==AudioMode.CD?I18n.t(R.string.ui_disc)+(i+1):(i+1)+"  —",14,palette.muted);station.setSingleLine(false);station.setMaxLines(2);station.setGravity(Gravity.CENTER);FrameLayout tile=new FrameLayout(this);tile.setBackground(shape(mode==AudioMode.CD?palette.button:palette.bg,10));if(mode==AudioMode.CD){LinearLayout discRow=row();discRow.setGravity(Gravity.CENTER);discRow.addView(new DiscGlyph(this,tile),new LinearLayout.LayoutParams(dp(22),dp(22)));discRow.addView(gap(8,1));discRow.addView(station);tile.addView(discRow,new FrameLayout.LayoutParams(-1,-1));}else tile.addView(station,new FrameLayout.LayoutParams(-1,-1));presetCards[i]=tile;LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(0,dp(46),1);lp.rightMargin=dp(column<2?8:0);stationRow.addView(tile,lp);presets[i]=station;}grid.addView(stationRow);if(rowIndex==0)grid.addView(gap(1,8));}}
-        // Center title, timer and playback details as one group instead of spreading
-        // them between the middle and bottom of the card. Long titles scroll with
-        // their context, while the station/disc grid keeps its own space below.
-        LinearLayout facts=column();facts.setGravity(Gravity.CENTER_VERTICAL);if(mode==AudioMode.RADIO)elapsed.setVisibility(View.GONE);facts.addView(elapsed,new LinearLayout.LayoutParams(-1,-2));if(mode!=AudioMode.RADIO)facts.addView(gap(1,4));facts.addView(details,new LinearLayout.LayoutParams(-1,-2));metadata.addView(gap(1,mode==AudioMode.RADIO?6:10));metadata.addView(facts,new LinearLayout.LayoutParams(-1,-2));
-        ScrollView metadataScroll=new ScrollView(this);metadataScroll.setVerticalScrollBarEnabled(false);metadataScroll.setFillViewport(true);metadataScroll.setClipToPadding(false);metadataScroll.addView(metadata,new ScrollView.LayoutParams(-1,-2));information.addView(metadataScroll,new LinearLayout.LayoutParams(-1,0,1));if(mode==AudioMode.CD||mode==AudioMode.RADIO)information.addView(choiceGrid,new LinearLayout.LayoutParams(-1,-2));informationPanel.addView(information,new FrameLayout.LayoutParams(-1,-1));playerInfo=infoButton("player-controls-info",R.string.player_controls_help_description,v->showPlayerHelp());FrameLayout.LayoutParams helpPosition=new FrameLayout.LayoutParams(dp(44),dp(44),Gravity.TOP|Gravity.END);helpPosition.topMargin=dp(8);helpPosition.rightMargin=dp(8);informationPanel.addView(playerInfo,helpPosition);body.addView(informationPanel,new LinearLayout.LayoutParams(wide?0:-1,wide?-1:dp(mode==AudioMode.USB?250:340),wide?1:0));
-        if(wide)root.addView(body,new LinearLayout.LayoutParams(-1,0,1));else{ScrollView bodyScroll=new ScrollView(this);bodyScroll.addView(body);root.addView(bodyScroll,new LinearLayout.LayoutParams(-1,0,1));}root.addView(gap(1,16));
+        titleInfo=infoButton("player-title-info",R.string.player_title_help_description,v->showTitleHelp());titleInfo.setPadding(dp(8),dp(8),dp(8),dp(8));titleInfo.setVisibility(mode==AudioMode.RADIO?View.GONE:View.VISIBLE);titleRow.addView(titleInfo,new LinearLayout.LayoutParams(dp(36),dp(36)));metadata.addView(titleRow);metadata.addView(gap(1,4));
+        primary=text(mode==AudioMode.RADIO?"—":waitingDots(),mode==AudioMode.RADIO?54:32,palette.text);primary.setIncludeFontPadding(false);if(mode!=AudioMode.RADIO){primary.setSingleLine(false);primary.setMaxLines(3);primary.setEllipsize(android.text.TextUtils.TruncateAt.END);}primary.setTypeface(Typeface.create("sans-serif",0));metadata.addView(primary);secondary=text("—",16,palette.muted);secondary.setVisibility(View.GONE);metadata.addView(secondary);
+        elapsed=text("—",20,palette.text);details=text("—",12,palette.muted);elapsed.setIncludeFontPadding(false);details.setIncludeFontPadding(false);details.setSingleLine(true);details.setEllipsize(android.text.TextUtils.TruncateAt.END);presets=null;choiceGrid=column();singleDiscRow=false;
+        if(mode==AudioMode.RADIO||mode==AudioMode.CD){if(mode==AudioMode.RADIO)elapsed.setVisibility(View.GONE);presets=new TextView[6];presetCards=new View[6];LinearLayout grid=choiceGrid;grid.addView(gap(1,10));for(int rowIndex=0;rowIndex<2;rowIndex++){LinearLayout stationRow=row();for(int column=0;column<3;column++){int i=rowIndex*3+column;TextView station=text(mode==AudioMode.CD?I18n.t(R.string.ui_disc)+(i+1):(i+1)+"  —",14,palette.muted);station.setSingleLine(false);station.setMaxLines(2);station.setGravity(Gravity.CENTER);FrameLayout tile=new FrameLayout(this);tile.setBackground(shape(mode==AudioMode.CD?palette.button:palette.bg,10));if(mode==AudioMode.CD){LinearLayout discRow=row();discRow.setGravity(Gravity.CENTER);discRow.addView(new DiscGlyph(this,tile),new LinearLayout.LayoutParams(dp(22),dp(22)));discRow.addView(gap(6,1));discRow.addView(station);tile.addView(discRow,new FrameLayout.LayoutParams(-1,-1));}else tile.addView(station,new FrameLayout.LayoutParams(-1,-1));presetCards[i]=tile;LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(0,dp(46),1);lp.rightMargin=dp(column<2?8:0);stationRow.addView(tile,lp);presets[i]=station;}grid.addView(stationRow);if(rowIndex==0)grid.addView(gap(1,8));}}
+        // Keep the title, timer and playback details together. Bound long text to
+        // the remaining card height so every preset/disc and control stays visible.
+        LinearLayout facts=column();facts.setGravity(Gravity.CENTER_VERTICAL);if(mode==AudioMode.RADIO)elapsed.setVisibility(View.GONE);facts.addView(elapsed,new LinearLayout.LayoutParams(-1,-2));if(mode!=AudioMode.RADIO)facts.addView(gap(1,2));facts.addView(details,new LinearLayout.LayoutParams(-1,-2));metadata.addView(gap(1,6));metadata.addView(facts,new LinearLayout.LayoutParams(-1,-2));
+        metadata.setTag("player-metadata");information.addView(metadata,new LinearLayout.LayoutParams(-1,0,1));if(mode==AudioMode.CD||mode==AudioMode.RADIO)information.addView(choiceGrid,new LinearLayout.LayoutParams(-1,-2));informationPanel.addView(information,new FrameLayout.LayoutParams(-1,-1));playerInfo=infoButton("player-controls-info",R.string.player_controls_help_description,v->showPlayerHelp());FrameLayout.LayoutParams helpPosition=new FrameLayout.LayoutParams(dp(44),dp(44),Gravity.TOP|Gravity.END);helpPosition.topMargin=dp(8);helpPosition.rightMargin=dp(8);informationPanel.addView(playerInfo,helpPosition);informationPanel.setTag("player-information-panel");body.addView(informationPanel,new LinearLayout.LayoutParams(0,-1,1));
+        root.addView(body,new LinearLayout.LayoutParams(-1,0,1));footerGap=gap(1,16);root.addView(footerGap);
         LinearLayout controls=row();controls.setBaselineAligned(false);controls.setGravity(Gravity.CENTER_VERTICAL);
         select=text(selectionPrompt(),12,palette.muted);select.setSingleLine(false);select.setMaxLines(2);select.setGravity(Gravity.CENTER_VERTICAL|Gravity.START);
         sourceIndicator=new GradientDrawable();sourceIndicator.setShape(GradientDrawable.OVAL);sourceIndicator.setColor(palette.muted);sourceIndicator.setBounds(0,0,dp(6),dp(6));select.setCompoundDrawablesRelative(sourceIndicator,null,null,null);select.setCompoundDrawablePadding(dp(8));select.setOnClickListener(v->{if(AudioMode.reported(ProbeState.INSTANCE.overlaySnapshot())!=mode)send(mode.select);});
-        previous=button(mode==AudioMode.RADIO?I18n.t(R.string.ui_previous):I18n.t(R.string.ui_previous_126));next=button(mode==AudioMode.RADIO?I18n.t(R.string.ui_next):I18n.t(R.string.ui_next_119));previous.setOnClickListener(v->send(AudioCommand.PREVIOUS));next.setOnClickListener(v->send(AudioCommand.NEXT));
-        FrameLayout climateSpace=new FrameLayout(this);climateSpace.setTag("player-climate-space");climateSpace.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        previous=button(mode==AudioMode.RADIO?I18n.t(R.string.ui_previous):I18n.t(R.string.ui_previous_126));next=button(mode==AudioMode.RADIO?I18n.t(R.string.ui_next):I18n.t(R.string.ui_next_119));previous.setSingleLine(true);next.setSingleLine(true);previous.setEllipsize(android.text.TextUtils.TruncateAt.END);next.setEllipsize(android.text.TextUtils.TruncateAt.END);previous.setOnClickListener(v->send(AudioCommand.PREVIOUS));next.setOnClickListener(v->send(AudioCommand.NEXT));
+        climateSpace=new FrameLayout(this);climateSpace.setTag("player-climate-space");climateSpace.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
         // A quiet source label, clear center space and smaller transport controls.
-        int sourceWidth=wide?Math.max(0,Math.min(dp(300),getResources().getDisplayMetrics().widthPixels-dp(400))):0;
+        int transportWidth=transportWidth(wide);int sourceWidth=wide?sourceWidth(dp(getResources().getConfiguration().screenWidthDp),transportWidth):0;
         controls.addView(select,new LinearLayout.LayoutParams(sourceWidth,dp(48),wide?0:1));
         controls.addView(climateSpace,new LinearLayout.LayoutParams(0,dp(48),wide?1:0));
-        controls.addView(gap(14,1));controls.addView(previous,new LinearLayout.LayoutParams(dp(wide?160:125),dp(48)));controls.addView(gap(10,1));controls.addView(next,new LinearLayout.LayoutParams(dp(wide?160:125),dp(48)));root.addView(controls);
+        controls.addView(gap(14,1));controls.addView(previous,new LinearLayout.LayoutParams(transportWidth,dp(48)));controls.addView(gap(10,1));controls.addView(next,new LinearLayout.LayoutParams(transportWidth,dp(48)));root.addView(controls);
+        root.addOnLayoutChangeListener((v,l,t,r,b,ol,ot,or,ob)->{if(v==playerRoot)applyWindowWidth(r-l);});
+        applyWindowWidth(dp(getResources().getConfiguration().screenWidthDp));
+    }
+    // Use the measured activity window, including vendor embedded/split windows,
+    // rather than the physical display width. Visibility changes preserve player data.
+    private void applyWindowWidth(int width){
+        if(width<=0||width==layoutWidthPx)return;layoutWidthPx=width;compactLayout=width<dp(900);
+        illustrationPanel.setVisibility(compactLayout?View.GONE:View.VISIBLE);illustrationGap.setVisibility(compactLayout?View.GONE:View.VISIBLE);
+        playerRoot.setPadding(dp(28),dp(compactLayout?14:18),dp(28),dp(14));
+        heading.setTextSize(compactLayout?24:28);heading.setLayoutParams(new LinearLayout.LayoutParams(0,dp(compactLayout?44:48),1));
+        settingsButton.setLayoutParams(new LinearLayout.LayoutParams(-2,dp(compactLayout?44:48)));
+        headerGap.setLayoutParams(new LinearLayout.LayoutParams(dp(1),dp(compactLayout?8:12)));footerGap.setLayoutParams(new LinearLayout.LayoutParams(dp(1),dp(compactLayout?12:16)));
+        information.setPadding(dp(compactLayout?16:24),dp(compactLayout?12:18),dp(compactLayout?16:24),dp(compactLayout?12:18));
+        boolean wideControls=width>=dp(650);int transportWidth=transportWidth(wideControls);int sourceWidth=wideControls?sourceWidth(width,transportWidth):0;
+        select.setLayoutParams(new LinearLayout.LayoutParams(sourceWidth,dp(48),wideControls?0:1));climateSpace.setLayoutParams(new LinearLayout.LayoutParams(0,dp(48),wideControls?1:0));
+        previous.setLayoutParams(new LinearLayout.LayoutParams(transportWidth,dp(48)));next.setLayoutParams(new LinearLayout.LayoutParams(transportWidth,dp(48)));
+        primary.setTextSize(mode==AudioMode.RADIO?(compactLayout?46:54):(compactLayout?26:32));metadata.requestLayout();
+    }
+    private int transportWidth(boolean wide){
+        // Keep localized labels on one line, including their native font/padding.
+        int labelWidth=0;
+        for(Button control:new Button[]{previous,next})labelWidth=Math.max(labelWidth,
+            (int)Math.ceil(control.getPaint().measureText(control.getText().toString()))+control.getCompoundPaddingLeft()+control.getCompoundPaddingRight()+dp(8));
+        return Math.max(dp(wide?176:144),labelWidth);
+    }
+    private int sourceWidth(int windowWidth,int transportWidth){
+        return Math.max(0,Math.min(dp(300),windowWidth-dp(56+14+10+20)-transportWidth*2));
+    }
+    private void arrangeDiscs(boolean singleRow){
+        if(mode!=AudioMode.CD||presetCards==null||singleDiscRow==singleRow)return;
+        singleDiscRow=singleRow;
+        // Reuse the same tiles so the selected disc and its styling survive resizing.
+        for(View tile:presetCards)((ViewGroup)tile.getParent()).removeView(tile);
+        choiceGrid.removeAllViews();choiceGrid.addView(gap(1,10));
+        int columns=singleRow?6:3;
+        for(int first=0;first<6;first+=columns){
+            LinearLayout line=row();
+            for(int column=0;column<columns;column++){
+                int i=first+column;presets[i].setText(singleRow?String.valueOf(i+1):I18n.t(R.string.ui_disc)+(i+1));
+                presetCards[i].setContentDescription(I18n.t(R.string.ui_disc)+(i+1));
+                LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(0,dp(46),1);lp.rightMargin=dp(column<columns-1?8:0);line.addView(presetCards[i],lp);
+            }
+            choiceGrid.addView(line);if(first+columns<6)choiceGrid.addView(gap(1,8));
+        }
+    }
+    private final class InformationLayout extends LinearLayout {
+        InformationLayout(){super(AudioPlayerActivity.this);setOrientation(VERTICAL);}
+        @Override protected void onMeasure(int widthSpec,int heightSpec){
+            if(MeasureSpec.getMode(heightSpec)!=MeasureSpec.UNSPECIFIED)
+                arrangeDiscs(MeasureSpec.getSize(heightSpec)-getPaddingTop()-getPaddingBottom()<dp(320));
+            super.onMeasure(widthSpec,heightSpec);
+        }
+    }
+    private final class MetadataLayout extends LinearLayout {
+        MetadataLayout(){super(AudioPlayerActivity.this);setOrientation(VERTICAL);}
+        @Override protected void onMeasure(int widthSpec,int heightSpec){
+            if(primary!=null&&primary.getParent()==this&&MeasureSpec.getMode(heightSpec)!=MeasureSpec.UNSPECIFIED){
+                int other=getPaddingTop()+getPaddingBottom();
+                // Measure the fixed rows at their natural height before allocating
+                // title lines. Measuring after layout can already have clipped them.
+                for(int i=0;i<getChildCount();i++){
+                    View child=getChildAt(i);if(child==primary||child.getVisibility()==GONE)continue;
+                    LinearLayout.LayoutParams lp=(LinearLayout.LayoutParams)child.getLayoutParams();
+                    int childWidth=getChildMeasureSpec(widthSpec,getPaddingLeft()+getPaddingRight()+lp.leftMargin+lp.rightMargin,lp.width);
+                    int childHeight=lp.height>=0?MeasureSpec.makeMeasureSpec(lp.height,MeasureSpec.EXACTLY):MeasureSpec.makeMeasureSpec(0,MeasureSpec.UNSPECIFIED);
+                    child.measure(childWidth,childHeight);other+=child.getMeasuredHeight()+lp.topMargin+lp.bottomMargin;
+                }
+                int available=Math.max(1,MeasureSpec.getSize(heightSpec)-other);
+                int lines=Math.max(1,Math.min(compactLayout?2:3,available/Math.max(1,primary.getLineHeight())));
+                if(primary.getMaxLines()!=lines)primary.setMaxLines(lines);
+            }
+            super.onMeasure(widthSpec,heightSpec);
+        }
     }
     private String frequency(ProbeState.Snapshot s,int code){return s.fresh(code)?RadioFrequency.value(s.displayNumber(115),s.displayNumber(code),Integer.valueOf(6291908).equals(s.number(1000))):"—";}
     private String presetFrequency(ProbeState.Snapshot s,int slot){return RadioFrequency.value(s.displayNumber(115),s.preset(slot),Integer.valueOf(6291908).equals(s.number(1000)));}

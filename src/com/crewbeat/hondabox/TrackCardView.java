@@ -11,10 +11,13 @@ import android.view.View;
 public final class TrackCardView extends View {
     private final Paint paint=new Paint(Paint.ANTI_ALIAS_FLAG);
     private final TextPaint titlePaint=new TextPaint(Paint.ANTI_ALIAS_FLAG);
-    private final String title,label;private final Drawable icon;
+    private String title;private final String label;private final Drawable icon;
     private final long deadline;private StaticLayout lines;private int textWidth;
     private ThemeSettings.Palette palette;private Shader tileShader,iconShader;private final PorterDuffXfermode iconBlend=new PorterDuffXfermode(PorterDuff.Mode.SRC_IN);
-    public TrackCardView(Context context,String title,String label,int resource,long deadline){super(context);this.title=title.replace('\n',' ').replaceAll("\\s+"," ").trim();this.label=label;this.deadline=deadline;icon=context.getDrawable(resource).mutate();setLayerType(LAYER_TYPE_SOFTWARE,null);setContentDescription(label+": "+this.title);}
+    public TrackCardView(Context context,String title,String label,int resource,long deadline){super(context);this.title=cleanTitle(title);this.label=label;this.deadline=deadline;icon=context.getDrawable(resource).mutate();setLayerType(LAYER_TYPE_SOFTWARE,null);setContentDescription(label+": "+this.title);}
+    private static String cleanTitle(String value){return value.replace('\n',' ').replaceAll("\\s+"," ").trim();}
+    /** Refresh the selected OEM display field without restarting animation or dismissal. */
+    public void updateTitle(String value){String next=cleanTitle(value);if(title.equals(next))return;title=next;lines=null;setContentDescription(label+": "+title);invalidate();}
     private static int mix(int base,int tint,float amount){return Color.rgb(Math.round(Color.red(base)*(1-amount)+Color.red(tint)*amount),Math.round(Color.green(base)*(1-amount)+Color.green(tint)*amount),Math.round(Color.blue(base)*(1-amount)+Color.blue(tint)*amount));}
     private float dp(float n){return n*getResources().getDisplayMetrics().density;}
     @Override protected void onDraw(Canvas c){super.onDraw(c);ThemeSettings.Palette next=ThemeSettings.resolve(getContext()).palette;

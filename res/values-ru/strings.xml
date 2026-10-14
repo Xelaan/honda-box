@@ -342,11 +342,11 @@
     <string name="home_hint" formatted="false">"Radio · CD · штатный USB/iPod"</string>
     <string name="home_select" formatted="false">"Выбрать источник"</string>
     <string name="background_operation" formatted="false">"Фоновая работа"</string>
-    <string name="start_after_boot" formatted="false">"Запускать после загрузки Android"</string>
+    <string name="start_after_boot" formatted="false">Запускать после загрузки / включения зажигания</string>
     <string name="battery_settings" formatted="false">"Разрешить фоновую работу Android"</string>
-    <string name="dudu_settings" formatted="false">"Открыть настройки DUDU / Android"</string>
+    <string name="dudu_settings" formatted="false">Открыть системные настройки</string>
     <string name="settings_unavailable" formatted="false">"Настройки недоступны"</string>
-    <string name="keep_alive_help" formatted="false">"DUDU: Vehicle → Start up → Keep alive — добавьте Honda Box. Android: разрешите фоновую работу без ограничений. Остановка вручную приостанавливает автозапуск до следующего открытия приложения. Приложение переподключается после пробуждения и не удерживает устройство бодрствующим. Принудительное завершение системой DUDU требует её разрешения на сохранение приложения."</string>
+    <string name="keep_alive_help" formatted="false">В автозапуске выбирайте Honda Box Service — службу без окна. Honda Box открывает главный экран. Ниже — инструкции для вашей прошивки.</string>
     <string name="media_by_menu">по меню</string>
     <string name="media_last_menu">Последние полученные пункты меню</string>
     <string name="radio_khz">кГц</string>
@@ -557,4 +557,36 @@
     <string name="debug_radio_saved">Частота сохранённой станции</string>
     <string name="debug_radio_no_preset">Ручная настройка</string>
     <string name="debug_radio_menu_row">Строка меню</string>
+    <string name="debug_overlay_experiments">Эксперименты с оверлеями</string>
+    <string name="debug_climate_extend_navigation">Расширять компактный климат в область системной навигации</string>
+    <string name="debug_climate_extend_navigation_notes">По умолчанию выключено. Позволяет строке и свёрнутой полоске заходить в область навигации. Android или DUDU могут остаться поверх них. Если строка пропадёт, выключите эту настройку. Применяется автоматически; большая панель не меняется.</string>
+    <string name="background_recovery">Автоматически восстанавливать службу</string>
+    <string name="background_recovery_note">Периодическая проверка при включённом экране (минимальный интервал 15 минут; Android может задержать запуск). После ACC OFF и ручной остановки служба не восстанавливается. Чтобы возобновить работу после остановки, откройте Honda Box.</string>
+    <string name="setup_guides">Инструкции по настройке</string>
+    <string name="setup_fyt_title">Настройка FYT</string>
+    <string name="setup_dudu_title">Настройка DUDU</string>
+    <string name="setup_check_title">Проверка и помощь</string>
+    <string name="setup_open_fyt">Открыть настройки FYT</string>
+    <string name="setup_open_system">Открыть системные настройки</string>
+    <string name="setup_fyt_fallback">Штатные настройки FYT не найдены. Открываем настройки Android.</string>
+    <string name="setup_choose_title">Выберите службу, а не главный экран</string>
+    <string name="setup_choose_body">В списках автозапуска и Keep alive выбирайте Honda Box Service. Она запускается в фоне без окна. Отдельный значок Honda Box открывает экран выбора источника.\n\nЕсли список показывает имена пакетов, выберите com.crewbeat.hondabox. Не добавляйте ярлыки Radio, CD и USB в автозапуск.</string>
+    <string name="setup_fyt_steps_title">Штатная прошивка FYT</string>
+    <string name="setup_fyt_steps">1. Откройте оригинальное приложение настроек FYT на магнитоле.\n2. Перейдите в User → Application Settings.\n3. Добавьте Honda Box Service в автозапуск после загрузки и после сна. Если это два отдельных переключателя, включите оба.\n4. Если есть отдельный список Keep alive или исключений фоновой очистки, добавьте туда ту же службу. Автозапуск повторно запускает приложение, а Keep alive разрешает сохранять его работающим.\n5. В Honda Box → Настройки → Фоновая работа оставьте включёнными запуск после загрузки/зажигания и автоматическое восстановление.</string>
+    <string name="setup_android_title">Разрешения Android</string>
+    <string name="setup_android_steps">Разрешите отображение поверх других приложений для панелей климата, громкости, источника и трека. Это разрешение настраивается отдельно от автозапуска.\n\nРазрешите уведомления, если Android их запрашивает: работающая служба использует постоянное уведомление. Через кнопку настроек батареи разрешите фоновую работу без ограничений или исключите Honda Box Service из оптимизации. Если прошивка отдельно запрашивает разрешение фонового запуска, включите его тоже. Названия пунктов зависят от версии Android.</string>
+    <string name="setup_missing_title">Если пункта FYT нет</string>
+    <string name="setup_fyt_missing">Проверьте оригинальное приложение настроек FYT, а не только настройки Android или лаунчера. Кнопка FYT открывает это приложение, если оно установлено; иначе откроются настройки Android.\n\nВ некоторых прошивках управление автозапуском скрыто или отсутствует. Используйте доступные на вашей магнитоле штатные настройки. Honda Box не может сама выдать себе исключение Keep alive. Если списка нет или автозапуск не работает, запишите версию прошивки и отдельно проверьте загрузку и пробуждение по инструкции.</string>
+    <string name="setup_dudu_os_title">Прошивка DUDU OS</string>
+    <string name="setup_dudu_os_steps">Откройте настройки DUDU → Vehicle → Startup Settings. В некоторых версиях раздел называется Start up.\n\nДобавьте Honda Box Service в Apps to open at Startup. При наличии Sleep Mode Keep-Alive App / Keep alive добавьте службу и туда.\n\nВ некоторых версиях доступна Automatic Task: Vehicle ignition → Open app → Honda Box Service. Можно задать небольшую задержку, например 5 секунд, чтобы дождаться запуска системы. Сначала используйте один механизм автозапуска, чтобы не создавать дубли. Названия и наличие этих пунктов зависят от прошивки: они есть не на каждой магнитоле.</string>
+    <string name="setup_dudu_launcher_title">DUDU Launcher на штатной FYT</string>
+    <string name="setup_dudu_launcher_steps">Установка DUDU Launcher сама по себе не превращает штатную FYT в DUDU OS. Если раздела Vehicle / Startup Settings нет, используйте инструкцию автозапуска для FYT.\n\nЕсли лаунчер предлагает собственные списки автозапуска или Keep alive, выбирайте в них Honda Box Service. Исключение из оптимизации батареи Android не заменяет штатный автозапуск FYT. Кнопка системных настроек открывает обработчик настроек Android, а не конкретную страницу DUDU.</string>
+    <string name="setup_check_boot_title">1. Проверка полной перезагрузки</string>
+    <string name="setup_check_boot">Настройте автозапуск и выполните настоящую перезагрузку Android/магнитолы. Выключение и включение только штатного аудио не является холодной загрузкой.\n\nДождитесь запуска Android и FYT. Не открывая плеер, измените громкость или климат и проверьте включённый оверлей. Honda Box Service должна работать без открытия главного экрана или плеера.</string>
+    <string name="setup_check_sleep_title">2. Отдельная проверка глубокого сна</string>
+    <string name="setup_check_sleep">Выключите зажигание / ACC и дождитесь фактического перехода магнитолы в глубокий сон: задержка зависит от прошивки. Затем включите ACC. Быстрое выключение и включение может вообще не проверять сон.\n\nПроверьте восстановление подключения, появление включённого оверлея источника и обновление данных при изменении громкости/климата. Если данные не вернулись, откройте Honda Box один раз. Если это помогло, перепроверьте цель штатного автозапуска и разрешения фоновой работы.</string>
+    <string name="setup_stop_title">Ручная остановка и восстановление</string>
+    <string name="setup_stop_body">Остановка в Honda Box намеренно приостанавливает автоматические запуски и отменяет периодическое восстановление. Загрузка, ACC и ярлык службы не снимают эту паузу. Для возобновления откройте интерфейс Honda Box.\n\nПериодическая проверка — запасной механизм с минимальным интервалом 15 минут; Android может задержать запуск. При ACC OFF она отменяется и не заменяет немедленный штатный автозапуск. После принудительной остановки прошивкой может потребоваться повторный запуск через FYT.</string>
+    <string name="setup_troubleshoot_title">Если всё ещё не работает</string>
+    <string name="setup_troubleshoot">При запуске открывается плеер или главный экран: выберите Honda Box Service вместо ярлыка интерфейса.\n\nСлужба работает, но оверлеев нет: разрешите отображение поверх других приложений и включите нужные панели в настройках Honda Box. Разрешение уведомлений настраивается отдельно.\n\nПосле перезагрузки работает, а после сна нет: проверьте штатные списки запуска после сна и Keep alive.\n\nСлужба работает, но нет данных машины: проверьте подключение FYT в Debug и выбранный CAN-профиль. Keep alive не исправляет неправильный профиль или отсутствие CAN-данных.\n\nДля короткой диагностики откройте Настройки → Диагностика, сбросьте лог, включите запись, воспроизведите проблему и экспортируйте лог. Затем выключите запись: для обычной работы постоянное логирование не требуется.</string>
 </resources>

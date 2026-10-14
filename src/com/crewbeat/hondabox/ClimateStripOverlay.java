@@ -5,6 +5,7 @@ public final class ClimateStripOverlay {
  private final Context context;private final ClimateOverlay popup;private final WindowManager windows;private final Handler ui=new Handler(Looper.getMainLooper());
  private FrameLayout view;private ClimateStripView strip;private ImageButton expandButton,minimizeButton;private ThemeSettings.Palette buttonPalette;private boolean buttonShown,buttonWanted,lastAlwaysAutoHide;private float buttonReveal;private ValueAnimator buttonAnimator;private long buttonHideAt;private WindowManager.LayoutParams layout;private ValueAnimator animator;private ViewTreeObserver.OnGlobalLayoutListener pendingLayout;private float fold;private boolean animationWindow,collapsed,started,failed,wasAllowed;
  private static final long AUTO_SHOW_MS=5000;
+ private boolean extendNavAreaApplied;private int defaultFitInsetsTypes;
  private long demoUntil;private boolean wasDemo;
  private long lastRevision=-1;private String lastClimate;private boolean autoExpanded;private long autoHideAt;
  private final Runnable tick=new Runnable(){public void run(){if(!started)return;render();ui.postDelayed(this,200);}};
@@ -19,6 +20,23 @@ public final class ClimateStripOverlay {
  public static void expandButton(Context c,boolean on){c.getSharedPreferences("overlay",0).edit().putBoolean("climateStripExpandButton",on).apply();}
  public static boolean buttonAutoHide(Context c){return c.getSharedPreferences("overlay",0).getBoolean("climateStripButtonAutoHide",false);}
  public static void buttonAutoHide(Context c,boolean on){c.getSharedPreferences("overlay",0).edit().putBoolean("climateStripButtonAutoHide",on).apply();}
+ public static boolean extendToSystemNavigation(Context c){return c.getSharedPreferences("overlay",0).getBoolean("climateStripExtendNavigation",false);}
+ public static void extendToSystemNavigation(Context c,boolean on){c.getSharedPreferences("overlay",0).edit().putBoolean("climateStripExtendNavigation",on).apply();}
+ // This changes geometry only; the application-overlay layer stays unchanged.
+ private void configureNavigationArea(WindowManager.LayoutParams lp,boolean extend){
+  int flags=WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+  if(Build.VERSION.SDK_INT<30)flags|=WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
+  lp.flags=extend?lp.flags|flags:lp.flags&~flags;
+  if(Build.VERSION.SDK_INT>=30)lp.setFitInsetsTypes(extend?defaultFitInsetsTypes&~WindowInsets.Type.navigationBars():defaultFitInsetsTypes);
+ }
+ private void refreshNavigationArea(boolean extend){
+  if(layout==null||view==null||extend==extendNavAreaApplied||animator!=null||pendingLayout!=null)return;
+  extendNavAreaApplied=extend;configureNavigationArea(layout,extend);
+  layout.y=extend||collapsed?0:dp(8);
+  // A pure position/insets change need not produce an OnGlobalLayout callback.
+  // Keep the mounted view visible; its size and folding progress stay intact.
+  windows.updateViewLayout(view,layout);
+ }
  private int dp(int n){return Math.round(n*context.getResources().getDisplayMetrics().density);}
  public void start(){if(started)return;started=true;ui.post(tick);}
  public void demo(){demoUntil=SystemClock.uptimeMillis()+15000;failed=false;if(started)render();}
@@ -44,7 +62,7 @@ public final class ClimateStripOverlay {
   strip.expandedWidth(expandedWidth());FrameLayout.LayoutParams content=new FrameLayout.LayoutParams(width,height,Gravity.BOTTOM|Gravity.LEFT);content.leftMargin=gutter;content.bottomMargin=bottomInset;strip.setLayoutParams(content);strip.setTranslationY(forAnimation?dp(8)*fold:0);
   for(int side=0;side<2;side++){ImageButton button=side==0?expandButton:minimizeButton;FrameLayout.LayoutParams buttonLayout=(FrameLayout.LayoutParams)button.getLayoutParams();buttonLayout.bottomMargin=dp(6)+bottomInset;button.setLayoutParams(buttonLayout);}setButtonsVisibility(buttonShown?(buttonWanted||buttonAnimator!=null||(forAnimation&&buttonReveal>0)?View.VISIBLE:View.INVISIBLE):View.GONE);applyButton();
   width+=gutter*2;height=Math.max(height,buttonShown?dp(52):0)+bottomInset;
-  final int targetWidth=width,targetHeight=height,targetX=0,targetY=forAnimation||collapsed?0:dp(8);
+  final int targetWidth=width,targetHeight=height,targetX=0,targetY=extendNavAreaApplied||forAnimation||collapsed?0:dp(8);
   boolean same=layout.width==width&&layout.height==height&&layout.x==targetX&&layout.y==targetY&&view.getWidth()==width&&view.getHeight()==height;
   if(same){view.setAlpha(1);view.setVisibility(popup.isWindowPresent()?View.INVISIBLE:View.VISIBLE);ready.run();return;}
   view.setAlpha(0);view.setVisibility(popup.isWindowPresent()?View.INVISIBLE:View.VISIBLE);pendingLayout=()->{if(view!=target||target.getWidth()!=targetWidth||target.getHeight()!=targetHeight)return;cancelPendingLayout();target.setAlpha(1);target.setVisibility(popup.isWindowPresent()?View.INVISIBLE:View.VISIBLE);ready.run();};
@@ -93,10 +111,11 @@ public final class ClimateStripOverlay {
  }
  private void toggle(){if(view==null||popup.isWindowPresent())return;if(collapsed)buttonHideAt=SystemClock.uptimeMillis()+AUTO_SHOW_MS;autoExpanded=collapsed&&alwaysAutoHide(context);autoHideAt=autoExpanded?SystemClock.uptimeMillis()+AUTO_SHOW_MS:0;animateFold(!collapsed);if(SystemClock.uptimeMillis()>=demoUntil)context.getSharedPreferences("overlay",0).edit().putBoolean("climateStripCollapsed",collapsed).apply();ProbeState.INSTANCE.climateStrip(true,ClimateStripView.description(SystemClock.uptimeMillis()<demoUntil?ClimateOverlay.demoSnapshot():ProbeState.INSTANCE.overlaySnapshot()),collapsed);}
  private void render(){ProbeState state=ProbeState.INSTANCE;long now=SystemClock.uptimeMillis();boolean test=now<demoUntil;if(test!=wasDemo){hide();wasDemo=test;if(test)buttonHideAt=now+AUTO_SHOW_MS;}ProbeState.Snapshot s=test?ClimateOverlay.demoSnapshot():state.overlaySnapshot();boolean allowed=android.provider.Settings.canDrawOverlays(context);if(allowed!=wasAllowed){failed=false;wasAllowed=allowed;}
-  if(!allowed||(!test&&(!enabled(context)||!active(s)))){hide();state.climateStrip(false,"");return;}if(failed)return;
+  if(!allowed||(!test&&(!enabled(context)||!active(s)))){hide();state.climateStrip(false,"");return;}boolean navExtension=extendToSystemNavigation(context);if(navExtension!=extendNavAreaApplied)failed=false;if(failed)return;
   try{if(view==null){collapsed=!test&&context.getSharedPreferences("overlay",0).getBoolean("climateStripCollapsed",false);fold=collapsed?1:0;view=new FrameLayout(context);strip=new ClimateStripView(context);strip.setOnClickListener(v->onBarTap());view.addView(strip);expandButton=new ImageButton(context);expandButton.setImageResource(R.drawable.ic_climate_expand);expandButton.setPadding(dp(10),dp(10),dp(10),dp(10));expandButton.setContentDescription(I18n.t(R.string.climate_strip_full_panel));expandButton.setOnClickListener(v->{popup.showFromStrip(SystemClock.uptimeMillis()<demoUntil);if(popup.isWindowPresent()&&view!=null){view.setVisibility(View.INVISIBLE);ProbeState.INSTANCE.climateStrip(false,lastClimate==null?"":lastClimate,collapsed);}});FrameLayout.LayoutParams buttonLayout=new FrameLayout.LayoutParams(dp(40),dp(40),Gravity.LEFT|Gravity.BOTTOM);buttonLayout.bottomMargin=dp(6);view.addView(expandButton,buttonLayout);minimizeButton=new ImageButton(context);minimizeButton.setImageResource(R.drawable.ic_climate_minimize);minimizeButton.setPadding(dp(10),dp(10),dp(10),dp(10));minimizeButton.setContentDescription(I18n.t(R.string.climate_strip_collapse));minimizeButton.setOnClickListener(v->{if(!collapsed)toggle();});FrameLayout.LayoutParams minimizeLayout=new FrameLayout.LayoutParams(dp(40),dp(40),Gravity.RIGHT|Gravity.BOTTOM);minimizeLayout.bottomMargin=dp(6);view.addView(minimizeButton,minimizeLayout);setButtonsVisibility(View.GONE);applyButton();lastAlwaysAutoHide=alwaysAutoHide(context);if(lastAlwaysAutoHide&&!collapsed){autoExpanded=true;autoHideAt=now+AUTO_SHOW_MS;}int type=Build.VERSION.SDK_INT>=26?WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY:WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
    // Force an initial size transition: an unchanged window size can skip the layout callback while invisible.
-   WindowManager.LayoutParams lp=new WindowManager.LayoutParams(1,1,type,WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,PixelFormat.TRANSLUCENT);noWindowMoveAnimation(lp);lp.gravity=Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL;lp.y=dp(8);lp.setTitle("Honda Box Climate Strip");layout=lp;windows.addView(view,lp);applyFold();settleWindow();}
+   WindowManager.LayoutParams lp=new WindowManager.LayoutParams(1,1,type,WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,PixelFormat.TRANSLUCENT);noWindowMoveAnimation(lp);lp.gravity=Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL;extendNavAreaApplied=navExtension;defaultFitInsetsTypes=Build.VERSION.SDK_INT>=30?lp.getFitInsetsTypes():0;configureNavigationArea(lp,navExtension);lp.y=navExtension?0:dp(8);lp.setTitle("Honda Box Climate Strip");layout=lp;windows.addView(view,lp);applyFold();settleWindow();}
+   refreshNavigationArea(navExtension);
    String climate=ClimateStripView.description(s);
    // Establish a baseline on creation; repeated callbacks with identical values do not open it.
    boolean changed=lastClimate!=null&&(!lastClimate.equals(climate)||(lastRevision>=0&&lastRevision!=s.climateRevision));lastRevision=s.climateRevision;

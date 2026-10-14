@@ -186,6 +186,8 @@ Download the complete **Setup Pack ZIP** from [GitHub Releases](https://github.c
 4. Confirm the head unit uses profile 6291908. Allow foreground/background operation; add Honda Box to DUDU's keep-alive list if needed.
 5. Optional: install/start [Shizuku](https://shizuku.rikka.app/guide/setup/) via ADB and grant Honda Box access to manage the stock overlay setting.
 
+For boot/deep-sleep recovery, add **Honda Box Service** in FYT **Settings → User → Application Settings**. The app also handles FYT ACC events and provides an optional periodic recovery check. See [background operation](docs/background-operation.md) for settings, manual-stop behavior and firmware limits.
+
 The service icon starts headlessly. The separate Honda Box launcher opens the selector. Location is only needed for sunrise/sunset setup. Logging is off by default and can be enabled/reset in Debug. The app cannot guarantee survival of vendor task killers.
 
 ## Package identifiers

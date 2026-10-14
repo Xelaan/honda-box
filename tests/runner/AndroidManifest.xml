@@ -14,4 +14,10 @@
     <instrumentation android:name="com.crewbeat.hondabox.tests.TitleHelpTests" android:targetPackage="com.crewbeat.hondabox"/>
     <instrumentation android:name="com.crewbeat.hondabox.tests.TrackTitleCycleTests" android:targetPackage="com.crewbeat.hondabox"/>
     <instrumentation android:name="com.crewbeat.hondabox.tests.DocumentationScreenshots" android:targetPackage="com.crewbeat.hondabox"/>
+    <instrumentation android:name="com.crewbeat.hondabox.tests.CompactClimateNavigationTests" android:targetPackage="com.crewbeat.hondabox"/>
+    <instrumentation android:name="com.crewbeat.hondabox.tests.PlayerResponsiveTests" android:targetPackage="com.crewbeat.hondabox"/>
+    <instrumentation android:name="com.crewbeat.hondabox.tests.BackgroundRecoveryTests" android:targetPackage="com.crewbeat.hondabox"/>
+    <instrumentation android:name="com.crewbeat.hondabox.tests.SetupGuideTests" android:targetPackage="com.crewbeat.hondabox"/>
+    <instrumentation android:name="com.crewbeat.hondabox.tests.MenuCloseOverlayTests" android:targetPackage="com.crewbeat.hondabox"/>
+    <instrumentation android:name="com.crewbeat.hondabox.tests.TrackOverlayRefreshTests" android:targetPackage="com.crewbeat.hondabox"/>
 </manifest>

@@ -1,4 +1,4 @@
-# Honda Box 0.8.30 — FYT / DUDU installation
+# Honda Box 0.8.33 — FYT / DUDU installation
 
 Supported configuration: Honda Accord VIII / Spirior 2009–2013, FYT CAN profile **6291908**, BSJ V704. Requires **Android 7.0 / API 24+**. This is an Android companion for the original Honda audio/climate system, not a head-unit or CAN-adapter firmware update.
 
@@ -6,7 +6,7 @@ Supported configuration: Honda Accord VIII / Spirior 2009–2013, FYT CAN profil
 
 | File | Purpose |
 | --- | --- |
-| `Honda-Box-0.8.30.apk` | Honda Box Service, UI and overlays |
+| `Honda-Box-0.8.33.apk` | Honda Box Service, UI and overlays |
 | `Honda-Box-Launcher-1.3.apk` | Honda Box selector icon |
 | `Honda-Radio-Launcher-1.5.apk` | Radio icon |
 | `Honda-CD-Launcher-1.5.apk` | CD icon |
@@ -31,7 +31,7 @@ Installing over the same new package with our release certificate keeps preferen
 ## Install on the head unit
 
 1. Extract the Setup Pack ZIP on your computer, copy its APKs to a USB drive and open them in Android's file manager. Do not use the firmware-update mechanism.
-2. Install **Honda-Box-0.8.30.apk** first. Allow installation from the file manager if requested.
+2. Install **Honda-Box-0.8.33.apk** first. Allow installation from the file manager if requested.
 3. Install **Honda-Box-Launcher-1.3.apk** and the desired Radio/CD/Honda USB launchers. All four may be installed. USB and iPod share one launcher.
 4. Open **Honda Box**. **Honda Box Service** starts headlessly; the separate Honda Box icon opens the UI. FYT connection starts automatically. Confirm the unit already uses profile 6291908; Honda Box does not change it.
 5. Settings → **Allow display over other apps**: grant overlay permission. On Android 13+, allow notifications if prompted.
@@ -40,6 +40,12 @@ Installing over the same new package with our release certificate keeps preferen
 8. Verify MODE switching, volume and climate in the car. If firmware does not support outgoing source/Previous/Next commands, use the car controls. Recording is off by default; enable/reset/export it from Debug when needed.
 
 iPod detection uses observed adapter markers and can take a few seconds after connection. Data not transmitted by the adapter cannot be recovered. This release is checked in an emulator; firmware-specific behavior and DUDU sleep retention require a head-unit check.
+
+## Boot and sleep setup
+
+Open **Honda Box → Settings → Background operation** for offline **FYT setup**, **DUDU setup** and **Check & help** guides. On stock FYT, add **Honda Box Service** in **Settings → User → Application Settings** for boot and deep-sleep wake. On DUDU OS, use the available startup and sleep Keep alive lists; DUDU Launcher on stock FYT may still require the FYT settings route. Menu availability varies by firmware.
+
+Boot/ignition startup and automatic service recovery default to on. Recovery is a best-effort periodic check while awake, not a guarantee against vendor force-stop. **Stop** deliberately pauses automatic restarts; open the **Honda Box UI** to resume. Verify a full Android reboot and an ACC OFF/deep-sleep/ACC ON cycle separately. See the included [background operation guide](background-operation.md).
 
 ## Optional: hide stock overlays with Shizuku
 
@@ -69,6 +75,6 @@ The helper verifies SHA-256 and installs the five Honda APKs without incremental
 
 ## Verify downloads
 
-After extraction: `sha256sum -c SHA256SUMS.txt` (Linux) or `shasum -a 256 -c SHA256SUMS.txt` (macOS). Windows: `Get-FileHash .\Honda-Box-0.8.30.apk -Algorithm SHA256`, then compare with SHA256SUMS.txt. The release also supplies a `.zip.sha256` file for the archive.
+After extraction: `sha256sum -c SHA256SUMS.txt` (Linux) or `shasum -a 256 -c SHA256SUMS.txt` (macOS). Windows: `Get-FileHash .\Honda-Box-0.8.33.apk -Algorithm SHA256`, then compare with SHA256SUMS.txt. The release also supplies a `.zip.sha256` file for the archive.
 
 Source/releases: [Xelaan/honda-box](https://github.com/Xelaan/honda-box). Original code is MIT; third-party licenses and Shizuku provenance are included.

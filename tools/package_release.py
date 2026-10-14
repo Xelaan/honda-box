@@ -135,6 +135,7 @@ def main():
         rows.append(shizuku)
         for source, target in [('docs/install.ru.md', 'INSTALL.ru.md'),
                                ('docs/install.en.md', 'INSTALL.en.md'),
+                               ('docs/background-operation.md', 'background-operation.md'),
                                ('docs/releases/v' + APP_VERSION + '.md', 'RELEASE-NOTES.md'),
                                ('LICENSE', 'LICENSE'), ('NOTICE.md', 'NOTICE.md'),
                                ('third_party/shizuku/Shizuku-app-LICENSE.txt', 'Shizuku-LICENSE.txt'),

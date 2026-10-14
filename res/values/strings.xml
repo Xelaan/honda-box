@@ -342,11 +342,11 @@
     <string name="home_hint" formatted="false">"Radio · CD · vehicle USB/iPod"</string>
     <string name="home_select" formatted="false">"Select source"</string>
     <string name="background_operation" formatted="false">"Background operation"</string>
-    <string name="start_after_boot" formatted="false">"Start after Android boot"</string>
+    <string name="start_after_boot" formatted="false">Start after boot / ignition</string>
     <string name="battery_settings" formatted="false">"Allow background operation in Android"</string>
-    <string name="dudu_settings" formatted="false">"Open DUDU / Android settings"</string>
+    <string name="dudu_settings" formatted="false">Open system settings</string>
     <string name="settings_unavailable" formatted="false">"Settings unavailable"</string>
-    <string name="keep_alive_help" formatted="false">"DUDU: Vehicle → Start up → Keep alive — add Honda Box. Android: allow unrestricted background operation. A manual stop pauses autostart until you open the app again. The app reconnects after wake and does not keep the device awake. DUDU can still terminate it unless its keep-alive setting permits it."</string>
+    <string name="keep_alive_help" formatted="false">For startup lists choose Honda Box Service, which runs without a window. Honda Box opens the selector. Use the guides below for your firmware.</string>
     <string name="media_by_menu">menu</string>
     <string name="media_last_menu">Previously received menu</string>
     <string name="radio_khz">kHz</string>
@@ -557,4 +557,36 @@
     <string name="debug_radio_saved">Preset frequency</string>
     <string name="debug_radio_no_preset">Manual tuning</string>
     <string name="debug_radio_menu_row">Menu row</string>
+    <string name="debug_overlay_experiments">Experimental overlays</string>
+    <string name="debug_climate_extend_navigation">Extend compact climate overlay to system nav area</string>
+    <string name="debug_climate_extend_navigation_notes">Off by default. Lets the compact bar and folded handle reach the navigation area. Android or DUDU may still cover them. If the bar disappears, turn this off. Takes effect automatically; the large panel is unchanged.</string>
+    <string name="background_recovery">Recover service automatically</string>
+    <string name="background_recovery_note">Checks periodically while the screen is on (minimum interval: 15 minutes; Android may delay it). No recovery after ACC OFF or a manual stop. Open Honda Box to resume after stopping.</string>
+    <string name="setup_guides">Setup guides</string>
+    <string name="setup_fyt_title">FYT setup</string>
+    <string name="setup_dudu_title">DUDU setup</string>
+    <string name="setup_check_title">Check &amp; help</string>
+    <string name="setup_open_fyt">Open FYT settings</string>
+    <string name="setup_open_system">Open system settings</string>
+    <string name="setup_fyt_fallback">FYT settings app was not found. Opening Android settings instead.</string>
+    <string name="setup_choose_title">Choose the service, not the selector</string>
+    <string name="setup_choose_body">Select Honda Box Service in startup and keep-alive lists. It starts in the background without opening a window. The separate Honda Box icon opens the source selector.\n\nIf the picker shows package names, choose com.crewbeat.hondabox. Do not add the Radio, CD or USB shortcuts as startup targets.</string>
+    <string name="setup_fyt_steps_title">Stock FYT firmware</string>
+    <string name="setup_fyt_steps">1. Open the head unit’s original FYT Settings app.\n2. Go to User → Application Settings.\n3. Add Honda Box Service to autostart after boot and after sleep. Enable both options if the firmware lists them separately.\n4. If a separate keep-alive or background exception list exists, add the same service there. Autostart relaunches an app; keep-alive controls whether it may remain running.\n5. In Honda Box → Settings → Background operation, leave boot/ignition startup and automatic recovery enabled.</string>
+    <string name="setup_android_title">Android permissions</string>
+    <string name="setup_android_steps">Allow display over other apps for the climate, volume, source and track overlays. This permission is separate from autostart.\n\nAllow notifications if Android requests it; the running service uses a persistent notification. Use the battery settings button to allow unrestricted background operation or exclude Honda Box Service from battery optimisation. If the firmware has a separate background-start permission, allow it too. Menu names vary by Android version.</string>
+    <string name="setup_missing_title">If the FYT menu is missing</string>
+    <string name="setup_fyt_missing">Check the original FYT Settings app, not only Android Settings or the launcher preferences. The FYT button opens that app if installed; otherwise it opens Android Settings.\n\nSome firmware builds hide or omit startup management. Use the startup options actually available on your head unit. Honda Box cannot grant itself a vendor keep-alive exception. If the list is absent or startup still fails, note the firmware version and check boot and wake separately using the checklist.</string>
+    <string name="setup_dudu_os_title">DUDU OS firmware</string>
+    <string name="setup_dudu_os_steps">Open DUDU Settings → Vehicle → Startup Settings. Depending on the version, this may be named Start up.\n\nAdd Honda Box Service under Apps to open at Startup. Add it to Sleep Mode Keep-Alive App / Keep alive as well, if available.\n\nSome versions also offer Automatic Task: Vehicle ignition → Open app → Honda Box Service. A short delay, such as 5 seconds, can allow startup to settle. Use one startup mechanism first to avoid duplicate launches. These menu names and options vary by firmware; they are not present on every unit.</string>
+    <string name="setup_dudu_launcher_title">DUDU Launcher on stock FYT</string>
+    <string name="setup_dudu_launcher_steps">Installing DUDU Launcher does not by itself turn stock FYT firmware into DUDU OS. If Vehicle / Startup Settings is not present, use the stock FYT autostart instructions instead.\n\nIf your launcher offers its own startup or keep-alive list, choose Honda Box Service there. An Android battery exception alone does not replace the FYT startup list. The system-settings button opens the settings handler provided by Android; it does not jump directly to a DUDU-specific page.</string>
+    <string name="setup_check_boot_title">1. Check a full reboot</string>
+    <string name="setup_check_boot">Configure the startup list, then perform a real Android/head-unit restart. Merely turning the original audio off and on is not a cold boot.\n\nWait for Android and FYT to finish starting. Without opening a player, change the volume or climate and check an enabled overlay. Honda Box Service should run without bringing the source selector or a player to the foreground.</string>
+    <string name="setup_check_sleep_title">2. Check deep sleep separately</string>
+    <string name="setup_check_sleep">Switch ignition / ACC off and wait until the head unit actually enters deep sleep; the delay depends on the firmware. Switch ACC on again. A quick off/on may not test sleep at all.\n\nCheck that the service reconnects, the current-source overlay appears if enabled, and new volume/climate changes update. If data does not return, open Honda Box once: if this restores it, recheck the firmware startup target and background permissions.</string>
+    <string name="setup_stop_title">Manual stop and automatic recovery</string>
+    <string name="setup_stop_body">Stop in Honda Box deliberately pauses automatic starts and cancels periodic recovery. Boot, ACC and the headless service icon do not undo that pause. Open the Honda Box interface to resume.\n\nThe recovery check is a fallback with a minimum repeat interval of 15 minutes, and Android can delay it. It is cancelled on ACC OFF and does not replace immediate firmware autostart. After a firmware force-stop, FYT may need to launch the service again.</string>
+    <string name="setup_troubleshoot_title">What to check if it still fails</string>
+    <string name="setup_troubleshoot">A player or selector opens at startup: select Honda Box Service instead of a UI shortcut.\n\nThe service runs but overlays are missing: allow display over other apps and enable the required overlays in Honda Box settings. Notification permission is separate.\n\nIt works after reboot but not after sleep: recheck the firmware’s wake/autostart and keep-alive lists.\n\nThe service runs but vehicle data is missing: check the FYT connection in Debug and the selected CAN profile. Keep-alive cannot fix a wrong vehicle profile or absent CAN data.\n\nFor a short diagnostic capture, open Settings → Diagnostics, reset the log, enable recording, reproduce the problem and export it. Turn recording off afterwards; normal use does not require continuous logging.</string>
 </resources>

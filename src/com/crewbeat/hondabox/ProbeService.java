@@ -24,18 +24,40 @@ public class ProbeService extends Service {
     }
     private TrackOverlay trackOverlay;private UnknownOverlay unknownOverlay;
     private boolean active; private int generation;
-    private final BroadcastReceiver wakeReceiver=new BroadcastReceiver(){@Override public void onReceive(Context c,Intent i){if(Intent.ACTION_SCREEN_ON.equals(i.getAction()))worker.post(()->wakeUp());}};
-    private void wakeUp(){
-        if(!active||!BackgroundSettings.wanted(this))return;
+    private long lastWakeAt=-1;
+    private final BroadcastReceiver wakeReceiver=new BroadcastReceiver(){@Override public void onReceive(Context c,Intent i){
+        String action=i==null?null:i.getAction();
+        if(BackgroundRecovery.ACC_OFF.equals(action)){
+            BackgroundRecovery.notePower(c,false);final PendingResult pending=goAsync();
+            if(!worker.post(()->{try{prepareForSleep();}finally{pending.finish();}}))pending.finish();
+        }else if(Intent.ACTION_SCREEN_ON.equals(action)||BackgroundRecovery.ACC_ON.equals(action)){
+            BackgroundRecovery.notePower(c,true);worker.post(()->wakeUp(action));
+        }
+    }};
+    private void prepareForSleep(){
+        lastWakeAt=-1;
+        worker.removeCallbacks(retry);worker.removeCallbacks(watchdog);
+        worker.removeCallbacks(captureLogicalMenu);worker.removeCallbacks(saveMenus);worker.removeCallbacks(savePresets);menuSaveQueued=false;presetSaveQueued=false;
+        state.captureLogicalMenu();
+        try{
+            getSharedPreferences("carMenuMemory",MODE_PRIVATE).edit().putString("received",state.carMenuMemory.json().toString()).commit();savedMenuRevision=state.carMenuMemory.revision();
+            getSharedPreferences("radioPresets",MODE_PRIVATE).edit().putString("received",state.radioPresets.json().toString()).commit();savedPresetRevision=state.radioPresets.revision();
+        }catch(Exception e){state.log("ACC OFF CACHE: "+e);}
+        state.log("ACC OFF: caches saved; reconnect retries suspended");
+    }
+    private void wakeUp(){BackgroundRecovery.notePower(this,true);wakeUp("fyt_screen");}
+    private void wakeUp(String reason){
+        if(!active||!BackgroundSettings.wanted(this)||!BackgroundRecovery.awake(this))return;
+        long now=SystemClock.elapsedRealtime();if(lastWakeAt>=0&&now-lastWakeAt<2000)return;lastWakeAt=now;
+        // Suppress player navigation even if subscriptions remained connected through sleep.
+        ui.post(()->{audioScreens.backgroundStart();sourceOverlay.announceCurrentSource();});
+        // ACC OFF cancels the timeout. Re-arm it on wake without discarding an in-flight bind.
+        if(binding!=null&&module==null){worker.removeCallbacks(watchdog);worker.postDelayed(watchdog,10000);return;}
         ProbeState.Snapshot current=state.overlaySnapshot();
-        boolean freshConnection=current.connected&&System.currentTimeMillis()-current.lastEvent<2000;
-        if(!freshConnection)state.status(I18n.t(R.string.ui_connecting),"",false);
-        // Announce even when subscriptions survived sleep and the source is unchanged.
-        // Reconnect clears the session, so its announcement waits for actual source data.
-        ui.post(()->sourceOverlay.announceCurrentSource());
-        if(freshConnection)return;
-        state.log("WAKE: reconnecting read-only FYT subscriptions");
-        ui.post(()->audioScreens.backgroundStart());disconnect();connect();
+        boolean fresh=current.connected&&module!=null&&module.isBinderAlive()&&System.currentTimeMillis()-current.lastEvent<2000;
+        if(fresh)return;
+        state.status(I18n.t(R.string.ui_connecting),"",false);
+        state.log("WAKE "+reason+": reconnecting read-only FYT subscriptions");disconnect();connect();
     }
 
 
@@ -54,11 +76,16 @@ public class ProbeService extends Service {
     private final Runnable watchdog = () -> fail(I18n.t(R.string.ui_no_service_response), I18n.t(R.string.ui_connection_did_not_complete_within), true);
 
     @Override public void onCreate() {
-        super.onCreate();state.recording(DiagnosticSettings.enabled(this));state.carMenuMemory.restore(getSharedPreferences("carMenuMemory",MODE_PRIVATE).getString("received",""));state.radioPresets.restore(getSharedPreferences("radioPresets",MODE_PRIVATE).getString("received",""));state.auxSource(SourceSettings.aux(this));state.auxName(SourceSettings.auxName(this));unknownOverlay=new UnknownOverlay(this);trackOverlay=new TrackOverlay(this);carMenuOverlay=new CarMenuOverlay(this); audioScreens=new AudioSourceController(this); overlay = new VolumeOverlay(this);sourceOverlay=new SourceOverlay(this);climateOverlay=new ClimateOverlay(this);climateStrip=new ClimateStripOverlay(this,climateOverlay); thread = new HandlerThread("FytProbeIPC"); thread.start(); worker = new Handler(thread.getLooper());registerReceiver(wakeReceiver,new IntentFilter(Intent.ACTION_SCREEN_ON));
+        super.onCreate();
         if (Build.VERSION.SDK_INT >= 26) {
             NotificationChannel channel = new NotificationChannel("probe", I18n.t(R.string.ui_fyt_diagnostics), NotificationManager.IMPORTANCE_LOW);
             channel.setDescription(I18n.t(R.string.ui_background_head_unit_data_capture)); getSystemService(NotificationManager.class).createNotificationChannel(channel);
         }
+        // Fulfil startForegroundService immediately, including rejected/racing start requests.
+        showNotification();
+        state.recording(DiagnosticSettings.enabled(this));state.carMenuMemory.restore(getSharedPreferences("carMenuMemory",MODE_PRIVATE).getString("received",""));state.radioPresets.restore(getSharedPreferences("radioPresets",MODE_PRIVATE).getString("received",""));state.auxSource(SourceSettings.aux(this));state.auxName(SourceSettings.auxName(this));unknownOverlay=new UnknownOverlay(this);trackOverlay=new TrackOverlay(this);carMenuOverlay=new CarMenuOverlay(this); audioScreens=new AudioSourceController(this); overlay = new VolumeOverlay(this);sourceOverlay=new SourceOverlay(this);climateOverlay=new ClimateOverlay(this);climateStrip=new ClimateStripOverlay(this,climateOverlay); thread = new HandlerThread("FytProbeIPC"); thread.start(); worker = new Handler(thread.getLooper());IntentFilter wakeFilter=new IntentFilter(Intent.ACTION_SCREEN_ON);wakeFilter.addAction(BackgroundRecovery.ACC_ON);wakeFilter.addAction(BackgroundRecovery.ACC_OFF);
+        if(Build.VERSION.SDK_INT>=33)registerReceiver(wakeReceiver,wakeFilter,Context.RECEIVER_EXPORTED);else registerReceiver(wakeReceiver,wakeFilter);
+
     }
     @Override public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null && STOP.equals(intent.getAction())) { BackgroundSettings.pause(this);stopSelf(); return START_NOT_STICKY; }
@@ -85,12 +112,20 @@ public class ProbeService extends Service {
             if (!state.snapshot().running) stopSelf();
             return state.snapshot().running?START_STICKY:START_NOT_STICKY;
         }
+        final String automaticReason=intent==null?null:intent.getStringExtra(BackgroundRecovery.REASON);
+        // Recheck at service delivery too: STOP may race a previously queued automatic start.
+        if(automaticReason!=null&&!BackgroundRecovery.mayStart(this,automaticReason)){
+            boolean running=state.overlaySnapshot().running;if(!running)stopSelf(startId);return running?START_STICKY:START_NOT_STICKY;
+        }
         if(intent==null&&!BackgroundSettings.wanted(this)){stopSelf();return START_NOT_STICKY;}
-        if(intent!=null)BackgroundSettings.activate(this);
+        if(intent!=null){if(automaticReason==null)BackgroundRecovery.notePower(this,true);BackgroundSettings.activate(this);}else BackgroundRecovery.schedule(this);
+        String startReason=intent==null?"sticky_restart":automaticReason==null?"manual":automaticReason;
+        getSharedPreferences("background",MODE_PRIVATE).edit().putString("lastStartReason",startReason).putLong("lastStartMs",System.currentTimeMillis()).apply();
+        state.log("SERVICE START: "+startReason);
         if(intent==null||(intent!=null&&intent.getBooleanExtra("backgroundStart",false)))audioScreens.backgroundStart();
         showNotification();
         unknownOverlay.start();trackOverlay.start();audioScreens.start();overlay.start();sourceOverlay.start();climateStrip.start();climateOverlay.start();carMenuOverlay.start();
-        worker.post(() -> { if (!active) { active = true; state.running(true); state.newSession(); connect(); } });
+        worker.post(() -> { if (!active) { active = true; state.running(true); state.newSession(); connect(); }else wakeUp(automaticReason==null?"service_start":automaticReason); });
         return START_STICKY;
     }
     private void showNotification(){
@@ -103,7 +138,7 @@ public class ProbeService extends Service {
             .setOngoing(true).addAction(new Notification.Action.Builder(null, I18n.t(R.string.ui_stop), stop).build()).build());
     }
     private void connect() {
-        if (!active || binding != null) return;
+        if (!active || !BackgroundRecovery.awake(this) || binding != null) return;
         worker.removeCallbacks(retry); state.newSession();
         ComponentName component = new ComponentName("com.syu.ms", "app.ToolkitService");
         try {
@@ -191,7 +226,7 @@ public class ProbeService extends Service {
     }
     private void fail(String title, String detail, boolean again) {
         disconnect(); state.status(title, detail, false);
-        if (active && again) worker.postDelayed(retry, 5000);
+        if (active && again && BackgroundRecovery.awake(this)) worker.postDelayed(retry, 5000);
     }
     private void sendCommand(AudioCommand action,AudioCommandOptions options) {
         ProbeState.Snapshot s = state.snapshot();

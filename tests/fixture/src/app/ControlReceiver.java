@@ -3,6 +3,7 @@ import android.content.*;
 import android.os.*;
 public class ControlReceiver extends BroadcastReceiver {
     @Override public void onReceive(Context c,Intent i){
+        if(i.hasExtra("fytAcc")){c.sendBroadcast(new Intent(i.getIntExtra("fytAcc",0)==1?"com.fyt.boot.ACCON":"com.fyt.boot.ACCOFF").setPackage("com.crewbeat.hondabox"));return;}
         if(i.getBooleanExtra("getCommands",false)){setResultData(ToolkitService.commandReport());return;}
         if(i.getBooleanExtra("getRoutes",false)){setResultData(ToolkitService.routeReport());return;}
         if(i.hasExtra("simulateSourceCommands"))ToolkitService.simulateSourceCommands=i.getBooleanExtra("simulateSourceCommands",false);

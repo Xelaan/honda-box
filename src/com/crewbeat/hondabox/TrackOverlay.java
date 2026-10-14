@@ -10,6 +10,7 @@ import android.widget.TextView;
 public final class TrackOverlay {
     private final Context context;private final Handler ui=new Handler(Looper.getMainLooper());private final WindowManager windows;
     private final TrackChange changes=new TrackChange();private TrackCardView view;private long until,demoUntil;private boolean demoPending;private boolean started;
+    private long shownSession,shownSourceSequence;private AudioMode shownMode;private String shownTrack="";
     public TrackOverlay(Context c){context=c;windows=(WindowManager)c.getSystemService(Context.WINDOW_SERVICE);}
     public static boolean enabled(Context c){return c.getSharedPreferences("overlay",0).getBoolean("tracks",true);}
     public static void enabled(Context c,boolean value){c.getSharedPreferences("overlay",0).edit().putBoolean("tracks",value).apply();}
@@ -32,9 +33,20 @@ public final class TrackOverlay {
         if(title!=null){hide();until=demo?demoUntil:now+4000;
             AudioMode mode=AudioMode.reported(s);int icon=s.mediaDevice==ProbeState.MediaDevice.IPOD?R.drawable.track_icon_ipod:mode==AudioMode.RADIO?R.drawable.track_icon_radio:mode==AudioMode.USB?R.drawable.track_icon_usb:R.drawable.track_icon_cd;
             String label=demo?I18n.t(R.string.track_demo_label):I18n.t(R.string.track_now_playing)+"  ·  "+s.source();view=new TrackCardView(context,title,label,icon,until);
+            shownSession=s.sessionId;shownSourceSequence=s.sourceSequence;shownMode=mode;shownTrack=trackKey(s);
             view.setOnClickListener(v->openSource());
             WindowManager.LayoutParams lp=new WindowManager.LayoutParams(Math.min(dp(600),context.getResources().getDisplayMetrics().widthPixels-dp(32)),dp(88),Build.VERSION.SDK_INT>=26?WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY:WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,PixelFormat.TRANSLUCENT);lp.gravity=Gravity.TOP|Gravity.CENTER_HORIZONTAL;lp.y=dp(6);lp.alpha=VolumeOverlay.WINDOW_ALPHA;lp.setTitle("Honda Box New Track");try{windows.addView(view,lp);ProbeState.INSTANCE.trackOverlay(true);view.setAlpha(0);view.setTranslationY(-dp(8));view.animate().alpha(1).translationY(0).setDuration(180).start();}catch(RuntimeException e){view=null;ProbeState.INSTANCE.log("TRACK OVERLAY: "+e);}}
+        // TITLE may arrive after the fallback announcement, or select a different
+        // field for the same song. Refresh the existing card without announcing again.
+        AudioMode current=AudioMode.reported(s);
+        if(view!=null&&!demo&&now<until&&current!=null&&current!=AudioMode.RADIO
+                &&s.sessionId==shownSession&&s.sourceSequence==shownSourceSequence
+                &&current==shownMode&&trackKey(s).equals(shownTrack)&&!s.usingStandbyText()){
+            String selected=s.combinedMediaText();
+            if(!selected.isEmpty()&&!selected.equals("—"))view.updateTitle(selected);
+        }
         if(now>=until||(!demo&&s.carMenuOverlayVisible))hide();
     }
+    private static String trackKey(ProbeState.Snapshot s){return s.cdNumber(113)+":"+s.cdNumber(101);}
     public void close(){started=false;demoUntil=0;demoPending=false;ui.removeCallbacks(tick);hide();}
 }

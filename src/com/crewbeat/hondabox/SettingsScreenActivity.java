@@ -47,7 +47,7 @@ public abstract class SettingsScreenActivity extends Activity {
 
         LinearLayout title = column(); title.addView(label(debugScreen()?"HONDA  /  DEBUG":"HONDA  /  SETTINGS", 11, ACCENT));
         title.addView(label(I18n.t(debugScreen()?R.string.debug_title:R.string.ui_settings), 27, TEXT)); header.addView(title, new LinearLayout.LayoutParams(0,-2,1));
-        TextView version = label("BOX  0.8.33", 12, MUTED); header.addView(version);header.addView(spaceX(16));Button back=button(I18n.t(R.string.ui_back),false);back.setTag("settings-back");back.setOnClickListener(v->finish());header.addView(back,new LinearLayout.LayoutParams(-2,dp(48)));root.addView(header);
+        TextView version = label("BOX  0.8.34", 12, MUTED); header.addView(version);header.addView(spaceX(16));Button back=button(I18n.t(R.string.ui_back),false);back.setTag("settings-back");back.setOnClickListener(v->finish());header.addView(back,new LinearLayout.LayoutParams(-2,dp(48)));root.addView(header);
         root.addView(space(18));
         if(!debugScreen()){
             LinearLayout permissions=card();permissions.addView(label(I18n.t(R.string.settings_overlay_permission_title),14,ACCENT));
@@ -152,6 +152,7 @@ public abstract class SettingsScreenActivity extends Activity {
         cdEnabled.setOnCheckedChangeListener((toggle,checked)->{AudioSourceController.enabled(this,checked);overlayAction(false);});
         CheckBox hideAux=new CheckBox(this);hideAux.setText(I18n.t(R.string.hide_player_on_aux));hideAux.setTextColor(TEXT);hideAux.setChecked(SourceSettings.hideOnAux(this));cdCard.addView(hideAux);
         hideAux.setOnCheckedChangeListener((toggle,checked)->{SourceSettings.hideOnAux(this,checked);overlayAction(false);});
+        cdCard.addView(space(12));cdCard.addView(AuxPlaybackSettings.controls(this));
         cdCard.addView(space(12));cdCard.addView(label(I18n.t(R.string.aux_name_title),13,TEXT));
         LinearLayout auxNameRow=row();auxNameRow.setGravity(Gravity.CENTER_VERTICAL);EditText auxName=new EditText(this);auxName.setSingleLine(true);auxName.setTextColor(TEXT);auxName.setHintTextColor(MUTED);auxName.setHint("AUX");auxName.setText(SourceSettings.auxName(this).equals("AUX")||SourceSettings.auxName(this).equals("Android")||SourceSettings.auxName(this).equals("Head Unit")?SourceSettings.auxCustomName(this):SourceSettings.auxName(this));auxName.setTextSize(14);auxName.setFilters(new android.text.InputFilter[]{new android.text.InputFilter.LengthFilter(32)});auxName.setInputType(android.text.InputType.TYPE_CLASS_TEXT|android.text.InputType.TYPE_TEXT_FLAG_CAP_WORDS);auxName.setContentDescription(I18n.t(R.string.aux_name_title));
         auxNameRow.addView(auxName,new LinearLayout.LayoutParams(dp(260),dp(48)));auxNameRow.addView(spaceX(10));Button saveAuxName=button(I18n.t(R.string.ui_save),false);auxNameRow.addView(saveAuxName);
@@ -166,6 +167,7 @@ public abstract class SettingsScreenActivity extends Activity {
         root.addView(overlayCard);root.addView(space(16));
         root.addView(menuCard);root.addView(space(16));
         root.addView(stockOverlays.controls());root.addView(space(16));
+        LinearLayout compatibility=card();compatibility.addView(AccordCompatibility.controls(this));root.addView(compatibility);root.addView(space(16));
         Button debug=button(I18n.t(R.string.debug_open),false);debug.setOnClickListener(v->startActivity(new Intent(this,DebugActivity.class)));root.addView(debug);
         }
         if(debugScreen()){
@@ -290,11 +292,11 @@ public abstract class SettingsScreenActivity extends Activity {
         vehiclePacket10Info.setText(vehiclePacketDescription(0x10,s.vehiclePacket10));
         steeringInfo.setText(steeringDescription(s));
         media.setText(s.media()); audioRouteInfo.setText(ProbeState.INSTANCE.audioRoutes.summary()); if (fields.getVisibility() == View.VISIBLE) fields.setText(s.allFields());
-        boolean canCommand = s.running && s.connected && !s.commandBusy && s.number(1000) != null && s.number(1000) == 6291908;
+        boolean canCommand = s.running && s.connected && !s.commandBusy && s.accord();
         for (Button b : commandButtons) { b.setEnabled(canCommand); b.setAlpha(canCommand ? 1f : .45f); }
         commandStatus.setText(I18n.stored(s.commandStatus));
         Integer p=s.number(1000);
-        profile.setText(I18n.t(R.string.ui_profile_252) + (p==null?I18n.t(R.string.ui_not_received_yet):p) + (p==null?"":s.honda()?I18n.t(R.string.ui_honda_compatible_schema):I18n.t(R.string.ui_unknown_schema_raw_values)));
+        profile.setText(I18n.t(R.string.ui_profile_252) + (p==null?I18n.t(R.string.ui_not_received_yet):p) + (p==null?"":s.honda()?I18n.t(R.string.ui_honda_compatible_schema):I18n.t(R.string.ui_unknown_schema_raw_values))+(s.processAsHondaAccord?" · "+I18n.t(R.string.accord_compatibility_toggle):""));
         String age=s.lastEvent==0?"—":String.format(Locale.getDefault(),"%tT",s.lastEvent);
         stats.setText("Callbacks: " + s.count + I18n.t(R.string.ui_last_event) + age + (s.connected?"":I18n.t(R.string.ui_current_values_unavailable)));
         backend.setText(I18n.stored(s.backend)); log.setText(s.log.isEmpty()?I18n.t(R.string.ui_connection_results_and_received_events):s.log);

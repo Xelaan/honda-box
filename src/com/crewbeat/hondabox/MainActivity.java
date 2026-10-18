@@ -45,14 +45,14 @@ public final class MainActivity extends Activity {
     }
     private void startReading(){try{BackgroundSettings.open(this);}catch(RuntimeException e){ProbeState.INSTANCE.status(I18n.t(R.string.ui_could_not_start),e.toString(),false);}}
 
-    private void select(AudioMode mode){ProbeState.Snapshot s=ProbeState.INSTANCE.overlaySnapshot();if(!s.running||!s.connected||s.commandBusy||!Integer.valueOf(6291908).equals(s.number(1000)))return;
+    private void select(AudioMode mode){ProbeState.Snapshot s=ProbeState.INSTANCE.overlaySnapshot();if(!s.running||!s.connected||s.commandBusy||!s.accord())return;
         try{startService(new Intent(this,ProbeService.class).setAction(ProbeService.COMMAND).putExtra("command",mode.select.name()));startActivity(AudioPlayerActivity.intent(this,mode,false));}catch(RuntimeException e){ProbeState.INSTANCE.commandRejected(I18n.t(R.string.ui_could_not_send_command)+e.getMessage());}
     }
-    private void render(){if(languageRevision!=I18n.revision()||palette!=ThemeSettings.resolve(this).palette)buildUi();ProbeState.Snapshot s=ProbeState.INSTANCE.overlaySnapshot();boolean ready=s.running&&s.connected&&!s.commandBusy&&Integer.valueOf(6291908).equals(s.number(1000));AudioMode active=AudioMode.reported(s);String key=ready+":"+(active==null?"":active.name())+":"+s.source()+":"+s.mediaDevice;
+    private void render(){if(languageRevision!=I18n.revision()||palette!=ThemeSettings.resolve(this).palette)buildUi();ProbeState.Snapshot s=ProbeState.INSTANCE.overlaySnapshot();boolean ready=s.running&&s.connected&&!s.commandBusy&&s.accord();AudioMode active=AudioMode.reported(s);String key=ready+":"+(active==null?"":active.name())+":"+s.source()+":"+s.mediaDevice;
         if(!key.equals(cardState)){cardState=key;for(int i=0;i<cards.length;i++){boolean selected=modes[i]==active;cards[i].setEnabled(ready);cards[i].setAlpha(ready?1f:.6f);String info=i==0?(selected?s.source():"AM / FM"):i==1?I18n.t(R.string.home_cd_value):(selected?(s.mediaDevice==ProbeState.MediaDevice.IPOD?"iPod":"USB"):I18n.t(R.string.home_usb_value));cards[i].illustration(i==2&&selected&&s.mediaDevice==ProbeState.MediaDevice.IPOD?3:i);cards[i].bind(palette,selected,info);}}
-        boolean audioOff=s.connected&&Integer.valueOf(6291908).equals(s.number(1000))&&Boolean.FALSE.equals(s.bsjAudioEnabled);
+        boolean audioOff=s.connected&&s.accord()&&Boolean.FALSE.equals(s.bsjAudioEnabled);
         String currentSource=I18n.t(R.string.home_current)+" · "+s.source();
-        source.setText(currentSource);source.setContentDescription(currentSource);audioOffChip.setVisibility(audioOff?View.VISIBLE:View.GONE);audioOffGap.setVisibility(audioOff?View.VISIBLE:View.GONE);connectionDot.setBackground(shape(s.connected?palette.accent:palette.warning,0));status.setText(s.connected&&!Integer.valueOf(6291908).equals(s.number(1000))?I18n.t(R.string.audio_unavailable):I18n.stored(s.status));status.setTextColor(s.connected?palette.muted:palette.warning);connect.setVisibility(s.running?View.GONE:View.VISIBLE);
+        source.setText(currentSource);source.setContentDescription(currentSource);audioOffChip.setVisibility(audioOff?View.VISIBLE:View.GONE);audioOffGap.setVisibility(audioOff?View.VISIBLE:View.GONE);connectionDot.setBackground(shape(s.connected?palette.accent:palette.warning,0));status.setText(s.connected&&!s.accord()?I18n.t(R.string.audio_unavailable):I18n.stored(s.status));status.setTextColor(s.connected?palette.muted:palette.warning);connect.setVisibility(s.running?View.GONE:View.VISIBLE);
     }
     @Override protected void onStart(){super.onStart();ui.removeCallbacks(refresh);ui.post(refresh);}
     @Override protected void onStop(){ui.removeCallbacks(refresh);super.onStop();}

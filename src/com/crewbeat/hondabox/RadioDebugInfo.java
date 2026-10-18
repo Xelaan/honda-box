@@ -11,7 +11,7 @@ public final class RadioDebugInfo {
   return data+" @"+String.format(Locale.US,"%tT",v.at)+(source>0&&v.sequence<=source?" · "+I18n.t(R.string.debug_radio_before_source):"");
  }
  private static String decoded(ProbeState.Snapshot s,int code){
-  if(!s.connected||!Integer.valueOf(6291908).equals(s.number(1000))||!s.fresh(code))return "";Integer n=s.displayNumber(code);if(n==null)return "";
+  if(!s.connected||!s.accord()||!s.fresh(code))return "";Integer n=s.displayNumber(code);if(n==null)return "";
   if(code==115){String[] bands={"FM","FM1","FM2","AM","AM1 / MW","AM2 / LW"};return n>=0&&n<bands.length?bands[n]:"";}
   if(code==116)return n>=1&&n<=6?"#"+n:n==0?I18n.t(R.string.debug_radio_no_preset):"";
   if(code==117){String[] states={"—","Normal","TUNE+","TUNE−","SEEK+","SEEK−","SCAN","Auto Search"};return n>=1&&n<states.length?states[n]:"";}

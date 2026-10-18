@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProbeService extends Service {
+    public static final String COMPATIBILITY="com.crewbeat.hondabox.COMPATIBILITY";
     public static final String STOP = "com.crewbeat.hondabox.STOP";
     public static final String OVERLAY = "com.crewbeat.hondabox.OVERLAY";
     private CarMenuOverlay carMenuOverlay;private AudioSourceController audioScreens;private VolumeOverlay overlay;private SourceOverlay sourceOverlay;private ClimateOverlay climateOverlay;private ClimateStripOverlay climateStrip;
@@ -22,13 +23,14 @@ public class ProbeService extends Service {
     private static final class RouteSubscription {
         IBinder binder; FytProtocol.Callback callback; final List<Integer> codes = new ArrayList<>(); boolean closed;
     }
+    private AuxPlaybackController androidMedia;
     private TrackOverlay trackOverlay;private UnknownOverlay unknownOverlay;
     private boolean active; private int generation;
     private long lastWakeAt=-1;
     private final BroadcastReceiver wakeReceiver=new BroadcastReceiver(){@Override public void onReceive(Context c,Intent i){
         String action=i==null?null:i.getAction();
         if(BackgroundRecovery.ACC_OFF.equals(action)){
-            BackgroundRecovery.notePower(c,false);final PendingResult pending=goAsync();
+            BackgroundRecovery.notePower(c,false);androidMedia.reset();final PendingResult pending=goAsync();
             if(!worker.post(()->{try{prepareForSleep();}finally{pending.finish();}}))pending.finish();
         }else if(Intent.ACTION_SCREEN_ON.equals(action)||BackgroundRecovery.ACC_ON.equals(action)){
             BackgroundRecovery.notePower(c,true);worker.post(()->wakeUp(action));
@@ -40,8 +42,8 @@ public class ProbeService extends Service {
         worker.removeCallbacks(captureLogicalMenu);worker.removeCallbacks(saveMenus);worker.removeCallbacks(savePresets);menuSaveQueued=false;presetSaveQueued=false;
         state.captureLogicalMenu();
         try{
-            getSharedPreferences("carMenuMemory",MODE_PRIVATE).edit().putString("received",state.carMenuMemory.json().toString()).commit();savedMenuRevision=state.carMenuMemory.revision();
-            getSharedPreferences("radioPresets",MODE_PRIVATE).edit().putString("received",state.radioPresets.json().toString()).commit();savedPresetRevision=state.radioPresets.revision();
+            getSharedPreferences("carMenuMemory",MODE_PRIVATE).edit().putString(cacheKey(state.carMenuMemory.profile()),state.carMenuMemory.json().toString()).commit();savedMenuRevision=state.carMenuMemory.revision();
+            getSharedPreferences("radioPresets",MODE_PRIVATE).edit().putString(cacheKey(state.radioPresets.profile()),state.radioPresets.json().toString()).commit();savedPresetRevision=state.radioPresets.revision();
         }catch(Exception e){state.log("ACC OFF CACHE: "+e);}
         state.log("ACC OFF: caches saved; reconnect retries suspended");
     }
@@ -64,10 +66,16 @@ public class ProbeService extends Service {
     private CommandRun commandRun;
     private final Runnable captureLogicalMenu=()->captureMenuAndSave();
     private void captureMenuAndSave(){state.captureLogicalMenu();saveMenus.run();}
+    private String cacheKey(int profile){return profile==AccordCompatibility.PROFILE?"received":"received."+profile;}
+    private void restoreProfileCaches(){
+        int profile=state.radioPresets.profile();if(profile<=0)return;
+        state.radioPresets.restore(getSharedPreferences("radioPresets",MODE_PRIVATE).getString(cacheKey(profile),""));
+        state.carMenuMemory.restore(getSharedPreferences("carMenuMemory",MODE_PRIVATE).getString(cacheKey(profile),""));
+    }
     private long savedMenuRevision=-1;private boolean menuSaveQueued;
-    private final Runnable saveMenus=()->{menuSaveQueued=false;try{long revision=state.carMenuMemory.revision();if(revision!=savedMenuRevision){getSharedPreferences("carMenuMemory",MODE_PRIVATE).edit().putString("received",state.carMenuMemory.json().toString()).apply();savedMenuRevision=revision;}}catch(Exception e){state.log("MENU CACHE ERROR: "+e);}};
+    private final Runnable saveMenus=()->{menuSaveQueued=false;try{long revision=state.carMenuMemory.revision();if(state.carMenuMemory.profile()>0&&revision!=savedMenuRevision){getSharedPreferences("carMenuMemory",MODE_PRIVATE).edit().putString(cacheKey(state.carMenuMemory.profile()),state.carMenuMemory.json().toString()).apply();savedMenuRevision=revision;}}catch(Exception e){state.log("MENU CACHE ERROR: "+e);}};
     private long savedPresetRevision=-1;private boolean presetSaveQueued;
-    private final Runnable savePresets=()->{presetSaveQueued=false;try{long revision=state.radioPresets.revision();if(revision!=savedPresetRevision){getSharedPreferences("radioPresets",MODE_PRIVATE).edit().putString("received",state.radioPresets.json().toString()).apply();savedPresetRevision=revision;}}catch(Exception e){state.log("PRESET CACHE ERROR: "+e);}};
+    private final Runnable savePresets=()->{presetSaveQueued=false;try{long revision=state.radioPresets.revision();if(state.radioPresets.profile()>0&&revision!=savedPresetRevision){getSharedPreferences("radioPresets",MODE_PRIVATE).edit().putString(cacheKey(state.radioPresets.profile()),state.radioPresets.json().toString()).apply();savedPresetRevision=revision;}}catch(Exception e){state.log("PRESET CACHE ERROR: "+e);}};
     private static final class CommandRun {
         long id,routeStartedAt,modeSentAt; int generation; IBinder can; AudioCommand action; AudioCommandOptions options; boolean pressed;
         Runnable next, finish;
@@ -83,12 +91,22 @@ public class ProbeService extends Service {
         }
         // Fulfil startForegroundService immediately, including rejected/racing start requests.
         showNotification();
-        state.recording(DiagnosticSettings.enabled(this));state.carMenuMemory.restore(getSharedPreferences("carMenuMemory",MODE_PRIVATE).getString("received",""));state.radioPresets.restore(getSharedPreferences("radioPresets",MODE_PRIVATE).getString("received",""));state.auxSource(SourceSettings.aux(this));state.auxName(SourceSettings.auxName(this));unknownOverlay=new UnknownOverlay(this);trackOverlay=new TrackOverlay(this);carMenuOverlay=new CarMenuOverlay(this); audioScreens=new AudioSourceController(this); overlay = new VolumeOverlay(this);sourceOverlay=new SourceOverlay(this);climateOverlay=new ClimateOverlay(this);climateStrip=new ClimateStripOverlay(this,climateOverlay); thread = new HandlerThread("FytProbeIPC"); thread.start(); worker = new Handler(thread.getLooper());IntentFilter wakeFilter=new IntentFilter(Intent.ACTION_SCREEN_ON);wakeFilter.addAction(BackgroundRecovery.ACC_ON);wakeFilter.addAction(BackgroundRecovery.ACC_OFF);
+        state.processAsHondaAccord(AccordCompatibility.enabled(this));state.recording(DiagnosticSettings.enabled(this));state.carMenuMemory.restore(getSharedPreferences("carMenuMemory",MODE_PRIVATE).getString("received",""));state.radioPresets.restore(getSharedPreferences("radioPresets",MODE_PRIVATE).getString("received",""));state.auxSource(SourceSettings.aux(this));state.auxName(SourceSettings.auxName(this));unknownOverlay=new UnknownOverlay(this);trackOverlay=new TrackOverlay(this);carMenuOverlay=new CarMenuOverlay(this); audioScreens=new AudioSourceController(this);androidMedia=new AuxPlaybackController(this); overlay = new VolumeOverlay(this);sourceOverlay=new SourceOverlay(this);climateOverlay=new ClimateOverlay(this);climateStrip=new ClimateStripOverlay(this,climateOverlay); thread = new HandlerThread("FytProbeIPC"); thread.start(); worker = new Handler(thread.getLooper());IntentFilter wakeFilter=new IntentFilter(Intent.ACTION_SCREEN_ON);wakeFilter.addAction(BackgroundRecovery.ACC_ON);wakeFilter.addAction(BackgroundRecovery.ACC_OFF);
         if(Build.VERSION.SDK_INT>=33)registerReceiver(wakeReceiver,wakeFilter,Context.RECEIVER_EXPORTED);else registerReceiver(wakeReceiver,wakeFilter);
 
     }
     @Override public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null && STOP.equals(intent.getAction())) { BackgroundSettings.pause(this);stopSelf(); return START_NOT_STICKY; }
+        if(intent!=null&&COMPATIBILITY.equals(intent.getAction())){
+            if(!state.overlaySnapshot().running){state.processAsHondaAccord(AccordCompatibility.enabled(this));stopSelf();return START_NOT_STICKY;}
+            audioScreens.backgroundStart();androidMedia.reset();
+            worker.post(()->{
+                boolean on=AccordCompatibility.enabled(this);
+                if(on==state.overlaySnapshot().processAsHondaAccord)return;
+                saveMenus.run();savePresets.run();disconnect();state.processAsHondaAccord(on);connect();
+            });
+            return START_STICKY;
+        }
         if (intent != null && OVERLAY.equals(intent.getAction())) {
             if (!state.snapshot().running) { stopSelf(); return START_NOT_STICKY; }
             showNotification();unknownOverlay.refreshOptions();audioScreens.refreshOptions();overlay.refreshOptions();sourceOverlay.refreshOptions();climateOverlay.refreshOptions();climateStrip.refreshOptions();carMenuOverlay.refreshOptions();
@@ -124,7 +142,7 @@ public class ProbeService extends Service {
         state.log("SERVICE START: "+startReason);
         if(intent==null||(intent!=null&&intent.getBooleanExtra("backgroundStart",false)))audioScreens.backgroundStart();
         showNotification();
-        unknownOverlay.start();trackOverlay.start();audioScreens.start();overlay.start();sourceOverlay.start();climateStrip.start();climateOverlay.start();carMenuOverlay.start();
+        unknownOverlay.start();trackOverlay.start();audioScreens.start();androidMedia.start();overlay.start();sourceOverlay.start();climateStrip.start();climateOverlay.start();carMenuOverlay.start();
         worker.post(() -> { if (!active) { active = true; state.running(true); state.newSession(); connect(); }else wakeUp(automaticReason==null?"service_start":automaticReason); });
         return START_STICKY;
     }
@@ -178,7 +196,10 @@ public class ProbeService extends Service {
             death = () -> worker.post(() -> { if (session == generation) fail(I18n.t(R.string.ui_can_module_disconnected), I18n.t(R.string.ui_binder_terminated_retrying_in_5), true); });
             module.linkToDeath(death, 0);
             callback = new FytProtocol.Callback((code, ints, floats, strings) -> worker.post(() -> {
-                if (active && session == generation && module != null){state.event(code, ints, floats, strings);if(code>=135&&code<=139){worker.removeCallbacks(captureLogicalMenu);worker.postDelayed(captureLogicalMenu,200);}if(!menuSaveQueued&&state.carMenuMemory.revision()!=savedMenuRevision){menuSaveQueued=true;worker.postDelayed(saveMenus,1000);}if(code==1019||(code>=120&&code<=125)){if(!presetSaveQueued&&state.radioPresets.revision()!=savedPresetRevision){presetSaveQueued=true;worker.postDelayed(savePresets,1000);}}}
+                if (active && session == generation && module != null){
+                    if(code==1000){saveMenus.run();savePresets.run();}
+                    int oldCacheProfile=state.radioPresets.profile();state.event(code, ints, floats, strings);
+                    if(code==1000&&oldCacheProfile!=state.radioPresets.profile())restoreProfileCaches();if(code>=135&&code<=139){worker.removeCallbacks(captureLogicalMenu);worker.postDelayed(captureLogicalMenu,200);}if(!menuSaveQueued&&state.carMenuMemory.revision()!=savedMenuRevision){menuSaveQueued=true;worker.postDelayed(saveMenus,1000);}if(code==1019||(code>=120&&code<=125)){if(!presetSaveQueued&&state.radioPresets.revision()!=savedPresetRevision){presetSaveQueued=true;worker.postDelayed(savePresets,1000);}}}
             }));
             state.status(I18n.t(R.string.ui_subscription_sent), I18n.t(R.string.ui_binder_available_waiting_for_callbacks), true);
             // The stock Honda callback subscribes to the complete 0..147 range.
@@ -231,7 +252,7 @@ public class ProbeService extends Service {
     private void sendCommand(AudioCommand action,AudioCommandOptions options) {
         ProbeState.Snapshot s = state.snapshot();
         if (!active || !s.running || module == null || !s.connected) { state.commandRejected(I18n.t(R.string.ui_not_connected_command_not_sent)); return; }
-        if (s.number(1000) == null || s.number(1000) != 6291908) { state.commandRejected(I18n.t(R.string.ui_commands_are_available_only_for)); return; }
+        if (!s.accord()) { state.commandRejected(I18n.t(R.string.ui_commands_are_available_only_for)); return; }
         if (commandRun != null) { state.commandRejected(I18n.t(R.string.ui_previous_command_still_in_progress)); return; }
         final CommandRun run = new CommandRun();
         run.id=state.beginCommand(action.title()+(options.debug?" · "+options.description():""));
@@ -255,7 +276,7 @@ public class ProbeService extends Service {
     }
     private boolean sameCommandTarget(CommandRun run){
         ProbeState.Snapshot current=state.overlaySnapshot();
-        return run==commandRun&&run.generation==generation&&active&&module==run.can&&current.running&&current.connected&&Integer.valueOf(6291908).equals(current.number(1000));
+        return run==commandRun&&run.generation==generation&&active&&module==run.can&&current.running&&current.connected&&current.accord();
     }
     private void dispatchAudio(CommandRun run)throws RemoteException{
         if(!sameCommandTarget(run)){endCommand(run,I18n.t(R.string.debug_audio_target_changed));return;}
@@ -306,7 +327,7 @@ public class ProbeService extends Service {
     }
     @Override public void onDestroy() {
         try{unregisterReceiver(wakeReceiver);}catch(IllegalArgumentException ignored){}
-        unknownOverlay.close();trackOverlay.close();audioScreens.close();overlay.close();sourceOverlay.close();climateStrip.close();climateOverlay.close();carMenuOverlay.close(); state.running(false);
+        unknownOverlay.close();trackOverlay.close();audioScreens.close();androidMedia.close();overlay.close();sourceOverlay.close();climateStrip.close();climateOverlay.close();carMenuOverlay.close(); state.running(false);
         worker.post(() -> { active = false; disconnect();worker.removeCallbacks(saveMenus);saveMenus.run();worker.removeCallbacks(savePresets);savePresets.run(); state.status(I18n.t(R.string.ui_stopped), I18n.t(R.string.ui_background_capture_stopped_you_can), false); thread.quitSafely(); });
         stopForeground(true); super.onDestroy();
     }

@@ -44,7 +44,7 @@ public final class TrackChange {
         boolean radio=current==AudioMode.RADIO;
         if(radio){
             Integer band=s.displayNumber(115),frequency=s.displayNumber(119);
-            String station=s.fresh(115)&&s.fresh(119)?RadioFrequency.value(band,frequency,Integer.valueOf(6291908).equals(s.number(1000))):"—";
+            String station=s.fresh(115)&&s.fresh(119)?RadioFrequency.value(band,frequency,s.accord()):"—";
             if(!station.equals("—")){
                 key="radio:"+band+":"+frequency;String unit=RadioFrequency.unit(band);
                 unit=unit.equals("kHz")?I18n.t(R.string.radio_khz):unit.equals("MHz")?I18n.t(R.string.radio_mhz):unit;

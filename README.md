@@ -4,6 +4,8 @@ An Android companion for Honda's original audio and climate system on FYT head u
 
 Developed against **Honda Accord VIII / Spirior 2009–2013**, FYT profile **6291908**, and BSJ V704. Compatibility with other profiles is not assumed. Requires **Android 7.0 / API 24+**. The main package is `com.crewbeat.hondabox`.
 
+At the bottom of Settings, **Process as Honda Accord** optionally applies the profile 6291908 processing/workarounds to any selected CAN profile. It is off by default; native 6291908 handling is always enabled. This covers fan-based climate power, inferred DUAL, BSJ source/media decoding, USB/iPod detection, menu/preset caches and player commands. The configured CAN profile stays unchanged, and received caches remain isolated by actual profile. Changing the setting reconnects read-only FYT subscriptions. Compatibility with another adapter still needs checking on the car.
+
 ## Features
 
 *Actual app screens captured in a 1280×480 emulator with synthetic data, not live vehicle readings. Open an image for full size. Screenshots use English; Russian is also supported.*
@@ -115,6 +117,8 @@ Top cards announce detected track/station changes while a player is not foregrou
 ### Source and audio power status
 
 A source overlay appears on changes and service start/wake. Verified OEM audio power status is shown as a separate OFF chip on the selector; the source overlay can remain visible while audio is off. AUX can be renamed in settings, for example to Android.
+
+Settings → Players also controls Android playback around AUX. Pausing when leaving AUX defaults to on. Returning offers Always play, Resume if auto-paused (default), or Do nothing. This uses [Android media buttons](https://developer.android.com/reference/android/media/AudioManager#dispatchMediaKeyEvent(android.view.KeyEvent)); the Android player must support them. The default does not resume music that was already paused.
 
 **Selector / audio OFF**
 

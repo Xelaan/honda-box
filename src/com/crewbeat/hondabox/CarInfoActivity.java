@@ -17,7 +17,7 @@ public final class CarInfoActivity extends Activity {
   explanation=text(I18n.t(R.string.car_info_unconfirmed),12,palette.muted);root.addView(explanation);root.addView(gap(10));Button details=ConsoleControls.button(this,I18n.t(R.string.car_info_received_fields),palette,false);details.setOnClickListener(v->{expanded=!expanded;raw.setVisibility(expanded?View.VISIBLE:View.GONE);});root.addView(details);raw=text("",12,palette.text);raw.setTypeface(Typeface.MONOSPACE);raw.setPadding(dp(8),dp(10),dp(8),0);raw.setVisibility(expanded?View.VISIBLE:View.GONE);root.addView(raw);
  }
  public static ProbeState.Value received(ProbeState.Snapshot s,int code){
-  if(!Integer.valueOf(6291908).equals(s.number(1000)))return null;
+  if(!s.accord())return null;
   ProbeState.Value decoded=s.bsjValues.get(code);if(decoded!=null)return decoded;
   ProbeState.Value callback=s.values.get(code);return callback!=null&&callback.ints!=null&&callback.ints.length>0&&callback.ints[0]!=0?callback:null;
  }

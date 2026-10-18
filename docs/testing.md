@@ -5,6 +5,7 @@
 ```sh
 python3 -m unittest discover -s tools -p 'test_*.py'
 python3 tests/run_solar_tests.py
+python3 tests/run_aux_playback_tests.py
 ```
 
 The decoder tests generate packets locally. SolarTimes tests require a JDK but no Android device. GitHub Actions runs these checks and compiles the app, launchers and test APKs.
@@ -16,7 +17,7 @@ Use an emulator with overlays enabled. Build first:
 ```sh
 python3 build.py
 python3 build_tests.py
-adb -s emulator-5554 install -r dist/Honda-Box-0.8.33.apk
+adb -s emulator-5554 install -r dist/Honda-Box-0.8.34.apk
 adb -s emulator-5554 install -r dist/TEST-ONLY-probe-tests.apk
 adb -s emulator-5554 shell appops set com.crewbeat.hondabox SYSTEM_ALERT_WINDOW allow
 adb -s emulator-5554 shell am instrument -w com.crewbeat.hondabox.tests/com.crewbeat.hondabox.tests.RadioDebugTests
@@ -38,7 +39,7 @@ An emulator verifies parsing and UI behavior; it cannot prove that a particular 
 
 ## Live track-announcement text
 
-`TrackOverlayRefreshTests` checks real overlay windows for CD, USB and iPod: a late TITLE replaces the track-number fallback, selecting another TITLE field updates the same card and accessibility caption, and neither refresh restarts the four-second lifetime. A new track counter cannot overwrite the preceding card before its own announcement; an expired card stays hidden on a non-track TITLE update. Run only in a disposable emulator, with overlay permission granted; no FYT fixture or vehicle commands are involved.
+`TrackOverlayRefreshTests` checks real overlay windows for CD, USB and iPod: a late TITLE replaces the track-number fallback, selecting another TITLE field updates the same card and accessibility caption, and neither refresh restarts the five-second lifetime. A new track counter cannot overwrite the preceding card before its own announcement; an expired card stays hidden on a non-track TITLE update. Run only in a disposable emulator, with overlay permission granted; no FYT fixture or vehicle commands are involved.
 
 ```sh
 adb -s emulator-5554 shell am instrument -w com.crewbeat.hondabox.tests/com.crewbeat.hondabox.tests.TrackOverlayRefreshTests
@@ -86,3 +87,37 @@ adb -s emulator-5554 pull /sdcard/Android/data/com.crewbeat.hondabox/files/docum
 ```
 
 Run only in a disposable emulator. The capture ends with the service stopped; open Honda Box again to reconnect. Review the images before replacing the gallery. Both README files link to the same PNGs; maintain matching `-day` and `-night` pairs. These documentation captures show interface states, not a hardware compatibility test.
+
+## Android playback around AUX
+
+`AuxPlaybackTests` is an Android-free policy suite covering real source transitions, already-paused playback, all three return modes, disabling pause, manual playback override, asynchronous/ignored PAUSE, session changes, disconnection and AUX remapping. Run it with `python3 tests/run_aux_playback_tests.py`.
+
+`AuxPlaybackIntegrationTests` runs only on an emulator. It uses a real Android `MediaSession` and a muted looping `AudioTrack` to verify media-key Pause/Play delivery, return policies, and the compact settings dialog in RU/EN and both themes. No FYT fixture or vehicle commands are required.
+
+```sh
+adb -s emulator-5554 shell am force-stop com.crewbeat.hondabox
+adb -s emulator-5554 shell am instrument -w com.crewbeat.hondabox.tests/com.crewbeat.hondabox.tests.AuxPlaybackIntegrationTests
+```
+
+Verified on API34: 41 host policy checks and 137 native settings/media checks passed.
+
+Playback control is independent of automatic player-window and overlay settings. It uses the configured raw AUX source, so menu-based iPod detection alone cannot cause media commands. Connection, invalid source, profile change, service stop and ACC sleep discard pause ownership; restoring a connection never invents a return to AUX. Default resume requires an observed playing→auto-pause sequence in the current service session. An ignored pause expires after two seconds; independently resumed playback cancels ownership of a later user pause. Android routes media keys to its current media-button consumer, so firmware/player behavior still needs a head-unit check.
+
+## Optional Accord processing
+
+The previous automatic fan fallback for every supported Honda profile has been replaced with the bottom of Settings → Process as Honda Accord (default OFF). Native 6291908 retains its verified behavior. The override applies the same handling to any positive actual CAN profile while preserving field1000 and normalized callback values in snapshots/exports. Missing/invalid profiles do not gain inferred support.
+
+`ClimatePowerFallbackTests` exercises power missing/OFF/ON, fan missing/invalid/0..7, supported and otherwise unknown profiles, both override choices, compact eligibility, large-panel power indication, and stopped/disconnected states.
+
+`AccordCompatibilityTests` compares effective source, radio presets, DUAL, CD text retention during volume changes, iPod menu/marker inference and experimental packet capture against native 6291908. It checks profile-isolated caches, clearing derived state on toggle, the real settings checkbox in EN/RU and both themes, persistent defaults, and real service reconnects through the cross-UID emulator fixture without vehicle commands.
+
+```sh
+adb -s emulator-5554 shell am force-stop com.crewbeat.hondabox
+adb -s emulator-5554 shell am instrument -w com.crewbeat.hondabox.tests/com.crewbeat.hondabox.tests.ClimatePowerFallbackTests
+adb -s emulator-5554 shell am force-stop com.crewbeat.hondabox
+adb -s emulator-5554 shell am instrument -w com.crewbeat.hondabox.tests/com.crewbeat.hondabox.tests.AccordCompatibilityTests
+```
+
+The override is protocol interpretation, not a head-unit CAN configuration write. Another profile using a different protocol is not guaranteed compatible. Analyzer experiment windows continue to retain and filter on actual profile IDs.
+
+Verified on API34: 2,163 climate checks and 165 compatibility/settings/reconnect checks passed. These are emulator checks with synthetic data; another CAN profile still needs hardware verification.

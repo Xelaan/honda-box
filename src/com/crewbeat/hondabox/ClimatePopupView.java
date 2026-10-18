@@ -17,7 +17,11 @@ public final class ClimatePopupView extends View {
         setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
     }
     public void content(ProbeState.Snapshot s,boolean test){state=s;demo=test;if(ownsTemperatures&&!test)temperatures.observe(s,true,SystemClock.uptimeMillis());setContentDescription((test?I18n.t(R.string.ui_test_306):"")+I18n.t(R.string.ui_climate)+s.temperature(27)+" / "+s.temperature(28)+", DUAL "+s.dual()+", "+s.climate()+I18n.t(R.string.ui_fan)+s.raw(21));invalidate();}
-    private String flag(int code){if(state==null||!state.connected||state.number(code)==null||((code==12||code==16||code==17||code==33||code==36||code==49)&&!state.optionalKnown(code)))return "—";Integer n=code==10?state.climatePower():state.number(code);return n==0?I18n.t(R.string.ui_off):n==1?I18n.t(R.string.ui_on):"?";}
+    private String flag(int code){
+        if(state==null||!state.connected||((code==12||code==16||code==17||code==33||code==36||code==49)&&!state.optionalKnown(code)))return "—";
+        Integer n=code==10?state.climatePower():state.number(code);if(n==null)return "—";
+        return n==0?I18n.t(R.string.ui_off):n==1?I18n.t(R.string.ui_on):"?";
+    }
     private boolean active(int code){return I18n.t(R.string.ui_on).equals(flag(code));}
     private void text(Canvas c,String s,float x,float y,float size,int color){p.setStyle(Paint.Style.FILL);p.setColor(color);p.setTextAlign(Paint.Align.CENTER);p.setTextSize(size);p.setTypeface(Typeface.create("sans-serif",Typeface.NORMAL));c.drawText(s,x,y,p);}
     private void label(Canvas c,String s,int code,float x,float y,ThemeSettings.Palette t){String f=flag(code);text(c,s+(f.equals("—")?" —":f.equals("?")?" ?":""),x,y,getWidth()/getResources().getDisplayMetrics().density>=700?19:17,active(code)?t.accent:t.muted);}

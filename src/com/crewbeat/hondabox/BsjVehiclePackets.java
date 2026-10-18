@@ -39,6 +39,6 @@ public final class BsjVehiclePackets {
     public JSONObject json()throws Exception{
         return new JSONObject().put("type0E",packet0E==null?JSONObject.NULL:packet0E.json())
             .put("type10",packet10==null?JSONObject.NULL:packet10.json())
-            .put("note","Profile6291908; checksum-valid frames only. Latest sample plus counts per type, collected even with recording disabled. Reset on log reset, connection session or profile change. TYPE0E exact length13 maps to fields140..147; field semantics/units and D0E relationship remain unverified. TYPE10 length1/2 byte0 maps to fields133/134; a second byte is unassigned. Other lengths retained raw without guessed decoding.");
+            .put("note","Accord processing (native6291908 or explicit override); checksum-valid frames only. Latest sample plus counts per type, collected even with recording disabled. Reset on log reset, connection session or profile change. TYPE0E exact length13 maps to fields140..147; field semantics/units and D0E relationship remain unverified. TYPE10 length1/2 byte0 maps to fields133/134; a second byte is unassigned. Other lengths retained raw without guessed decoding.");
     }
 }

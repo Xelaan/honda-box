@@ -375,7 +375,7 @@
     <string name="headless_launch">Start Honda Box without a window (open from its notification)</string>
     <string name="track_popup">Show new tracks and radio stations in background</string>
 <string name="media_no_data">No data</string>
-<string name="track_demo_button">Test new track overlay · 4 seconds</string>
+<string name="track_demo_button">Test new track overlay · 5 seconds</string>
 <string name="track_demo_title">Led Zeppelin — Kashmir</string>
 <string name="track_demo_label">TEST · New track</string>
 <string name="track_now_playing">NOW PLAYING</string>
@@ -589,4 +589,13 @@
     <string name="setup_stop_body">Stop in Honda Box deliberately pauses automatic starts and cancels periodic recovery. Boot, ACC and the headless service icon do not undo that pause. Open the Honda Box interface to resume.\n\nThe recovery check is a fallback with a minimum repeat interval of 15 minutes, and Android can delay it. It is cancelled on ACC OFF and does not replace immediate firmware autostart. After a firmware force-stop, FYT may need to launch the service again.</string>
     <string name="setup_troubleshoot_title">What to check if it still fails</string>
     <string name="setup_troubleshoot">A player or selector opens at startup: select Honda Box Service instead of a UI shortcut.\n\nThe service runs but overlays are missing: allow display over other apps and enable the required overlays in Honda Box settings. Notification permission is separate.\n\nIt works after reboot but not after sleep: recheck the firmware’s wake/autostart and keep-alive lists.\n\nThe service runs but vehicle data is missing: check the FYT connection in Debug and the selected CAN profile. Keep-alive cannot fix a wrong vehicle profile or absent CAN data.\n\nFor a short diagnostic capture, open Settings → Diagnostics, reset the log, enable recording, reproduce the problem and export it. Turn recording off afterwards; normal use does not require continuous logging.</string>
+    <string name="aux_playback_title">AUX / Android playback</string>
+    <string name="aux_pause_android">Pause Android media when leaving AUX</string>
+    <string name="aux_return_playback">When returning to AUX</string>
+    <string name="aux_return_always">Always play</string>
+    <string name="aux_return_if_paused">Resume if auto-paused</string>
+    <string name="aux_return_nothing">Do nothing</string>
+    <string name="aux_playback_notes">The default resumes only music that was playing when Honda Box paused it after leaving AUX. Already paused music stays paused. Requires a player that accepts Android media buttons. Reconnecting or waking the service does not start playback.</string>
+    <string name="accord_compatibility_toggle">Process as Honda Accord</string>
+    <string name="accord_compatibility_notes">Apply Honda Accord (6291908) processing and workarounds to any CAN profile: climate power and DUAL, source and USB/iPod detection, media, menus and player controls. Off by default; native 6291908 processing is always enabled. The actual CAN profile is unchanged. Changing this setting reconnects the FYT service subscriptions.</string>
 </resources>

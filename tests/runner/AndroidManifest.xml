@@ -20,4 +20,8 @@
     <instrumentation android:name="com.crewbeat.hondabox.tests.SetupGuideTests" android:targetPackage="com.crewbeat.hondabox"/>
     <instrumentation android:name="com.crewbeat.hondabox.tests.MenuCloseOverlayTests" android:targetPackage="com.crewbeat.hondabox"/>
     <instrumentation android:name="com.crewbeat.hondabox.tests.TrackOverlayRefreshTests" android:targetPackage="com.crewbeat.hondabox"/>
+    <instrumentation android:name="com.crewbeat.hondabox.tests.AuxPlaybackIntegrationTests" android:targetPackage="com.crewbeat.hondabox"/>
+    <instrumentation android:name="com.crewbeat.hondabox.tests.ClimatePowerFallbackTests" android:targetPackage="com.crewbeat.hondabox"/>
+    <instrumentation android:name="com.crewbeat.hondabox.tests.AccordCompatibilityTests" android:targetPackage="com.crewbeat.hondabox"/>
+    <instrumentation android:name="com.crewbeat.hondabox.tests.AuxSettingsVisibilityTests" android:targetPackage="com.crewbeat.hondabox"/>
 </manifest>

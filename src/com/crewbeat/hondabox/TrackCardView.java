@@ -34,7 +34,7 @@ public final class TrackCardView extends View {
         paint.setColor(palette.accent);paint.setTypeface(Typeface.create("sans-serif-medium",0));paint.setTextSize(dp(12));String caption=label;while(caption.length()>0&&paint.measureText(caption)>w-dp(124))caption=caption.substring(0,caption.length()-1);c.drawText(caption,dp(92),dp(29),paint);
         int width=Math.max(1,(int)(w-dp(122)));if(lines==null||width!=textWidth){textWidth=width;titlePaint.setColor(palette.text);titlePaint.setTextSize(dp(20));titlePaint.setTypeface(Typeface.create("sans-serif-medium",0));lines=StaticLayout.Builder.obtain(title,0,title.length(),titlePaint,width).setMaxLines(1).setEllipsize(TextUtils.TruncateAt.END).setIncludePad(false).setLineSpacing(dp(2),1).build();}
         c.save();c.translate(dp(92),dp(36));lines.draw(c);c.restore();
-        float left=dp(92),right=w-dp(30),y=h-dp(19);paint.setColor(palette.button);c.drawRoundRect(new RectF(left,y,right,y+dp(2)),dp(1),dp(1),paint);float remaining=Math.max(0,Math.min(1,(deadline-SystemClock.uptimeMillis())/4000f));paint.setColor(palette.accent);c.drawRoundRect(new RectF(left,y,left+(right-left)*remaining,y+dp(2)),dp(1),dp(1),paint);
+        float left=dp(92),right=w-dp(30),y=h-dp(19);paint.setColor(palette.button);c.drawRoundRect(new RectF(left,y,right,y+dp(2)),dp(1),dp(1),paint);float remaining=Math.max(0,Math.min(1,(deadline-SystemClock.uptimeMillis())/(float)TrackOverlay.DURATION));paint.setColor(palette.accent);c.drawRoundRect(new RectF(left,y,left+(right-left)*remaining,y+dp(2)),dp(1),dp(1),paint);
         if(remaining>0)postInvalidateOnAnimation();
     }
 }

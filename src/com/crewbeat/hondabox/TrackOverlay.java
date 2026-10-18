@@ -8,6 +8,7 @@ import android.view.*;
 import android.widget.TextView;
 /** New-track/station card; tapping opens the current source without sending commands. */
 public final class TrackOverlay {
+    public static final long DURATION=5000;
     private final Context context;private final Handler ui=new Handler(Looper.getMainLooper());private final WindowManager windows;
     private final TrackChange changes=new TrackChange();private TrackCardView view;private long until,demoUntil;private boolean demoPending;private boolean started;
     private long shownSession,shownSourceSequence;private AudioMode shownMode;private String shownTrack="";
@@ -17,7 +18,7 @@ public final class TrackOverlay {
     private int dp(int n){return Math.round(n*context.getResources().getDisplayMetrics().density);}
     private final Runnable tick=new Runnable(){public void run(){if(!started)return;render();ui.postDelayed(this,200);}};
     public void start(){if(!started){started=true;ui.post(tick);}}
-    public void demo(){demoUntil=SystemClock.uptimeMillis()+4000;demoPending=true;if(started)render();}
+    public void demo(){demoUntil=SystemClock.uptimeMillis()+DURATION;demoPending=true;if(started)render();}
     private void hide(){ProbeState.INSTANCE.trackOverlay(false);if(view!=null){view.animate().cancel();try{windows.removeViewImmediate(view);}catch(RuntimeException ignored){}view=null;}}
     private void openSource(){
         ProbeState.Snapshot s=ProbeState.INSTANCE.overlaySnapshot();AudioMode mode=AudioMode.reported(s);
@@ -30,7 +31,7 @@ public final class TrackOverlay {
         boolean demo=now<demoUntil;
         if(!Settings.canDrawOverlays(context)||(!demo&&(!s.connected||foreground||!enabled(context)))){hide();return;}
         if(demo){title=demoPending?I18n.t(R.string.track_demo_title):null;demoPending=false;}
-        if(title!=null){hide();until=demo?demoUntil:now+4000;
+        if(title!=null){hide();until=demo?demoUntil:now+DURATION;
             AudioMode mode=AudioMode.reported(s);int icon=s.mediaDevice==ProbeState.MediaDevice.IPOD?R.drawable.track_icon_ipod:mode==AudioMode.RADIO?R.drawable.track_icon_radio:mode==AudioMode.USB?R.drawable.track_icon_usb:R.drawable.track_icon_cd;
             String label=demo?I18n.t(R.string.track_demo_label):I18n.t(R.string.track_now_playing)+"  ·  "+s.source();view=new TrackCardView(context,title,label,icon,until);
             shownSession=s.sessionId;shownSourceSequence=s.sourceSequence;shownMode=mode;shownTrack=trackKey(s);

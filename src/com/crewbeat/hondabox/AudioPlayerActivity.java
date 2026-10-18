@@ -72,7 +72,7 @@ public final class AudioPlayerActivity extends Activity {
         String message=I18n.t(R.string.player_controls_source)+"\n\n"+I18n.t(source)+"\n\n"+I18n.t(R.string.player_controls_settings);
         dismissHelp();playerHelp=showHelp(screenTitle()+" · "+I18n.t(R.string.player_controls_help_title),message,640);
     }
-    private void send(AudioCommand command){ProbeState.Snapshot s=ProbeState.INSTANCE.overlaySnapshot();if(command==null||!s.running||!s.connected||s.commandBusy||!Integer.valueOf(6291908).equals(s.number(1000)))return;
+    private void send(AudioCommand command){ProbeState.Snapshot s=ProbeState.INSTANCE.overlaySnapshot();if(command==null||!s.running||!s.connected||s.commandBusy||!s.accord())return;
         if(!command.selectsSource()&&(AudioMode.reported(s)!=mode||s.audioSource()==null||s.audioSource()<1))return;
         startService(new Intent(this,ProbeService.class).setAction(ProbeService.COMMAND).putExtra("command",command.name()));}
     private void buildUi(){dismissHelp();languageRevision=I18n.revision();palette=ThemeSettings.resolve(this).palette;setTitle(screenTitle());getWindow().setStatusBarColor(palette.bg);getWindow().setNavigationBarColor(palette.bg);
@@ -186,8 +186,8 @@ public final class AudioPlayerActivity extends Activity {
             super.onMeasure(widthSpec,heightSpec);
         }
     }
-    private String frequency(ProbeState.Snapshot s,int code){return s.fresh(code)?RadioFrequency.value(s.displayNumber(115),s.displayNumber(code),Integer.valueOf(6291908).equals(s.number(1000))):"—";}
-    private String presetFrequency(ProbeState.Snapshot s,int slot){return RadioFrequency.value(s.displayNumber(115),s.preset(slot),Integer.valueOf(6291908).equals(s.number(1000)));}
+    private String frequency(ProbeState.Snapshot s,int code){return s.fresh(code)?RadioFrequency.value(s.displayNumber(115),s.displayNumber(code),s.accord()):"—";}
+    private String presetFrequency(ProbeState.Snapshot s,int slot){return RadioFrequency.value(s.displayNumber(115),s.preset(slot),s.accord());}
     // Reuse the visible-player refresh; no additional timer or background work.
     private String waitingDots(){int phase=(int)((SystemClock.uptimeMillis()/600)%3);return phase==0?".":phase==1?"..":"...";}
     private String loadingText(){return I18n.t(R.string.media_loading)+waitingDots();}
@@ -202,7 +202,7 @@ public final class AudioPlayerActivity extends Activity {
     private void render(){ProbeState.Snapshot s=ProbeState.INSTANCE.overlaySnapshot();if(AudioMode.aux(s)&&SourceSettings.hideOnAux(this)){hideForAux();return;}
         if(session!=s.sessionId){session=s.sessionId;sequence=s.sourceSequence;}
         else if(sequence!=s.sourceSequence||deviceRevision!=s.mediaDeviceRevision){deviceRevision=s.mediaDeviceRevision;boolean baseline=sequence==0;sequence=s.sourceSequence;AudioMode reported=AudioMode.reported(s);if((!baseline||s.bsjSource!=null)&&reported!=null&&reported!=mode){mode=reported;buildUi();}}
-        ProbeState.MediaDevice displayDevice=s.mediaDevice;if(shownDevice!=displayDevice){shownDevice=displayDevice;buildUi();}if(languageRevision!=I18n.revision()||palette!=ThemeSettings.resolve(this).palette)buildUi();AudioMode actual=AudioMode.reported(s);boolean active=actual==mode,valid=s.running&&s.connected&&Integer.valueOf(6291908).equals(s.number(1000));
+        ProbeState.MediaDevice displayDevice=s.mediaDevice;if(shownDevice!=displayDevice){shownDevice=displayDevice;buildUi();}if(languageRevision!=I18n.revision()||palette!=ThemeSettings.resolve(this).palette)buildUi();AudioMode actual=AudioMode.reported(s);boolean active=actual==mode,valid=s.running&&s.connected&&s.accord();
         sourceInfo.setText(!s.connected?I18n.t(R.string.ui_waiting_for_can_connection_117):active?I18n.t(R.string.ui_vehicle_source)+s.source():I18n.t(R.string.ui_current_source)+s.source());
         volume.setText(I18n.t(R.string.ui_volume_111)+s.volume());select.setEnabled(!active&&valid&&!s.commandBusy&&mode.select!=null);select.setSelected(active);sourceIndicator.setColor(active?palette.accent:palette.muted);
         String selection=active?screenTitle()+I18n.t(R.string.player_selected):selectionPrompt();

@@ -16,7 +16,7 @@ public final class ClimatePopupView extends View {
         dayCabin=BitmapFactory.decodeResource(getResources(),R.drawable.cabin_day,o);nightCabin=BitmapFactory.decodeResource(getResources(),R.drawable.cabin_night,o);
         setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
     }
-    public void content(ProbeState.Snapshot s,boolean test){state=s;demo=test;if(ownsTemperatures&&!test)temperatures.observe(s,true,SystemClock.uptimeMillis());setContentDescription((test?I18n.t(R.string.ui_test_306):"")+I18n.t(R.string.ui_climate)+s.temperature(27)+" / "+s.temperature(28)+", DUAL "+s.dual()+", "+s.climate()+I18n.t(R.string.ui_fan)+s.raw(21));invalidate();}
+    public void content(ProbeState.Snapshot s,boolean test){state=s;demo=test;if(ownsTemperatures&&!test)temperatures.observe(s,true,SystemClock.uptimeMillis());setContentDescription((test?I18n.t(R.string.ui_test_306):"")+I18n.t(R.string.ui_climate)+s.temperature(27)+" / "+s.temperature(28)+", DUAL "+s.dual()+", "+s.climate()+I18n.t(R.string.ui_fan)+s.fanLabel());invalidate();}
     private String flag(int code){
         if(state==null||!state.connected||((code==12||code==16||code==17||code==33||code==36||code==49)&&!state.optionalKnown(code)))return "—";
         Integer n=code==10?state.climatePower():state.number(code);if(n==null)return "—";
@@ -59,11 +59,11 @@ public final class ClimatePopupView extends View {
         if(!demo&&temperatures.animating(now))postInvalidateOnAnimation();
         int level=state!=null&&state.connected&&state.number(21)!=null?state.number(21):-1;
         float fanY=h-25,barLeft=w*.43f,barRight=w*.60f;
-        ClimateIcons.draw(getContext(),c,p,21,w*.38f,fanY,wide?30:26,level>0?t.accent:t.muted);
+        ClimateIcons.draw(getContext(),c,p,21,w*.38f,fanY,wide?30:26,level>0||state!=null&&state.climateFanAutomatic()?t.accent:t.muted);
         int segments=state==null?0:state.fanSegments();float gap=wide?7:3,segment=(barRight-barLeft-6*gap)/7;
         for(int i=0;i<7;i++){p.setColor(i<segments?t.accent:t.border);c.drawRoundRect(new RectF(barLeft+i*(segment+gap),fanY-2,barLeft+i*(segment+gap)+segment,fanY+2),2,2,p);}
-        text(c,level<0?"—":String.valueOf(level),w*.65f,fanY+6,18,t.muted);
-        if(active(33))text(c,"AUTO",w*.72f,fanY+6,14,t.accent);
+        text(c,state==null?"—":state.fanLabel(),w*.65f,fanY+6,18,state!=null&&state.climateFanAutomatic()?t.accent:t.muted);
+        if(active(33)&&!state.climateFanAutomatic())text(c,"AUTO",w*.72f,fanY+6,14,t.accent);
         if(demo)text(c,I18n.t(R.string.ui_test_vehicle_values_unchanged),w/2,wide?86:116,11,t.warning);
         c.restore();
     }

@@ -23,7 +23,7 @@ public abstract class SettingsScreenActivity extends Activity {
     private final Handler ui = new Handler(Looper.getMainLooper());
     private int BG, CARD, TEXT, MUTED, ACCENT;
     private int languageRevision=-1; private ThemeSettings.Palette palette; private ThemeController themes; private ScrollView scroll;
-    private TextView status, detail, source, rawSource, volume, left, right, fan, climateFlags, radio, radioTextInfo, media, fields, commandStatus, profile, stats, menu, backend, log, audioRouteInfo, standbyInfo, vehiclePacket0EInfo, vehiclePacket10Info, steeringInfo;
+    private TextView status, detail, source, rawSource, volume, left, right, fan, climateFlags, radio, radioTextInfo, media, fields, commandStatus, profile, stats, menu, backend, log, audioRouteInfo, standbyInfo, vehiclePacket0EInfo, vehiclePacket10Info, steeringInfo, protocolInfo;
     private final java.util.ArrayList<Button> commandButtons = new java.util.ArrayList<>();
     private Button connect, stop;
     private Spinner audioTransport,audioRoute,audioHold;
@@ -47,7 +47,7 @@ public abstract class SettingsScreenActivity extends Activity {
 
         LinearLayout title = column(); title.addView(label(debugScreen()?"HONDA  /  DEBUG":"HONDA  /  SETTINGS", 11, ACCENT));
         title.addView(label(I18n.t(debugScreen()?R.string.debug_title:R.string.ui_settings), 27, TEXT)); header.addView(title, new LinearLayout.LayoutParams(0,-2,1));
-        TextView version = label("BOX  0.8.34", 12, MUTED); header.addView(version);header.addView(spaceX(16));Button back=button(I18n.t(R.string.ui_back),false);back.setTag("settings-back");back.setOnClickListener(v->finish());header.addView(back,new LinearLayout.LayoutParams(-2,dp(48)));root.addView(header);
+        TextView version = label("BOX  0.8.35", 12, MUTED); header.addView(version);header.addView(spaceX(16));Button back=button(I18n.t(R.string.ui_back),false);back.setTag("settings-back");back.setOnClickListener(v->finish());header.addView(back,new LinearLayout.LayoutParams(-2,dp(48)));root.addView(header);
         root.addView(space(18));
         if(!debugScreen()){
             LinearLayout permissions=card();permissions.addView(label(I18n.t(R.string.settings_overlay_permission_title),14,ACCENT));
@@ -216,6 +216,10 @@ public abstract class SettingsScreenActivity extends Activity {
         mediaCard.addView(space(10)); Button marker = button(I18n.t(R.string.ui_mark_the_selected_source),false);
         marker.setOnClickListener(v -> markSource()); mediaCard.addView(marker);
         root.addView(mediaCard); root.addView(space(14));
+        LinearLayout protocolCard=card();protocolCard.addView(label(I18n.t(R.string.debug_data_title),11,ACCENT));
+        protocolCard.addView(space(8));protocolCard.addView(label(I18n.t(R.string.debug_data_notes),12,MUTED));
+        protocolInfo=label("",13,TEXT);protocolInfo.setTag("debug-protocol-evidence");protocolInfo.setTextIsSelectable(true);
+        protocolCard.addView(space(10));protocolCard.addView(protocolInfo);root.addView(protocolCard);root.addView(space(14));
         LinearLayout standbyCard=card();
         standbyCard.addView(label(I18n.t(R.string.debug_standby_title),11,ACCENT));
         standbyCard.addView(space(8));standbyCard.addView(label(I18n.t(R.string.debug_standby_notes),12,MUTED));
@@ -287,6 +291,7 @@ public abstract class SettingsScreenActivity extends Activity {
         menu.setText(I18n.t(R.string.ui_menu) + s.menu()); fan.setText(I18n.t(R.string.ui_fan_21) + value(s,21)); climateFlags.setText(s.climate()+"\nDUAL: "+s.dual()
             +"\n"+I18n.t(R.string.debug_climate_field16)+s.raw(16)+"\n"+I18n.t(R.string.debug_climate_field16_notes));
         radio.setText(RadioDebugInfo.fields(s));radioTextInfo.setText(RadioDebugInfo.textChannels(s));
+        protocolInfo.setText(BsjDataInfo.describe(s));
         standbyInfo.setText(standbyDescription(s.standbyDisplay));
         vehiclePacket0EInfo.setText(vehiclePacketDescription(0x0E,s.vehiclePacket0E));
         vehiclePacket10Info.setText(vehiclePacketDescription(0x10,s.vehiclePacket10));

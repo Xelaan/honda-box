@@ -40,11 +40,14 @@ def decode(t,p):
         text=f'Код кнопки {p[0]}, фаза {p[1]} (1 — нажатие, 0 — отпускание).'
         unknown.append('Соответствие этого кода физической кнопке не задано в скрипте.')
     elif t==2:
-        temp=lambda n:'LOW' if n==1 else 'HIGH' if n==255 else 'не задана' if n==0 else f'{n/2:g} °C'
+        temp=lambda n:'LOW' if n==1 else 'HIGH' if n==255 else 'не задана' if n==0 else '18 °C' if n==20 else f'{n/2:g} °C'
         bits=lambda n:'вкл.' if n else 'выкл.'
         fan=p[1]&15
         airflow=[name for mask,name in [(128,'стекло'),(64,'лицо'),(32,'ноги')] if p[1]&mask]
-        text=f'Слева {temp(p[2])}; справа {temp(p[3])}; вентилятор {fan}; A/C {bits(p[0]&64)}; AUTO {bits(p[0]&8)}; направление: '+(', '.join(airflow) or 'ни одного бита')+f'. Raw power={p[0]>>7}; питание по вентилятору: '+('вкл.' if 1<=fan<=7 else 'выкл.' if fan==0 else 'не установлено')+'.'
+        auto_fan=bool(p[0]&128 and p[0]&8 and fan==0 and (p[2] or p[3]))
+        fan_text='AUTO (числовая скорость не передана)' if auto_fan else str(fan)
+        effective_power='вкл. (AUTO)' if auto_fan else 'вкл.' if 1<=fan<=7 else 'выкл.' if fan==0 else 'не установлено'
+        text=f'Слева {temp(p[2])}; справа {temp(p[3])}; вентилятор {fan_text}; A/C {bits(p[0]&64)}; AUTO {bits(p[0]&8)}; направление: '+(', '.join(airflow) or 'ни одного бита')+f'. Raw power={p[0]>>7}; питание с поправкой Honda: '+effective_power+'.'
         if p[0]&0x37:unknown.append(f'b0: неописанные биты = {p[0]&0x37:02X}.')
         if p[1]&16:unknown.append('b1: неописанный бит 4 установлен.')
         if p[4:]!=[0,0]:unknown.append('b4/b5: назначение не установлено, '+hx(p[4:]))

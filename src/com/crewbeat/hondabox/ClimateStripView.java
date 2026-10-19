@@ -9,7 +9,7 @@ public final class ClimateStripView extends View {
  public void fold(float progress,boolean target){fold=Math.max(0,Math.min(1,progress));collapsed=target;accessibility();invalidate();}
  public void sideButtonsHidden(boolean hidden){if(sideButtonsHidden==hidden)return;sideButtonsHidden=hidden;accessibility();}
  private void accessibility(){setContentDescription(I18n.t(collapsed?R.string.climate_strip_expand:sideButtonsHidden?R.string.climate_strip_show_buttons:R.string.climate_strip_collapse)+(state==null?"":" · "+description(state)));}
- public static String description(ProbeState.Snapshot s){return s.temperature(27)+" · airflow="+ClimateAirflow.mask(s)+" · fan="+s.raw(21)+" · A/C="+s.flag(11)+" · "+s.temperature(28);}
+ public static String description(ProbeState.Snapshot s){return s.temperature(27)+" · airflow="+ClimateAirflow.mask(s)+" · fan="+s.fanLabel()+" · A/C="+s.flag(11)+" · "+s.temperature(28);}
  private void text(Canvas c,String v,float x,float y,float size,int color){p.setStyle(Paint.Style.FILL);p.setColor(color);p.setTextSize(size);p.setTextAlign(Paint.Align.CENTER);p.setTypeface(Typeface.create("sans-serif-medium",Typeface.NORMAL));Paint.FontMetrics f=p.getFontMetrics();c.drawText(v,x,y-(f.ascent+f.descent)/2,p);}
  @Override protected void onDraw(Canvas c){super.onDraw(c);if(state==null)return;ThemeSettings.Palette t=ThemeSettings.resolve(getContext()).palette;float d=getResources().getDisplayMetrics().density;c.save();c.scale(d,d);float windowWidth=getWidth()/d,h=getHeight()/d;
   float expanded=expandedWidthPx>0?expandedWidthPx/d:Math.min(420,(getResources().getDisplayMetrics().widthPixels/d)-24);
@@ -26,7 +26,7 @@ public final class ClimateStripView extends View {
   c.saveLayerAlpha(0,0,w,h,Math.round(255*contentAlpha));c.translate((w-expanded)/2,0);w=expanded;
   float size=w<360?21:25;text(c,state.temperature(27),w*.13f,y,size,t.text);
   int glyph=ClimateAirflow.glyph(state);if(glyph>=0)ClimateIcons.draw(getContext(),c,p,glyph,w*.335f,y,28,w*.12f,t.accent);else text(c,"—",w*.335f,y,18,t.muted);
-  ClimateIcons.draw(getContext(),c,p,21,w*.48f,y,25,t.accent);Integer fan=state.number(21);text(c,fan==null||fan<0||fan>7?"—":String.valueOf(fan),w*.565f,y,21,t.text);
+  ClimateIcons.draw(getContext(),c,p,21,w*.48f,y,25,t.accent);text(c,state.fanLabel(),w*.565f,y,state.climateFanAutomatic()?(w<360?11:13):21,t.text);
   Integer ac=state.number(11);boolean acOn=Integer.valueOf(1).equals(ac);p.setStyle(Paint.Style.FILL);p.setColor(acOn?t.accent:t.border);c.drawRoundRect(new RectF(w*.69f-23,y-14,w*.69f+23,y+14),8,8,p);text(c,ac==null?"A/C ?":"A/C",w*.69f,y,12,acOn?t.accentText:t.muted);
   text(c,state.temperature(28),w*.87f,y,size,t.text);c.restore();c.restore();
  }

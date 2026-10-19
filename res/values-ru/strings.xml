@@ -598,4 +598,24 @@
     <string name="aux_playback_notes">По умолчанию возобновляется только музыка, которую Honda Box поставил на паузу при уходе с AUX. Уже приостановленная музыка не запускается. Плеер должен поддерживать медиакнопки Android. Переподключение службы и пробуждение сами по себе не включают музыку.</string>
     <string name="accord_compatibility_toggle">Обрабатывать как Honda Accord</string>
     <string name="accord_compatibility_notes">Применять обработку и обходные решения Honda Accord (6291908) к любому CAN-профилю: питание климата и DUAL, определение источника и USB/iPod, данные плееров, меню и команды. По умолчанию выключено; для самого 6291908 эта обработка действует всегда. CAN-профиль магнитолы не меняется. При изменении настройки приложение переподключается к службе FYT.</string>
+    <string name="debug_data_title">Полученные данные CAN</string>
+    <string name="debug_data_notes">Счётчики относятся к текущему подключению и работают без записи лога. Сброс лога их сохраняет, переподключение или смена профиля — очищает. Отсутствие пакетов не означает, что функция не поддерживается. Начальные нули FYT не подтверждают поддержку источника или плеера. len — длина последнего пакета; получение пакета само по себе не подтверждает расшифровку.</string>
+    <string name="debug_data_live">Текущее подключение</string>
+    <string name="debug_data_history">Последнее подключение (связь отключена)</string>
+    <string name="debug_data_not_received">не получено</string>
+    <string name="debug_data_seconds_ago">" с назад"</string>
+    <string name="debug_data_keys">Кнопки автомобиля</string>
+    <string name="debug_data_climate">Климат</string>
+    <string name="debug_data_source_volume">Источник / громкость</string>
+    <string name="debug_data_radio">Радио</string>
+    <string name="debug_data_playback">Счётчики воспроизведения</string>
+    <string name="debug_data_discs">Состояния шести CD-дисков</string>
+    <string name="debug_data_titles">Текст воспроизведения</string>
+    <string name="debug_data_menu">Штатное меню</string>
+    <string name="debug_data_standby">Дисплей при выключенном аудио</string>
+    <string name="debug_data_vehicle">Предполагаемые данные автомобиля</string>
+    <string name="debug_data_audio">Дополнительные поля аудио</string>
+    <string name="debug_data_status">Статус (частичная расшифровка)</string>
+    <string name="debug_data_identity">Идентификатор адаптера</string>
+    <string name="debug_data_unassigned">Назначение не установлено</string>
 </resources>

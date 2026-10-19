@@ -21,6 +21,17 @@ class DecoderTests(unittest.TestCase):
     def test_source_volume(self):
         t,u,k=decode(3,[0x83,40]);self.assertIn('Источник 4',t);self.assertIn('40/40',t);self.assertEqual(k,'known');self.assertIn('аудио включено',t);self.assertFalse(u)
         self.assertIn('аудио выключено',decode(3,[0x03,0])[0]);self.assertTrue(decode(3,[0x33,0])[1])
+    def test_climate_auto_without_numeric_fan(self):
+        text,unknown,category=decode(2,[0x88,0x10,0x20,0x2A,0,0])
+        self.assertIn('AUTO (числовая скорость не передана)',text)
+        self.assertIn('вкл. (AUTO)',text)
+        self.assertEqual(category,'known')
+        self.assertIn('Слева 18 °C',decode(2,[0x88,0x10,20,20,0,0])[0])
+        for payload in ([0x80,0,0,0,0,0],[0x88,0x10,0,0,0,0],[0,0x10,0,0,0,0]):
+            text,_,_=decode(2,payload)
+            self.assertNotIn('числовая скорость не передана',text)
+            self.assertIn('поправкой Honda: выкл.',text)
+
     def test_menu_null_separator(self):
         row=list(b'CLOCK\0 12H')+[0]*6;p=[32,*row,*([0]*32)];self.assertIn('CLOCK  12H',decode(9,p)[0])
     def test_menu_sel_is_known(self):

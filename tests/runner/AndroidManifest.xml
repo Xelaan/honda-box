@@ -24,4 +24,6 @@
     <instrumentation android:name="com.crewbeat.hondabox.tests.ClimatePowerFallbackTests" android:targetPackage="com.crewbeat.hondabox"/>
     <instrumentation android:name="com.crewbeat.hondabox.tests.AccordCompatibilityTests" android:targetPackage="com.crewbeat.hondabox"/>
     <instrumentation android:name="com.crewbeat.hondabox.tests.AuxSettingsVisibilityTests" android:targetPackage="com.crewbeat.hondabox"/>
+    <instrumentation android:name="com.crewbeat.hondabox.tests.ClimateAutoPowerTests" android:targetPackage="com.crewbeat.hondabox"/>
+    <instrumentation android:name="com.crewbeat.hondabox.tests.BsjFallbackTests" android:targetPackage="com.crewbeat.hondabox"/>
 </manifest>

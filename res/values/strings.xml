@@ -598,4 +598,24 @@
     <string name="aux_playback_notes">The default resumes only music that was playing when Honda Box paused it after leaving AUX. Already paused music stays paused. Requires a player that accepts Android media buttons. Reconnecting or waking the service does not start playback.</string>
     <string name="accord_compatibility_toggle">Process as Honda Accord</string>
     <string name="accord_compatibility_notes">Apply Honda Accord (6291908) processing and workarounds to any CAN profile: climate power and DUAL, source and USB/iPod detection, media, menus and player controls. Off by default; native 6291908 processing is always enabled. The actual CAN profile is unchanged. Changing this setting reconnects the FYT service subscriptions.</string>
+    <string name="debug_data_title">CAN data received</string>
+    <string name="debug_data_notes">Counts cover this connection, including when recording is off. Reset log keeps them; reconnect or profile change clears them. Missing packets do not mean unsupported hardware. FYT startup zero values do not confirm source or player support. Length is the last received payload length; receipt alone does not confirm decoding.</string>
+    <string name="debug_data_live">Current connection</string>
+    <string name="debug_data_history">Last connection (disconnected)</string>
+    <string name="debug_data_not_received">not received</string>
+    <string name="debug_data_seconds_ago">" s ago"</string>
+    <string name="debug_data_keys">Car buttons</string>
+    <string name="debug_data_climate">Climate</string>
+    <string name="debug_data_source_volume">Source / volume</string>
+    <string name="debug_data_radio">Radio</string>
+    <string name="debug_data_playback">Playback counters</string>
+    <string name="debug_data_discs">Six CD slot states</string>
+    <string name="debug_data_titles">Media text</string>
+    <string name="debug_data_menu">OEM menu</string>
+    <string name="debug_data_standby">Standby display</string>
+    <string name="debug_data_vehicle">Candidate vehicle data</string>
+    <string name="debug_data_audio">Additional audio fields</string>
+    <string name="debug_data_status">Status (partially decoded)</string>
+    <string name="debug_data_identity">Adapter identification</string>
+    <string name="debug_data_unassigned">Unassigned</string>
 </resources>

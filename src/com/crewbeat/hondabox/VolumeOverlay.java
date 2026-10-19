@@ -42,7 +42,7 @@ public final class VolumeOverlay {
     private void render(){
         ProbeState.Snapshot s=state.overlaySnapshot(); long now=SystemClock.uptimeMillis();
         if(session!=s.sessionId || !s.connected){session=s.sessionId;lastVolume=null;changedUntil=0;}
-        Integer volume=s.connected?s.number(132):null;
+        Integer volume=s.volumeNumber();
         if(volume!=null && !volume.equals(lastVolume)){lastVolume=volume;changedUntil=now+3000;}
         boolean allowed=Settings.canDrawOverlays(context); if(allowed!=wasAllowed){failed=false;wasAllowed=allowed;}
         boolean test=now<demoUntil;

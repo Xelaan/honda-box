@@ -40,6 +40,7 @@ public final class ProbeState {
         public Value bsjMediaTextState;
         public long mediaTrackStartedNanos;
         public BsjVehiclePackets.Sample vehiclePacket0E,vehiclePacket10;
+        public Map<Integer,BsjProtocolEvidence.Sample> protocolEvidence=new LinkedHashMap<>();
         public Integer bsjSource;public long bsjFramesAccepted,bsjFramesRejected;public Map<Integer,Value> bsjValues=new LinkedHashMap<>();
         public Map<String,RadioPresets.Entry> presets=new LinkedHashMap<>();public Integer mainChannel;
         public Integer preset(int slot){Integer band=displayNumber(115);RadioPresets.Entry e=band==null?null:presets.get(band+":"+slot);return !connected||!accord()||e==null?null:e.index;}
@@ -73,7 +74,7 @@ public final class ProbeState {
             if (accord()&&n==auxSource) return auxName;
             switch (n) {
                 case 0: if(mediaDevice==MediaDevice.USB)return "USB";return mediaDevice==MediaDevice.IPOD?"iPod":I18n.t(R.string.ui_not_reported);
-                case 1: return number(115) == null ? "Radio" : radioBand();
+                case 1: return displayNumber(115) == null ? "Radio" : radioBand();
                 case 2: if(mediaDevice==MediaDevice.USB)return "USB";return mediaDevice==MediaDevice.IPOD?"iPod":"CD"; case 3: case 4:return n==auxSource?auxName:mediaDevice==MediaDevice.IPOD?"iPod":"USB"; default: return I18n.t(R.string.ui_code) + n;
             }
         }
@@ -143,10 +144,20 @@ public final class ProbeState {
             return String.format(Locale.US, "%.1f°", n == 20 ? 18f : n / 2f);
         }
         public boolean optionalKnown(int code){return connected&&(optionalClimateSeen&(1L<<code))!=0;}
+        /** Some Accord adapters report zero instead of a numeric fan speed in AUTO. */
+        public boolean climateFanAutomatic(){
+            return connected&&accord()&&Integer.valueOf(1).equals(number(10))
+                &&Integer.valueOf(1).equals(number(13))&&Integer.valueOf(0).equals(number(21))
+                &&(!temperature(27).equals("—")||!temperature(28).equals("—"));
+        }
+        public String fanLabel(){
+            if(climateFanAutomatic())return "AUTO";
+            Integer fan=number(21);return !connected||fan==null||fan<0||fan>7?"—":String.valueOf(fan);
+        }
         public Integer climatePower(){
             Integer power=number(10),fan=number(21);
-            // Accord workaround: a running fan overrides a missing/OFF bit; zero overrides a stuck ON bit.
-            if(connected&&accord()&&fan!=null&&fan>=0&&fan<=7)return fan==0?0:1;
+            // Preserve fan-based OFF for a stuck ON bit, except confirmed AUTO with a set temperature.
+            if(connected&&accord()&&fan!=null&&fan>=0&&fan<=7)return fan>0||climateFanAutomatic()?1:0;
             return power;
         }
         public int fanSegments(){Integer fan=number(21);return !connected||fan==null||fan<0||fan>7?0:fan;}
@@ -216,7 +227,8 @@ public final class ProbeState {
         public boolean displayTextOnly(){return cdTitle().equals("—")&&fresh(104)&&!text(104).equals("—");}
         public boolean dualInferred(){return connected&&!dualAvailable&&accord()&&!temperature(27).equals("—")&&!temperature(28).equals("—");}
         public String dual(){Integer v=number(14);if(!connected)return "—";if(dualAvailable&&v!=null)return v==0?I18n.t(R.string.ui_off):v==1?I18n.t(R.string.ui_on):"?";return dualInferred()?(temperature(27).equals(temperature(28))?I18n.t(R.string.ui_off):I18n.t(R.string.ui_on)):"—";}
-        public String volume() { Integer n = number(132); return !connected || n == null ? "—" : String.valueOf(n); }
+        public Integer volumeNumber() { return connected ? displayNumber(132) : null; }
+        public String volume() { Integer n = volumeNumber(); return n == null ? "—" : String.valueOf(n); }
         public boolean carMenuSupported(){Integer p=number(1000);return p!=null&&(accord()||p==6291908||p==3604932||p==6357444||p==12321220);}
         public String menuRow(int index){if(!connected||index<0||index>2)return "";Value v=reading(135+index);return sourceSequence>0&&v!=null&&v.sequence<=sourceSequence?"":cleanMenuText(v);}
         public boolean hasMenuRows(){return !menuRow(0).isEmpty()||!menuRow(1).isEmpty()||!menuRow(2).isEmpty();}
@@ -248,6 +260,7 @@ public final class ProbeState {
     private Boolean bsjAudioEnabled;private long bsjAudioPowerRevision;
     private BsjStandbyDisplay standbyDisplay;
     private final BsjVehiclePackets vehiclePackets=new BsjVehiclePackets();
+    private final BsjProtocolEvidence protocolEvidence=new BsjProtocolEvidence();
     private static final class StandbyMedia {
         BsjStandbyDisplay text,counters;
     }
@@ -278,6 +291,7 @@ public final class ProbeState {
     private final BsjIpodInference ipodInference=new BsjIpodInference();
     private final BsjFrames bsj=new BsjFrames((command,payload,at)->receiveBsjFrame(command,payload,at));
     private void receiveBsjFrame(int command,int[] payload,long at){
+        protocolEvidence.accept(command,payload,at);
         if(recording)analyzer.frame(command,payload,at);unknownMessages.accept(command,payload,at);
         if(accord())vehiclePackets.accept(command,payload,at);
         if(command==0x0C&&accord())
@@ -389,6 +403,11 @@ public final class ProbeState {
                 bsjMediaTextState=new Value(new int[]{payload[2]},null,null);bsjMediaTextState.sequence=count+1;
             }
         }
+        else if(command==6&&payload.length==3){
+            // Stock Honda decoder: two changer slot states per byte, high nibble first.
+            // Device inference above still owns the special iPod marker; slots never select a source.
+            for(int i=0;i<3;i++){bsjValue(106+i*2,(payload[i]>>>4)&15);bsjValue(107+i*2,payload[i]&15);}
+        }
         else if(command==7&&payload.length>=2){int kind=payload[0];
             if(retainMediaDuringVolume()){String incoming=BsjText.decode(payload,1).text;Snapshot current=overlaySnapshot();if((incoming.isEmpty()||incoming.equalsIgnoreCase("NO INFO"))&&!current.combinedMediaText().equals("—"))return;}
             bsjTitleField=new Value(new int[]{kind},null,null);bsjTitleField.sequence=count+1;if(kind==0||kind==1||kind==3||kind==4||kind==5||kind==6||kind==7||kind==8){BsjText.Result decoded=BsjText.decode(payload,1);Value work=bsjValues.get(114),track=bsjValues.get(101);if((decoded.text.isEmpty()||decoded.text.equalsIgnoreCase("NO INFO"))&&mediaParts.containsKey(kind)&&(work==null||(work.ints[0]!=9&&work.ints[0]!=10))){log("MEDIA TEXT: empty display retained while the same track is playing (TITLE/off)");return;}MediaText parts=mediaParts.get(kind);if(parts==null){parts=new MediaText();mediaParts.put(kind,parts);}Value v=bsjTextValue(parts.accept(decoded.text));
@@ -427,7 +446,7 @@ public final class ProbeState {
     public synchronized void running(boolean value) { running = value;if(!value)analyzer.end(System.currentTimeMillis()); }
     public synchronized void backend(String text) { backend = text; }
     public synchronized void status(String title, String text, boolean live) { status = title; detail = text;if(recording&&live&&!connected){Value p=values.get(1000);analyzer.begin(sessionId,p==null||p.ints==null||p.ints.length==0?-1:p.ints[0],System.currentTimeMillis());}if(!live)analyzer.end(System.currentTimeMillis()); connected = live; log(title + ": " + text); }
-    public synchronized void newSession() { analyzer.end(System.currentTimeMillis());unknownMessages.clear();menuBrowser.clear();menuValues.clear();playModeLabels.clear();sessionId++; audioRoutes.reset(sessionId); values.clear();bsj.reset();vehiclePackets.clear();standbyDisplay=null;standbyMedia.clear();bsjAudioEnabled=null;bsjAudioPowerRevision=0;bsjSource=null;bsjValues.clear();usbSourceContext=false;resetMediaText();resetMediaDevice();menuRevision=0;menuContentSequence=0;menuVisibilitySequence=0;climateRevision=0;optionalClimateSeen=0;sourceSequence=0;mediaSourceSequence=-1;mediaPlaybackSource=null;volumeChangedAt=0;dualAvailable=false; count = 0; lastEvent = 0; connected = false; }
+    public synchronized void newSession() { analyzer.end(System.currentTimeMillis());unknownMessages.clear();menuBrowser.clear();menuValues.clear();playModeLabels.clear();sessionId++; audioRoutes.reset(sessionId); values.clear();bsj.reset();protocolEvidence.clear();vehiclePackets.clear();standbyDisplay=null;standbyMedia.clear();bsjAudioEnabled=null;bsjAudioPowerRevision=0;bsjSource=null;bsjValues.clear();usbSourceContext=false;resetMediaText();resetMediaDevice();menuRevision=0;menuContentSequence=0;menuVisibilitySequence=0;climateRevision=0;optionalClimateSeen=0;sourceSequence=0;mediaSourceSequence=-1;mediaPlaybackSource=null;volumeChangedAt=0;dualAvailable=false; count = 0; lastEvent = 0; connected = false; }
     /** Start a fresh recording without altering current decoded state, IPC or freshness epochs. */
     public synchronized void clearLog(){
         captureId++;captureStartedAt=System.currentTimeMillis();
@@ -489,7 +508,7 @@ public final class ProbeState {
         Integer before=previous==null||previous.ints==null||previous.ints.length==0?null:previous.ints[0];
         Integer after=ints==null||ints.length==0?null:ints[0];
         if(code==132&&after!=null&&!java.util.Objects.equals(before,after))volumeChangedAt=v.at;
-        if(code==1000&&!java.util.Objects.equals(before,after)){bsj.reset();vehiclePackets.clear();standbyDisplay=null;standbyMedia.clear();bsjAudioEnabled=null;bsjAudioPowerRevision=0;bsjSource=null;bsjValues.clear();mediaSourceSequence=v.sequence;mediaPlaybackSource=null;usbSourceContext=false;resetMediaText();resetMediaDevice();menuValues.clear();menuBrowser.clear();playModeLabels.clear();if(recording&&connected)analyzer.profile(after==null?-1:after,v.at);}
+        if(code==1000&&!java.util.Objects.equals(before,after)){bsj.reset();protocolEvidence.clear();vehiclePackets.clear();standbyDisplay=null;standbyMedia.clear();bsjAudioEnabled=null;bsjAudioPowerRevision=0;bsjSource=null;bsjValues.clear();mediaSourceSequence=v.sequence;mediaPlaybackSource=null;usbSourceContext=false;resetMediaText();resetMediaDevice();menuValues.clear();menuBrowser.clear();playModeLabels.clear();if(recording&&connected)analyzer.profile(after==null?-1:after,v.at);}
         if(code==98&&bsjSource==null&&!java.util.Objects.equals(before,after))sourceTransition(after,v.sequence);
         if(code==115&&bsjSource==null&&Integer.valueOf(1).equals(effectiveSource())&&previous!=null&&!java.util.Objects.equals(before,after))sourceSequence=v.sequence;
         if(code==101&&after!=null&&after>0&&!bsjValues.containsKey(101)&&(mediaTrackStartedNanos==0||!java.util.Objects.equals(before,after)))mediaTrackStartedNanos=System.nanoTime();
@@ -541,6 +560,7 @@ public final class ProbeState {
         Snapshot s = new Snapshot(); s.processAsHondaAccord=processAsHondaAccord; s.auxSource=auxSource;s.auxName=auxName;s.running = running; s.connected = connected; s.status = status;
         s.detail = detail; s.backend = backend; s.count = count; s.lastEvent = lastEvent;
         s.sessionId=sessionId; s.rawCount=rawCount; s.rawDropped=rawDropped;
+        s.protocolEvidence=protocolEvidence.snapshot();
         s.standbyDisplay=standbyDisplay;s.vehiclePacket0E=vehiclePackets.packet0E();s.vehiclePacket10=vehiclePackets.packet10();
         s.bsjExtraTexts=new LinkedHashMap<>(bsjExtraTexts);s.bsjDisplayTexts=new java.util.ArrayList<>(bsjDisplayTexts);s.bsjFilename=bsjFilename;s.bsjFolder=bsjFolder;s.bsjTitleField=bsjTitleField;s.bsjTextLost=bsjTextLost;s.bsjTextEncoding=bsjTextEncoding;s.bsjAudioEnabled=bsjAudioEnabled;s.bsjAudioPowerRevision=bsjAudioPowerRevision;s.bsjSource=bsjSource;s.bsjValues=new LinkedHashMap<>(bsjValues);s.bsjFramesAccepted=bsj.accepted;s.bsjFramesRejected=bsj.rejected;s.sourceSequence=sourceSequence;s.mediaSourceSequence=mediaSourceSequence;s.audioPlayerVisible=audioPlayerVisible;s.audioPlayerStatus=audioPlayerStatus;s.audioPlayerMode=audioPlayerMode;s.optionalClimateSeen=optionalClimateSeen;
         s.menuValues=menuValues.snapshot();s.receivedPlayMode=playModeLabels.containsKey(effectiveSource())?playModeLabels.get(effectiveSource()):"";s.manualMediaDeviceHint=manualMediaDeviceHint;s.mediaDevice=mediaDevice;s.mediaDeviceRevision=mediaDeviceRevision;s.mediaDeviceEvidence=mediaDeviceEvidence;s.cachedMenu=accord()?carMenuMemory.summary(effectiveSource()):"";s.menuRevision=menuRevision;s.menuContentSequence=menuContentSequence;s.menuVisibilitySequence=menuVisibilitySequence;s.carMenuOverlayVisible=carMenuOverlayVisible;s.carMenuOverlayStatus=carMenuOverlayStatus;s.carMenuOverlayText=carMenuOverlayText;
@@ -560,7 +580,7 @@ public final class ProbeState {
         JSONObject root=new JSONObject(base);BsjAnalyzer.export(root,analysis,root.getLong("exportedAtMs"));return root.toString(2);
     }
     private String exportBaseJson() throws Exception {
-        JSONObject root = new JSONObject().put("app", "Honda Box 0.8.34").put("exportedAtMs", System.currentTimeMillis())
+        JSONObject root = new JSONObject().put("app", "Honda Box 0.8.35").put("exportedAtMs", System.currentTimeMillis())
             .put("android", Build.VERSION.RELEASE).put("manufacturer", Build.MANUFACTURER).put("model", Build.MODEL)
             .put("backend", backend).put("status", status).put("detail", detail).put("connected", connected)
             .put("callbacksThisSession", count).put("lastCallbackAtMs", lastEvent)
@@ -573,7 +593,7 @@ public final class ProbeState {
             .put("note","MCU/CAN protocol chunks, not proven original vehicle CAN frames. [0] subscription sentinel excluded. Signed ints normalized &255. Chunks may split packets. Oldest chunks discarded at limits.")
             .put("chunks",new JSONArray(rawChunks)));
         JSONObject decoded=new JSONObject();for(Map.Entry<Integer,Value> e:bsjValues.entrySet())decoded.put(String.valueOf(e.getKey()),e.getValue().json());
-        root.put("bsjDecoded",new JSONObject().put("audioBit7",bsjAudioEnabled==null?JSONObject.NULL:bsjAudioEnabled).put("audioBit7Revision",bsjAudioPowerRevision).put("audioBit7Note","Verified by owner on 2026-10-12, profile6291908: command03 byte0 bit7 indicates car audio on/off (1 on, 0 off).").put("source",bsjSource==null?JSONObject.NULL:bsjSource).put("acceptedFrames",bsj.accepted).put("checksumFailures",bsj.rejected).put("values",decoded).put("note","Profile6291908, or explicit Process as Honda Accord override. Length and checksum validated. CAN lastValues are untouched. DUAL fallback compares valid temperatures; power fallback uses fan0..7. Recirculation and defrost remain unconfirmed."));
+        root.put("bsjDecoded",new JSONObject().put("audioBit7",bsjAudioEnabled==null?JSONObject.NULL:bsjAudioEnabled).put("audioBit7Revision",bsjAudioPowerRevision).put("audioBit7Note","Verified by owner on 2026-10-12, profile6291908: command03 byte0 bit7 indicates car audio on/off (1 on, 0 off).").put("source",bsjSource==null?JSONObject.NULL:bsjSource).put("acceptedFrames",bsj.accepted).put("checksumFailures",bsj.rejected).put("values",decoded).put("note","Profile6291908, or explicit Process as Honda Accord override. Length and checksum validated. CAN lastValues are untouched. DUAL fallback compares valid temperatures; power fallback uses fan0..7 except powered AUTO with valid temperature and no numeric fan speed. Recirculation and defrost remain unconfirmed."));
         JSONObject extraTexts=new JSONObject();for(Map.Entry<Integer,Value> e:bsjExtraTexts.entrySet())extraTexts.put(String.valueOf(e.getKey()),e.getValue().json());
         root.getJSONObject("bsjDecoded").put("menuHeaderNote","Known by owner clarification on 2026-10-12, Honda/BSJ V704 profile6291908: TYPE09 payload[0]=0x20 (field138=32) represents the OEM SEL indicator: the item can be selected by pressing the car control. It is not a button-press event. Other header values remain unknown; no bitmask is inferred.");
         root.put("bsjMediaText",new JSONObject().put("displayStateByte2",bsjMediaTextState==null?JSONObject.NULL:bsjMediaTextState.json()).put("selectedSubtype",bsjTitleField==null?JSONObject.NULL:bsjTitleField.ints[0]).put("displayFieldsBySubtype",extraTexts).put("filename",bsjFilename==null?JSONObject.NULL:bsjFilename.json()).put("folder",bsjFolder==null?JSONObject.NULL:bsjFolder.json())
@@ -585,6 +605,7 @@ public final class ProbeState {
             if(cache.counters!=null)item.put("track",cache.counters.track).put("minutes",cache.counters.minutes).put("seconds",cache.counters.seconds).put("countersReceivedAtMs",cache.counters.at).put("countersPayloadHex",cache.counters.raw);
             standbyCache.put(e.getKey(),item);
         }
+        root.put("bsjProtocolEvidence",protocolEvidence.json());
         root.put("bsjVehiclePacketWatch",vehiclePackets.json());
         root.put("bsjStandbyDisplayCache",new JSONObject().put("byPlayer",standbyCache).put("note","TYPE0C observed layouts used only to fill missing display data. Retained through audio off/on; normal TYPE05/07 take priority. Numeric text tail is never a title. Byte0 meaning remains unconfirmed; this packet never selects a source or device."));
         root.put("audioPlayer",new JSONObject().put("manualDisplayDevice",manualMediaDeviceHint.name()).put("confirmedAuxSource",auxSource).put("auxDisplayName",auxName).put("visible",audioPlayerVisible).put("status",audioPlayerStatus).put("text",audioPlayerMode).put("dataAfterSourceSequence",sourceSequence).put("mediaAfterSourceSequence",mediaSourceSequence));

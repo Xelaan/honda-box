@@ -17,7 +17,7 @@ Use an emulator with overlays enabled. Build first:
 ```sh
 python3 build.py
 python3 build_tests.py
-adb -s emulator-5554 install -r dist/Honda-Box-0.8.34.apk
+adb -s emulator-5554 install -r dist/Honda-Box-0.8.35.apk
 adb -s emulator-5554 install -r dist/TEST-ONLY-probe-tests.apk
 adb -s emulator-5554 shell appops set com.crewbeat.hondabox SYSTEM_ALERT_WINDOW allow
 adb -s emulator-5554 shell am instrument -w com.crewbeat.hondabox.tests/com.crewbeat.hondabox.tests.RadioDebugTests
@@ -121,3 +121,31 @@ adb -s emulator-5554 shell am instrument -w com.crewbeat.hondabox.tests/com.crew
 The override is protocol interpretation, not a head-unit CAN configuration write. Another profile using a different protocol is not guaranteed compatible. Analyzer experiment windows continue to retain and filter on actual profile IDs.
 
 Verified on API34: 2,163 climate checks and 165 compatibility/settings/reconnect checks passed. These are emulator checks with synthetic data; another CAN profile still needs hardware verification.
+
+## AUTO with no numeric fan speed
+
+A second Accord with profile 6291908 reports powered AUTO as power10=1, AUTO13=1, fan21=0, with valid set temperatures. The compact strip must remain visible and display AUTO in place of a numeric zero. The original car’s OFF sample has power10 stuck at1, AUTO13=0, fan21=0 and unset temperatures; it must remain OFF. AUTO without a set temperature, a missing AUTO flag, or explicit power0 does not bypass the original zero-fan OFF fallback.
+
+`ClimateAutoPowerTests` covers both patterns, reported numeric fan speeds in AUTO, valid LOW/HI temperatures, disconnected data, native/opt-in/disabled profiles, and actual compact/full panel windows in both themes. It uses synthetic values and does not include the private vehicle recording or send CAN commands.
+
+```sh
+adb -s emulator-5554 shell am force-stop com.crewbeat.hondabox
+adb -s emulator-5554 shell am instrument -w com.crewbeat.hondabox.tests/com.crewbeat.hondabox.tests.ClimateAutoPowerTests
+```
+
+Verified on API34: 117 AUTO/window checks, 2,163 existing power/compact checks, 35 compact side-button checks and 9 offline decoder checks passed. The old-car OFF pattern remains hidden, while powered AUTO with fan0 stays visible and shows AUTO.
+
+## Raw BSJ / logical FYT compatibility
+
+`BsjFallbackTests` verifies source and volume with stale FYT startup/default values, raw-only radio/CD/USB/menu data, TYPE06's six nibble-packed disc states, logical-only operation, the existing CD-to-iPod marker, AUX isolation, malformed lengths/checksums, disconnected values, and connection/profile evidence resets. It also checks actual volume/player/Debug views, including RU/EN receipt descriptions. No fixture service or vehicle commands are needed. The standalone suite passed 132 checks on API34.
+
+```sh
+adb -s emulator-5554 shell am force-stop com.crewbeat.hondabox
+adb -s emulator-5554 shell am instrument -w com.crewbeat.hondabox.tests/com.crewbeat.hondabox.tests.BsjFallbackTests
+```
+
+An optional private asset supplied with `-e replay second-car-bsj-20261019.json` contains only the second car's raw transport chunks. This asset remains ignored and is not required by the standalone suite. The local replay checks all 247 chunks / 246 complete frames, every raw volume update despite fixed logical volume27, stable AUX, and absence of invented player packets. **436 checks passed** with this optional replay on API34. Missing radio/playback packets in this capture are not evidence that the second car supports or lacks those functions.
+
+See [second-car-compatibility.md](second-car-compatibility.md) for the observed packets, compatibility corrections and hardware validation still needed.
+
+After the shared fallbacks, API34 regression suites also passed: ClimateAutoPowerTests 117, ClimatePowerFallbackTests 2,163, RadioDebugTests 40, TrackTitleCycleTests 37, MenuCloseOverlayTests 51, SourcePowerOverlayTests 20, AccordCompatibilityTests 165, and TrackOverlayRefreshTests 29. The offline decoder passed 9 tests. These results do not establish second-car playback or command support.

@@ -2,7 +2,7 @@
 
 An Android companion for Honda's original audio and climate system on FYT head units with a BSJ CAN adapter. Native Java, built without Gradle or a cloud service. [Русский](README.ru.md).
 
-Developed against **Honda Accord VIII / Spirior 2009–2013**, FYT profile **6291908**, and BSJ V704. Compatibility with other profiles is not assumed. Requires **Android 7.0 / API 24+**. The main package is `com.crewbeat.hondabox`.
+Developed against **Honda Accord VIII / Acura TSX II / Spirior 2009–2013**, FYT profile **6291908**, and BSJ V704. Compatibility with other profiles is not assumed. Requires **Android 7.0 / API 24+**. The main package is `com.crewbeat.hondabox`.
 
 At the bottom of Settings, **Process as Honda Accord** optionally applies the profile 6291908 processing/workarounds to any selected CAN profile. It is off by default; native 6291908 handling is always enabled. This covers fan-based climate power, inferred DUAL, BSJ source/media decoding, USB/iPod detection, menu/preset caches and player commands. The configured CAN profile stays unchanged, and received caches remain isolated by actual profile. Changing the setting reconnects read-only FYT subscriptions. Compatibility with another adapter still needs checking on the car.
 

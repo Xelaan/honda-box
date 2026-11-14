@@ -10,7 +10,7 @@ import android.widget.*;
 public final class AccordCompatibility {
     public static final int PROFILE=6291908;
     private static final String KEY="processAsHondaAccord";
-    public static boolean active(Integer actual,boolean override){return actual!=null&&actual>0&&(actual==PROFILE||override);}
+    public static boolean active(Integer actual,boolean override){return actual!=null&&actual>0&&!CivicClimate.supports(actual)&&(actual==PROFILE||override);}
     public static boolean enabled(Context c){return c.getSharedPreferences("overlay",0).getBoolean(KEY,false);}
     public static void enabled(Context c,boolean on){
         c.getSharedPreferences("overlay",0).edit().putBoolean(KEY,on).apply();

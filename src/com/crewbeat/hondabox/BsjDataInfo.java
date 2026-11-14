@@ -25,9 +25,15 @@ public final class BsjDataInfo {
     }
     public static String describe(ProbeState.Snapshot s){
         StringBuilder b=new StringBuilder(I18n.t(s.connected?R.string.debug_data_live:R.string.debug_data_history)).append('\n');
-        b.append(I18n.t(R.string.debug_data_source_volume)).append(": ")
+        if(s.civic())b.append(I18n.t(R.string.debug_civic_distance)).append(": ").append(s.raw(98)).append('\n');
+        else b.append(I18n.t(R.string.debug_data_source_volume)).append(": ")
             .append(transport(s,98)).append(" / ").append(transport(s,132)).append('\n');
         long now=System.currentTimeMillis();
+        if(s.civic()){
+            for(Map.Entry<Integer,BsjProtocolEvidence.Sample> e:s.protocolEvidence.entrySet())
+                sample(b,e.getKey(),e.getKey()==0x28?I18n.t(R.string.debug_civic_climate):e.getKey()==0x35?I18n.t(R.string.debug_civic_distance):I18n.t(R.string.debug_data_unassigned),e.getValue(),now);
+            return b.toString().trim();
+        }
         for(int i=0;i<TYPES.length;i++)sample(b,TYPES[i],I18n.t(LABELS[i]),s.protocolEvidence.get(TYPES[i]),now);
         for(Map.Entry<Integer,BsjProtocolEvidence.Sample> e:s.protocolEvidence.entrySet())if(!listed(e.getKey()))sample(b,e.getKey(),I18n.t(R.string.debug_data_unassigned),e.getValue(),now);
         return b.toString().trim();

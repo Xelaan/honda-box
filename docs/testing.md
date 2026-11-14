@@ -149,3 +149,19 @@ An optional private asset supplied with `-e replay second-car-bsj-20261019.json`
 See [second-car-compatibility.md](second-car-compatibility.md) for the observed packets, compatibility corrections and hardware validation still needed.
 
 After the shared fallbacks, API34 regression suites also passed: ClimateAutoPowerTests 117, ClimatePowerFallbackTests 2,163, RadioDebugTests 40, TrackTitleCycleTests 37, MenuCloseOverlayTests 51, SourcePowerOverlayTests 20, AccordCompatibilityTests 165, and TrackOverlayRefreshTests 29. The offline decoder passed 9 tests. These results do not establish second-car playback or command support.
+
+## LZ/HZ Civic climate
+
+Run `python3 tests/run_civic_tests.py` to compile resources/sources and replay the numeric climate fixture through the production state and checksum parser. See [Civic evidence and limitations](civic-lz-compatibility.md). This requires an Android SDK and JDK but no emulator, and produces no APK.
+
+## Android MediaSession overlays (0.8.36)
+
+`python3 tests/run_android_media_tests.py` runs 20 pure-JVM announcement checks. `build_tests.py` also builds a separate **TEST-ONLY-android-media.apk** (`com.crewbeat.hondabox.mediafixture`) that publishes synthetic MediaSessions without playing audio. Never include test APKs in a release. On a disposable emulator, install the main APK, fixture and TEST-ONLY-probe-tests.apk, grant overlay access, then run:
+
+```sh
+adb -s emulator-5560 shell am instrument -w com.crewbeat.hondabox.tests/.AndroidMediaTests
+```
+
+The suite temporarily grants notification-listener access and restores the previous setting. It verifies real cross-UID metadata callbacks, permission denial/revocation, source gating (including Civic distance98), late text refresh without repeated announcement, session selection/destruction, paused/resumed playback, Unicode, EN/RU settings, tap-to-open and actual ProbeService start/stop. **47 checks passed** on API34. No CAN commands are sent. This proves integration with Android MediaSession; player-specific support and vendor permission/sleep behavior need a head-unit check.
+
+The 0.8.36 host run also passed: 1,123 Civic, 24 clock, 55 USB/iPod marker, 14 recording, 31 media-volume, 312 radio-volume, 41 AUX playback policy, 69 solar and 9 decoder checks.

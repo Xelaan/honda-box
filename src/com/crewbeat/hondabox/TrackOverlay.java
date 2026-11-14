@@ -10,6 +10,7 @@ import android.widget.TextView;
 public final class TrackOverlay {
     public static final long DURATION=5000;
     private final Context context;private final Handler ui=new Handler(Looper.getMainLooper());private final WindowManager windows;
+    private final AndroidTrackChange androidChanges=new AndroidTrackChange();private boolean shownAndroid;private String shownAndroidPackage="",shownAndroidKey="";
     private final TrackChange changes=new TrackChange();private TrackCardView view;private long until,demoUntil;private boolean demoPending;private boolean started;
     private long shownSession,shownSourceSequence;private AudioMode shownMode;private String shownTrack="";
     public TrackOverlay(Context c){context=c;windows=(WindowManager)c.getSystemService(Context.WINDOW_SERVICE);}
@@ -22,32 +23,40 @@ public final class TrackOverlay {
     private void hide(){ProbeState.INSTANCE.trackOverlay(false);if(view!=null){view.animate().cancel();try{windows.removeViewImmediate(view);}catch(RuntimeException ignored){}view=null;}}
     private void openSource(){
         ProbeState.Snapshot s=ProbeState.INSTANCE.overlaySnapshot();AudioMode mode=AudioMode.reported(s);
+        boolean android=shownAndroid;String pkg=shownAndroidPackage;
         demoUntil=0;demoPending=false;hide();
+        if(android){if(AndroidMediaRoute.allowed(s)&&AndroidMediaSettings.enabled(context))AndroidMediaMonitor.open(context,pkg);return;}
         if(mode==null)return;
         try{context.startActivity(AudioPlayerActivity.intent(context,mode,false));}
         catch(RuntimeException e){ProbeState.INSTANCE.log("TRACK OPEN SOURCE ERROR: "+e);}
     }
     private void render(){ProbeState.Snapshot s=ProbeState.INSTANCE.overlaySnapshot();long now=SystemClock.uptimeMillis();boolean foreground=AudioPlayerActivity.isVisible();String title=changes.update(s,now,foreground);
         boolean demo=now<demoUntil;
-        if(!Settings.canDrawOverlays(context)||(!demo&&(!s.connected||foreground||!enabled(context)))){hide();return;}
+        AndroidTrack android=AndroidMediaMonitor.current();
+        boolean androidRoute=AndroidMediaSettings.enabled(context)&&AndroidMediaRoute.allowed(s);
+        String androidTitle=androidChanges.update(android,now,androidRoute&&!demo&&enabled(context)&&Settings.canDrawOverlays(context));
+        if(!demo&&view!=null&&(shownAndroid!=androidRoute||shownAndroid&&(!android.usable()||!android.playing||!android.identity().equals(shownAndroidKey))))hide();
+        if(!Settings.canDrawOverlays(context)||(!demo&&(!enabled(context)||!androidRoute&&(!s.connected||foreground)))){hide();return;}
+        if(androidRoute)title=androidTitle;
         if(demo){title=demoPending?I18n.t(R.string.track_demo_title):null;demoPending=false;}
-        if(title!=null){hide();until=demo?demoUntil:now+DURATION;
-            AudioMode mode=AudioMode.reported(s);int icon=s.mediaDevice==ProbeState.MediaDevice.IPOD?R.drawable.track_icon_ipod:mode==AudioMode.RADIO?R.drawable.track_icon_radio:mode==AudioMode.USB?R.drawable.track_icon_usb:R.drawable.track_icon_cd;
-            String label=demo?I18n.t(R.string.track_demo_label):I18n.t(R.string.track_now_playing)+"  ·  "+s.source();view=new TrackCardView(context,title,label,icon,until);
+        if(title!=null){hide();until=demo?demoUntil:now+DURATION;shownAndroid=androidRoute&&!demo;shownAndroidPackage=android.packageName;shownAndroidKey=android.identity();
+            AudioMode mode=AudioMode.reported(s);int icon=shownAndroid?R.drawable.track_icon_android:s.mediaDevice==ProbeState.MediaDevice.IPOD?R.drawable.track_icon_ipod:mode==AudioMode.RADIO?R.drawable.track_icon_radio:mode==AudioMode.USB?R.drawable.track_icon_usb:R.drawable.track_icon_cd;
+            String label=demo?I18n.t(R.string.track_demo_label):I18n.t(R.string.track_now_playing)+"  ·  "+(shownAndroid?AndroidMediaRoute.label(s)+" · "+android.appName:s.source());view=new TrackCardView(context,title,label,icon,until);
             shownSession=s.sessionId;shownSourceSequence=s.sourceSequence;shownMode=mode;shownTrack=trackKey(s);
             view.setOnClickListener(v->openSource());
             WindowManager.LayoutParams lp=new WindowManager.LayoutParams(Math.min(dp(600),context.getResources().getDisplayMetrics().widthPixels-dp(32)),dp(88),Build.VERSION.SDK_INT>=26?WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY:WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,PixelFormat.TRANSLUCENT);lp.gravity=Gravity.TOP|Gravity.CENTER_HORIZONTAL;lp.y=dp(6);lp.alpha=VolumeOverlay.WINDOW_ALPHA;lp.setTitle("Honda Box New Track");try{windows.addView(view,lp);ProbeState.INSTANCE.trackOverlay(true);view.setAlpha(0);view.setTranslationY(-dp(8));view.animate().alpha(1).translationY(0).setDuration(180).start();}catch(RuntimeException e){view=null;ProbeState.INSTANCE.log("TRACK OVERLAY: "+e);}}
         // TITLE may arrive after the fallback announcement, or select a different
         // field for the same song. Refresh the existing card without announcing again.
         AudioMode current=AudioMode.reported(s);
-        if(view!=null&&!demo&&now<until&&current!=null&&current!=AudioMode.RADIO
+        if(view!=null&&!demo&&!shownAndroid&&now<until&&current!=null&&current!=AudioMode.RADIO
                 &&s.sessionId==shownSession&&s.sourceSequence==shownSourceSequence
                 &&current==shownMode&&trackKey(s).equals(shownTrack)&&!s.usingStandbyText()){
             String selected=s.combinedMediaText();
             if(!selected.isEmpty()&&!selected.equals("—"))view.updateTitle(selected);
         }
+        if(view!=null&&shownAndroid&&!demo&&now<until&&android.usable()&&android.identity().equals(shownAndroidKey))view.updateTitle(android.display());
         if(now>=until||(!demo&&s.carMenuOverlayVisible))hide();
     }
     private static String trackKey(ProbeState.Snapshot s){return s.cdNumber(113)+":"+s.cdNumber(101);}
-    public void close(){started=false;demoUntil=0;demoPending=false;ui.removeCallbacks(tick);hide();}
+    public void close(){androidChanges.reset();started=false;demoUntil=0;demoPending=false;ui.removeCallbacks(tick);hide();}
 }

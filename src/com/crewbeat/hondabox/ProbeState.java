@@ -36,6 +36,10 @@ public final class ProbeState {
         public Value bsjFilename,bsjFolder,bsjTitleField;public boolean bsjTextLost;public String bsjTextEncoding;
         public Boolean bsjAudioEnabled;public long bsjAudioPowerRevision;
         public BsjStandbyDisplay standbyDisplay;
+        public BsjClock.Sample clockSample;
+        public CivicClimate.Sample civicClimate;
+        public boolean civic(){return CivicClimate.supports(number(1000));}
+        public boolean supportsClimate(){return honda()||civic();}
         public BsjStandbyDisplay standbyText,standbyCounters;
         public Value bsjMediaTextState;
         public long mediaTrackStartedNanos;
@@ -52,7 +56,9 @@ public final class ProbeState {
         public long mediaSourceSequence=-1;public long climateRevision,optionalClimateSeen,sourceSequence;public boolean audioPlayerVisible;public String audioPlayerStatus,audioPlayerMode;public boolean climateStripCollapsed;public boolean climateStripVisible;public String climateStripText;public boolean climateOverlayVisible;public int climateOverlayHeight,overlayBottomPx;public String climateOverlayStatus,climateOverlayText; public String status, detail, backend, commandStatus;
         public long count, lastEvent, sessionId, rawCount, rawDropped;
         public boolean trackOverlayVisible;public boolean sourceOverlayVisible; public String sourceOverlayStatus,sourceOverlayText; public boolean overlayVisible; public String overlayStatus, overlayText; public Map<Integer, Value> values; public String log;
-        public Integer number(int code) { Value v = values.get(code); return v == null || v.ints == null || v.ints.length == 0 ? null : v.ints[0]; }
+        public Integer number(int code) {
+            if(civicClimate!=null&&(code==11||code==13||code==18||code==19||code==20||code==21||code==37))return civicClimate.field(code);
+            Value v = values.get(code); return v == null || v.ints == null || v.ints.length == 0 ? null : v.ints[0]; }
         public String text(int code) {
             Value v = code>=103&&code<=105?reading(code):values.get(code);
             if (v == null || v.strings == null || v.strings.length == 0 || v.strings[0] == null) return "—";
@@ -60,7 +66,7 @@ public final class ProbeState {
             return t.isEmpty() ? "—" : t;
         }
         public boolean honda() { Integer p = number(1000); return p != null && (accord() || p == 6291908 || p == 3604932 || p == 6357444 || p == 12321220 || p == 9175479); }
-        public Integer rawAudioSource(){return bsjSource!=null&&accord()?bsjSource:number(98);}
+        public Integer rawAudioSource(){if(civic())return null;return bsjSource!=null&&accord()?bsjSource:number(98);}
         public Integer audioSource(){Integer n=rawAudioSource();if(accord()){
             if(java.util.Objects.equals(n,auxSource))return n;
             if(mediaDevice==MediaDevice.IPOD&&mediaDeviceEvidence.startsWith("Inferred from BSJ marker06")&&(!Integer.valueOf(2).equals(n)&&!Integer.valueOf(4).equals(n)))return auxSource==2?4:2;
@@ -96,7 +102,7 @@ public final class ProbeState {
         }
         public String climate() {
             if (!connected) return "—";
-            if (!honda()) return "raw [10,11,13,18,19,20]: " + raw(10) + " / " + raw(11) + " / " + raw(13) + " / " + raw(18) + " / " + raw(19) + " / " + raw(20);
+            if (!supportsClimate()) return "raw [10,11,13,18,19,20]: " + raw(10) + " / " + raw(11) + " / " + raw(13) + " / " + raw(18) + " / " + raw(19) + " / " + raw(20);
             return I18n.t(R.string.ui_power) + flag(10) + "    A/C: " + flag(11) + "    AUTO: " + flag(13)
                 + I18n.t(R.string.ui_nwindshield) + flag(18) + I18n.t(R.string.ui_face) + flag(19) + I18n.t(R.string.ui_feet) + flag(20);
         }
@@ -137,15 +143,21 @@ public final class ProbeState {
             }
             return b.toString();
         }
+        /** Display-only mirroring for Civic when no separate passenger setpoint is reported. */
+        public Integer temperatureNumber(int code) {
+            Integer n=number(code);
+            return civic()&&code==28&&(n==null||n==0||n==-1)?number(27):n;
+        }
         public String temperature(int code) {
-            Integer n = number(code); if (!connected || n == null) return "—";
-            if (!honda()) return "raw " + n;
+            Integer n = temperatureNumber(code); if (!connected || n == null) return "—";
+            if (!supportsClimate()) return "raw " + n;
             if (n == 0 || n == -1) return "—"; if (n == -2) return "LOW"; if (n == -3) return "HI";
-            return String.format(Locale.US, "%.1f°", n == 20 ? 18f : n / 2f);
+            return String.format(Locale.US, "%.1f°", civic()?n/10f:n == 20 ? 18f : n / 2f);
         }
         public boolean optionalKnown(int code){return connected&&(optionalClimateSeen&(1L<<code))!=0;}
         /** Some Accord adapters report zero instead of a numeric fan speed in AUTO. */
         public boolean climateFanAutomatic(){
+            if(civic())return connected&&Integer.valueOf(1).equals(climatePower())&&Integer.valueOf(1).equals(number(13))&&Integer.valueOf(0).equals(number(21));
             return connected&&accord()&&Integer.valueOf(1).equals(number(10))
                 &&Integer.valueOf(1).equals(number(13))&&Integer.valueOf(0).equals(number(21))
                 &&(!temperature(27).equals("—")||!temperature(28).equals("—"));
@@ -155,6 +167,7 @@ public final class ProbeState {
             Integer fan=number(21);return !connected||fan==null||fan<0||fan>7?"—":String.valueOf(fan);
         }
         public Integer climatePower(){
+            if(civic())return civicClimate==null?null:civicClimate.power();
             Integer power=number(10),fan=number(21);
             // Preserve fan-based OFF for a stuck ON bit, except confirmed AUTO with a set temperature.
             if(connected&&accord()&&fan!=null&&fan>=0&&fan<=7)return fan>0||climateFanAutomatic()?1:0;
@@ -260,6 +273,8 @@ public final class ProbeState {
     private Boolean bsjAudioEnabled;private long bsjAudioPowerRevision;
     private BsjStandbyDisplay standbyDisplay;
     private final BsjVehiclePackets vehiclePackets=new BsjVehiclePackets();
+    private final BsjClock clock=new BsjClock();
+    private CivicClimate.Sample civicClimate;
     private final BsjProtocolEvidence protocolEvidence=new BsjProtocolEvidence();
     private static final class StandbyMedia {
         BsjStandbyDisplay text,counters;
@@ -292,7 +307,18 @@ public final class ProbeState {
     private final BsjFrames bsj=new BsjFrames((command,payload,at)->receiveBsjFrame(command,payload,at));
     private void receiveBsjFrame(int command,int[] payload,long at){
         protocolEvidence.accept(command,payload,at);
-        if(recording)analyzer.frame(command,payload,at);unknownMessages.accept(command,payload,at);
+        if(command==0x0A){
+            Value profile=values.get(1000);int p=profile==null||profile.ints==null||profile.ints.length==0?-1:profile.ints[0];
+            clock.accept(payload,at,accord()||p==3604932||p==6357444||p==12321220||p==9175479);
+        }
+        if(recording)analyzer.frame(command,payload,at);
+        Value currentProfile=values.get(1000);Integer profileId=currentProfile==null||currentProfile.ints==null||currentProfile.ints.length==0?null:currentProfile.ints[0];
+        unknownMessages.accept(command,payload,at,profileId);
+        if(CivicClimate.supports(profileId)){
+            CivicClimate.Sample next=CivicClimate.decode(command,payload,at);
+            if(next!=null){if(!next.same(civicClimate))climateRevision++;civicClimate=next;}
+            return;
+        }
         if(accord())vehiclePackets.accept(command,payload,at);
         if(command==0x0C&&accord())
             {standbyDisplay=new BsjStandbyDisplay(payload,at);captureStandby(standbyDisplay);}
@@ -446,12 +472,12 @@ public final class ProbeState {
     public synchronized void running(boolean value) { running = value;if(!value)analyzer.end(System.currentTimeMillis()); }
     public synchronized void backend(String text) { backend = text; }
     public synchronized void status(String title, String text, boolean live) { status = title; detail = text;if(recording&&live&&!connected){Value p=values.get(1000);analyzer.begin(sessionId,p==null||p.ints==null||p.ints.length==0?-1:p.ints[0],System.currentTimeMillis());}if(!live)analyzer.end(System.currentTimeMillis()); connected = live; log(title + ": " + text); }
-    public synchronized void newSession() { analyzer.end(System.currentTimeMillis());unknownMessages.clear();menuBrowser.clear();menuValues.clear();playModeLabels.clear();sessionId++; audioRoutes.reset(sessionId); values.clear();bsj.reset();protocolEvidence.clear();vehiclePackets.clear();standbyDisplay=null;standbyMedia.clear();bsjAudioEnabled=null;bsjAudioPowerRevision=0;bsjSource=null;bsjValues.clear();usbSourceContext=false;resetMediaText();resetMediaDevice();menuRevision=0;menuContentSequence=0;menuVisibilitySequence=0;climateRevision=0;optionalClimateSeen=0;sourceSequence=0;mediaSourceSequence=-1;mediaPlaybackSource=null;volumeChangedAt=0;dualAvailable=false; count = 0; lastEvent = 0; connected = false; }
+    public synchronized void newSession() { analyzer.end(System.currentTimeMillis());unknownMessages.clear();menuBrowser.clear();menuValues.clear();playModeLabels.clear();sessionId++; audioRoutes.reset(sessionId); values.clear();bsj.reset();protocolEvidence.clear();vehiclePackets.clear();clock.clear();civicClimate=null;standbyDisplay=null;standbyMedia.clear();bsjAudioEnabled=null;bsjAudioPowerRevision=0;bsjSource=null;bsjValues.clear();usbSourceContext=false;resetMediaText();resetMediaDevice();menuRevision=0;menuContentSequence=0;menuVisibilitySequence=0;climateRevision=0;optionalClimateSeen=0;sourceSequence=0;mediaSourceSequence=-1;mediaPlaybackSource=null;volumeChangedAt=0;dualAvailable=false; count = 0; lastEvent = 0; connected = false; }
     /** Start a fresh recording without altering current decoded state, IPC or freshness epochs. */
     public synchronized void clearLog(){
         captureId++;captureStartedAt=System.currentTimeMillis();
         logs.clear();markers.clear();commands.clear();rawChunks.clear();rawBytes=0;rawCount=rawDropped=0;
-        bsj.reset();vehiclePackets.clear();analyzer.clear(captureStartedAt);unknownMessages.clear();audioRoutes.clearHistory();
+        bsj.reset();vehiclePackets.clear();clock.clear();analyzer.clear(captureStartedAt);unknownMessages.clear();audioRoutes.clearHistory();
         log("LOG RESET: new capture "+captureId+"; FYT connection and current values retained");
     }
     public synchronized void mark(String label) {
@@ -508,8 +534,8 @@ public final class ProbeState {
         Integer before=previous==null||previous.ints==null||previous.ints.length==0?null:previous.ints[0];
         Integer after=ints==null||ints.length==0?null:ints[0];
         if(code==132&&after!=null&&!java.util.Objects.equals(before,after))volumeChangedAt=v.at;
-        if(code==1000&&!java.util.Objects.equals(before,after)){bsj.reset();protocolEvidence.clear();vehiclePackets.clear();standbyDisplay=null;standbyMedia.clear();bsjAudioEnabled=null;bsjAudioPowerRevision=0;bsjSource=null;bsjValues.clear();mediaSourceSequence=v.sequence;mediaPlaybackSource=null;usbSourceContext=false;resetMediaText();resetMediaDevice();menuValues.clear();menuBrowser.clear();playModeLabels.clear();if(recording&&connected)analyzer.profile(after==null?-1:after,v.at);}
-        if(code==98&&bsjSource==null&&!java.util.Objects.equals(before,after))sourceTransition(after,v.sequence);
+        if(code==1000&&!java.util.Objects.equals(before,after)){bsj.reset();protocolEvidence.clear();vehiclePackets.clear();clock.clear();civicClimate=null;standbyDisplay=null;standbyMedia.clear();bsjAudioEnabled=null;bsjAudioPowerRevision=0;bsjSource=null;bsjValues.clear();mediaSourceSequence=v.sequence;mediaPlaybackSource=null;usbSourceContext=false;resetMediaText();resetMediaDevice();menuValues.clear();menuBrowser.clear();playModeLabels.clear();if(recording&&connected)analyzer.profile(after==null?-1:after,v.at);}
+        if(code==98&&!CivicClimate.supports(actualProfile())&&bsjSource==null&&!java.util.Objects.equals(before,after))sourceTransition(after,v.sequence);
         if(code==115&&bsjSource==null&&Integer.valueOf(1).equals(effectiveSource())&&previous!=null&&!java.util.Objects.equals(before,after))sourceSequence=v.sequence;
         if(code==101&&after!=null&&after>0&&!bsjValues.containsKey(101)&&(mediaTrackStartedNanos==0||!java.util.Objects.equals(before,after)))mediaTrackStartedNanos=System.nanoTime();
         if(optional&&after!=null&&after>0)optionalClimateSeen|=1L<<code;
@@ -550,18 +576,18 @@ public final class ProbeState {
         logs.addLast(entry); while (logs.size() > 1600) logs.removeFirst();
     }
     public synchronized Snapshot overlaySnapshot() {
-        Snapshot s=new Snapshot();s.processAsHondaAccord=processAsHondaAccord;s.auxSource=auxSource;s.auxName=auxName;s.running=running;s.connected=connected;s.commandBusy=commandBusy;s.sessionId=sessionId;s.status=status;s.count=count;s.lastEvent=lastEvent;s.overlayVisible=overlayVisible;s.trackOverlayVisible=trackOverlayVisible;s.sourceOverlayVisible=sourceOverlayVisible;s.overlayBottomPx=overlayBottomPx;
+        Snapshot s=new Snapshot();s.civicClimate=civicClimate;s.processAsHondaAccord=processAsHondaAccord;s.auxSource=auxSource;s.auxName=auxName;s.running=running;s.connected=connected;s.commandBusy=commandBusy;s.sessionId=sessionId;s.status=status;s.count=count;s.lastEvent=lastEvent;s.overlayVisible=overlayVisible;s.trackOverlayVisible=trackOverlayVisible;s.sourceOverlayVisible=sourceOverlayVisible;s.overlayBottomPx=overlayBottomPx;
         s.bsjExtraTexts=new LinkedHashMap<>(bsjExtraTexts);s.bsjDisplayTexts=new java.util.ArrayList<>(bsjDisplayTexts);s.bsjFilename=bsjFilename;s.bsjFolder=bsjFolder;s.bsjTitleField=bsjTitleField;s.bsjTextLost=bsjTextLost;s.bsjTextEncoding=bsjTextEncoding;s.bsjAudioEnabled=bsjAudioEnabled;s.bsjAudioPowerRevision=bsjAudioPowerRevision;s.bsjSource=bsjSource;s.bsjValues=new LinkedHashMap<>(bsjValues);s.bsjFramesAccepted=bsj.accepted;s.bsjFramesRejected=bsj.rejected;s.sourceSequence=sourceSequence;s.mediaSourceSequence=mediaSourceSequence;s.audioPlayerVisible=audioPlayerVisible;s.audioPlayerStatus=audioPlayerStatus;s.audioPlayerMode=audioPlayerMode;s.optionalClimateSeen=optionalClimateSeen;
         s.menuValues=menuValues.snapshot();s.receivedPlayMode=playModeLabels.containsKey(effectiveSource())?playModeLabels.get(effectiveSource()):"";s.manualMediaDeviceHint=manualMediaDeviceHint;s.mediaDevice=mediaDevice;s.mediaDeviceRevision=mediaDeviceRevision;s.mediaDeviceEvidence=mediaDeviceEvidence;s.cachedMenu=accord()?carMenuMemory.summary(effectiveSource()):"";s.menuRevision=menuRevision;s.menuContentSequence=menuContentSequence;s.menuVisibilitySequence=menuVisibilitySequence;s.carMenuOverlayVisible=carMenuOverlayVisible;s.carMenuOverlayStatus=carMenuOverlayStatus;s.carMenuOverlayText=carMenuOverlayText;
         s.climateStripCollapsed=climateStripCollapsed;s.climateStripVisible=climateStripVisible;s.climateStripText=climateStripText;s.climateRevision=climateRevision;s.dualAvailable=dualAvailable;s.climateOverlayVisible=climateOverlayVisible;s.climateOverlayHeight=climateOverlayHeight;
         s.values=new LinkedHashMap<>(values);s.presets=radioPresets.snapshot();s.mainChannel=audioRoutes.mainChannel();s.browseItems=menuBrowser.snapshot(new String[]{s.menuRow(0),s.menuRow(1),s.menuRow(2)});copyStandby(s);return s;
     }
     public synchronized Snapshot snapshot() {
-        Snapshot s = new Snapshot(); s.processAsHondaAccord=processAsHondaAccord; s.auxSource=auxSource;s.auxName=auxName;s.running = running; s.connected = connected; s.status = status;
+        Snapshot s = new Snapshot();s.civicClimate=civicClimate; s.processAsHondaAccord=processAsHondaAccord; s.auxSource=auxSource;s.auxName=auxName;s.running = running; s.connected = connected; s.status = status;
         s.detail = detail; s.backend = backend; s.count = count; s.lastEvent = lastEvent;
         s.sessionId=sessionId; s.rawCount=rawCount; s.rawDropped=rawDropped;
         s.protocolEvidence=protocolEvidence.snapshot();
-        s.standbyDisplay=standbyDisplay;s.vehiclePacket0E=vehiclePackets.packet0E();s.vehiclePacket10=vehiclePackets.packet10();
+        s.clockSample=clock.latest();s.standbyDisplay=standbyDisplay;s.vehiclePacket0E=vehiclePackets.packet0E();s.vehiclePacket10=vehiclePackets.packet10();
         s.bsjExtraTexts=new LinkedHashMap<>(bsjExtraTexts);s.bsjDisplayTexts=new java.util.ArrayList<>(bsjDisplayTexts);s.bsjFilename=bsjFilename;s.bsjFolder=bsjFolder;s.bsjTitleField=bsjTitleField;s.bsjTextLost=bsjTextLost;s.bsjTextEncoding=bsjTextEncoding;s.bsjAudioEnabled=bsjAudioEnabled;s.bsjAudioPowerRevision=bsjAudioPowerRevision;s.bsjSource=bsjSource;s.bsjValues=new LinkedHashMap<>(bsjValues);s.bsjFramesAccepted=bsj.accepted;s.bsjFramesRejected=bsj.rejected;s.sourceSequence=sourceSequence;s.mediaSourceSequence=mediaSourceSequence;s.audioPlayerVisible=audioPlayerVisible;s.audioPlayerStatus=audioPlayerStatus;s.audioPlayerMode=audioPlayerMode;s.optionalClimateSeen=optionalClimateSeen;
         s.menuValues=menuValues.snapshot();s.receivedPlayMode=playModeLabels.containsKey(effectiveSource())?playModeLabels.get(effectiveSource()):"";s.manualMediaDeviceHint=manualMediaDeviceHint;s.mediaDevice=mediaDevice;s.mediaDeviceRevision=mediaDeviceRevision;s.mediaDeviceEvidence=mediaDeviceEvidence;s.cachedMenu=accord()?carMenuMemory.summary(effectiveSource()):"";s.menuRevision=menuRevision;s.menuContentSequence=menuContentSequence;s.menuVisibilitySequence=menuVisibilitySequence;s.carMenuOverlayVisible=carMenuOverlayVisible;s.carMenuOverlayStatus=carMenuOverlayStatus;s.carMenuOverlayText=carMenuOverlayText;
         s.climateStripCollapsed=climateStripCollapsed;s.climateStripVisible=climateStripVisible;s.climateStripText=climateStripText;s.climateRevision=climateRevision;s.dualAvailable=dualAvailable;s.climateOverlayVisible=climateOverlayVisible;s.climateOverlayHeight=climateOverlayHeight;s.climateOverlayStatus=climateOverlayStatus;s.climateOverlayText=climateOverlayText;s.overlayBottomPx=overlayBottomPx;
@@ -580,7 +606,7 @@ public final class ProbeState {
         JSONObject root=new JSONObject(base);BsjAnalyzer.export(root,analysis,root.getLong("exportedAtMs"));return root.toString(2);
     }
     private String exportBaseJson() throws Exception {
-        JSONObject root = new JSONObject().put("app", "Honda Box 0.8.35").put("exportedAtMs", System.currentTimeMillis())
+        JSONObject root = new JSONObject().put("app", "Honda Box 0.8.36").put("exportedAtMs", System.currentTimeMillis())
             .put("android", Build.VERSION.RELEASE).put("manufacturer", Build.MANUFACTURER).put("model", Build.MODEL)
             .put("backend", backend).put("status", status).put("detail", detail).put("connected", connected)
             .put("callbacksThisSession", count).put("lastCallbackAtMs", lastEvent)
@@ -607,6 +633,9 @@ public final class ProbeState {
         }
         root.put("bsjProtocolEvidence",protocolEvidence.json());
         root.put("bsjVehiclePacketWatch",vehiclePackets.json());
+        root.put("bsjClockWatch",clock.json());
+        root.put("civicClimate",new JSONObject().put("latest",civicClimate==null?JSONObject.NULL:civicClimate.json())
+            .put("note","LZ/HZ Civic 2006-2011 profiles15729093/15794629. TYPE28 raw climate flags; temperatures from FYT fields27/28 in tenths of degrees, -1 unavailable, -2 LOW, -3 HI. Power inferred from AUTO/fan/displayed temperature; no dedicated power bit. LOW profile validated by capture; HIGH shares stock parser but needs device verification. Audio unsupported."));
         root.put("bsjStandbyDisplayCache",new JSONObject().put("byPlayer",standbyCache).put("note","TYPE0C observed layouts used only to fill missing display data. Retained through audio off/on; normal TYPE05/07 take priority. Numeric text tail is never a title. Byte0 meaning remains unconfirmed; this packet never selects a source or device."));
         root.put("audioPlayer",new JSONObject().put("manualDisplayDevice",manualMediaDeviceHint.name()).put("confirmedAuxSource",auxSource).put("auxDisplayName",auxName).put("visible",audioPlayerVisible).put("status",audioPlayerStatus).put("text",audioPlayerMode).put("dataAfterSourceSequence",sourceSequence).put("mediaAfterSourceSequence",mediaSourceSequence));
         root.put("audioRoutes",audioRoutes.json());root.put("carMenuMemory",carMenuMemory.json());root.put("mediaDevice",new JSONObject().put("type",mediaDevice.name()).put("evidence",mediaDeviceEvidence).put("inferredFromMenu",mediaDeviceEvidence.contains("menu")).put("inferredFromPlayback",mediaDeviceEvidence.startsWith("Inferred from owner-confirmed USB playback05")).put("inferredFromStream",mediaDeviceEvidence.startsWith("Inferred from BSJ stream transition")).put("inferredFromMarker",mediaDeviceEvidence.startsWith("Inferred from BSJ marker06")));

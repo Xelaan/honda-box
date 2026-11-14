@@ -597,7 +597,7 @@
     <string name="aux_return_nothing">Do nothing</string>
     <string name="aux_playback_notes">The default resumes only music that was playing when Honda Box paused it after leaving AUX. Already paused music stays paused. Requires a player that accepts Android media buttons. Reconnecting or waking the service does not start playback.</string>
     <string name="accord_compatibility_toggle">Process as Honda Accord</string>
-    <string name="accord_compatibility_notes">Apply Honda Accord (6291908) processing and workarounds to any CAN profile: climate power and DUAL, source and USB/iPod detection, media, menus and player controls. Off by default; native 6291908 processing is always enabled. The actual CAN profile is unchanged. Changing this setting reconnects the FYT service subscriptions.</string>
+    <string name="accord_compatibility_notes">Apply Honda Accord (6291908) processing and workarounds to any CAN profile: climate power and DUAL, source and USB/iPod detection, media, menus and player controls. Off by default; native 6291908 processing is always enabled. The actual CAN profile is unchanged. Changing this setting reconnects the FYT service subscriptions. Known LZ/HZ Civic profiles use their own climate decoder; this override does not enable Accord audio on Civic.</string>
     <string name="debug_data_title">CAN data received</string>
     <string name="debug_data_notes">Counts cover this connection, including when recording is off. Reset log keeps them; reconnect or profile change clears them. Missing packets do not mean unsupported hardware. FYT startup zero values do not confirm source or player support. Length is the last received payload length; receipt alone does not confirm decoding.</string>
     <string name="debug_data_live">Current connection</string>
@@ -618,4 +618,21 @@
     <string name="debug_data_status">Status (partially decoded)</string>
     <string name="debug_data_identity">Adapter identification</string>
     <string name="debug_data_unassigned">Unassigned</string>
+    <string name="debug_clock_title">"OEM clock · experimental"</string>
+    <string name="debug_clock_notes">"Unverified TYPE 0A interpretation: 01 F5 58 → 01 F5 59 → 01 F6 00 may mean 5:58 → 5:59 → 6:00. Header, AM/PM and hours 10–12 are unknown. Shows the last received sample without ticking or setting Android time. Works without log recording; log reset, reconnect or profile change clears the sample."</string>
+    <string name="debug_clock_candidate">"Possible time: "</string>
+    <string name="debug_clock_unknown">"unknown format"</string>
+    <string name="debug_civic_notes">"LZ/HZ Civic climate: FYT temperature /10, TYPE 28. Power is inferred from AUTO, fan or a displayed temperature. If no passenger temperature is reported, both sides display the same setpoint. Audio and unreported flags are unverified. HIGH profile shares the parser but still needs device testing."</string>
+    <string name="debug_civic_distance">Civic distance [98], km (TYPE 35)</string>
+    <string name="debug_civic_climate">Climate LZ/HZ Civic</string>
+    <string name="car_info_civic_distance">Distance</string>
+    <string name="car_info_civic_distance_note">FYT field 98 · km. Odometer or trip counter has not yet been confirmed.</string>
+    <string name="car_info_km">km</string>
+    <string name="car_info_received_fields_general">Received fields</string>
+    <string name="android_media_listener">Honda Box · Android media</string>
+    <string name="android_media_enabled">Android track in overlays</string>
+    <string name="android_media_notes">Show the Android player title and artist in volume and new-track overlays on AUX or when the vehicle source is unknown. Requires notification access and a player that publishes a media session. Only media-session data is read; notification contents are not read or saved.</string>
+    <string name="android_media_access">Notification access</string>
+    <string name="android_media_access_on">Access granted · compatible Android players can provide track data</string>
+    <string name="android_media_access_off">Grant notification access to Honda Box to read Android track data</string>
 </resources>

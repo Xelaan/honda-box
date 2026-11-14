@@ -143,7 +143,7 @@ public class ProbeService extends Service {
         if(intent==null||(intent!=null&&intent.getBooleanExtra("backgroundStart",false)))audioScreens.backgroundStart();
         showNotification();
         unknownOverlay.start();trackOverlay.start();audioScreens.start();androidMedia.start();overlay.start();sourceOverlay.start();climateStrip.start();climateOverlay.start();carMenuOverlay.start();
-        worker.post(() -> { if (!active) { active = true; state.running(true); state.newSession(); connect(); }else wakeUp(automaticReason==null?"service_start":automaticReason); });
+        worker.post(() -> { if (!active) { active = true; state.running(true); state.newSession(); connect(); }else wakeUp(automaticReason==null?"service_start":automaticReason); AndroidMediaMonitor.refresh(this); });
         return START_STICKY;
     }
     private void showNotification(){
@@ -327,7 +327,7 @@ public class ProbeService extends Service {
     }
     @Override public void onDestroy() {
         try{unregisterReceiver(wakeReceiver);}catch(IllegalArgumentException ignored){}
-        unknownOverlay.close();trackOverlay.close();audioScreens.close();androidMedia.close();overlay.close();sourceOverlay.close();climateStrip.close();climateOverlay.close();carMenuOverlay.close(); state.running(false);
+        AndroidMediaMonitor.stop();unknownOverlay.close();trackOverlay.close();audioScreens.close();androidMedia.close();overlay.close();sourceOverlay.close();climateStrip.close();climateOverlay.close();carMenuOverlay.close(); state.running(false);
         worker.post(() -> { active = false; disconnect();worker.removeCallbacks(saveMenus);saveMenus.run();worker.removeCallbacks(savePresets);savePresets.run(); state.status(I18n.t(R.string.ui_stopped), I18n.t(R.string.ui_background_capture_stopped_you_can), false); thread.quitSafely(); });
         stopForeground(true); super.onDestroy();
     }

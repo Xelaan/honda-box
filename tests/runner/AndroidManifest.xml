@@ -26,4 +26,6 @@
     <instrumentation android:name="com.crewbeat.hondabox.tests.AuxSettingsVisibilityTests" android:targetPackage="com.crewbeat.hondabox"/>
     <instrumentation android:name="com.crewbeat.hondabox.tests.ClimateAutoPowerTests" android:targetPackage="com.crewbeat.hondabox"/>
     <instrumentation android:name="com.crewbeat.hondabox.tests.BsjFallbackTests" android:targetPackage="com.crewbeat.hondabox"/>
+    <instrumentation android:name="com.crewbeat.hondabox.tests.CivicReplay" android:targetPackage="com.crewbeat.hondabox"/>
+    <instrumentation android:name="com.crewbeat.hondabox.tests.AndroidMediaTests" android:targetPackage="com.crewbeat.hondabox"/>
 </manifest>

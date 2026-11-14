@@ -75,7 +75,7 @@ public final class BsjAnalyzer {
             b.put(new JSONObject().put("offset",i).put("min",min[i]).put("max",max[i]).put("avg",avg(i)).put("unique",unique(i)));if(unique(i)>1)changed.put(i);}
             return new JSONObject().put("type",type).put("typeHex",String.format(Locale.US,"%02X",type)).put("length",length).put("count",count)
                 .put("firstAtMs",firstAt).put("lastAtMs",lastAt).put("framesPerSecond",rate()==null?JSONObject.NULL:rate())
-                .put("knownFamily",known(type)).put("lastPayload",new JSONArray(last.data)).put("bytes",b).put("changedOffsets",changed);}
+                .put("knownFamily",known(type,last.profile)).put("lastPayload",new JSONArray(last.data)).put("bytes",b).put("changedOffsets",changed);}
     }
     private final ArrayDeque<Frame> history=new ArrayDeque<>();private final ArrayDeque<Marker> markers=new ArrayDeque<>();
     private long session,segment,startedAt,sequence,markerId,droppedFrames,droppedMarkers,lastEvictedAt;private int profile=-1,bytes,windowBytes;private boolean active;
@@ -103,6 +103,7 @@ public final class BsjAnalyzer {
     }
     public synchronized Snapshot snapshot(){return new Snapshot(this);}
     public static String hex(int[] values){StringBuilder b=new StringBuilder(values.length*3);for(int n:values){if(b.length()>0)b.append(' ');int value=n&255;String digits="0123456789ABCDEF";b.append(digits.charAt(value>>>4)).append(digits.charAt(value&15));}return b.toString();}
+    public static String known(int type,int profile){if(CivicClimate.supports(profile)){switch(type){case 0x24:return "Doors (LZ Civic)";case 0x28:return "Climate (LZ Civic)";case 0x35:return "Distance (LZ Civic, partial)";default:return "Unknown";}}return known(type);}
     public static String known(int type){switch(type){case 1:return "Key input";case 14:return "Stock vehicle fields";case 15:return "Stock notification";case 16:return "Stock fields133/134";case 17:return "Door status";case 2:return "Climate";case 3:return "Audio/volume";case 4:return "Radio";case 5:return "Media";case 6:return "CD changer";case 7:return "Media text";case 9:return "OEM menu";case 0x7f:return "Adapter identification";default:return "Unknown";}}
     public static LinkedHashMap<String,Stats> statistics(List<Frame> frames){LinkedHashMap<String,Stats> result=new LinkedHashMap<>();for(Frame f:frames){Stats s=result.get(f.key());
         if(s==null){s=new Stats(f);result.put(f.key(),s);}s.add(f);}return result;}

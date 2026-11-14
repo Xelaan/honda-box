@@ -15,8 +15,8 @@ public final class ClimateView extends View {
         setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
     }
     public void update(ProbeState.Snapshot s){state=s;setContentDescription(I18n.t(R.string.ui_climate_driver)+s.temperature(27)+I18n.t(R.string.ui_passenger)+s.temperature(28)+I18n.t(R.string.ui_fan)+s.raw(21)+", "+s.climate()+I18n.t(R.string.ui_display_only_use_the_vehicle));invalidate();}
-    private boolean active(int code){return state!=null&&state.connected&&state.honda()&&Integer.valueOf(1).equals(code==10?state.climatePower():state.number(code));}
-    private String value(int code){if(state==null||!state.connected||!state.honda()||state.number(code)==null)return "—";Integer n=code==10?state.climatePower():state.number(code);return n==0?I18n.t(R.string.ui_off):n==1?I18n.t(R.string.ui_on):"?";}
+    private boolean active(int code){return state!=null&&state.connected&&state.supportsClimate()&&Integer.valueOf(1).equals(code==10?state.climatePower():state.number(code));}
+    private String value(int code){if(state==null||!state.connected||!state.supportsClimate())return "—";Integer n=code==10?state.climatePower():state.number(code);if(n==null)return "—";return n==0?I18n.t(R.string.ui_off):n==1?I18n.t(R.string.ui_on):"?";}
     private void text(Canvas c,String s,float x,float y,float size,int color){paint.setStyle(Paint.Style.FILL);paint.setColor(color);paint.setTextSize(size);paint.setTypeface(Typeface.create("sans-serif",Typeface.NORMAL));paint.setTextAlign(Paint.Align.CENTER);c.drawText(s,x,y,paint);}
     private void chip(Canvas c,String label,int code,float x,float y,float width){
         boolean on=active(code);paint.setStyle(Paint.Style.FILL);paint.setColor(on?palette.accent:palette.button);
@@ -42,7 +42,7 @@ public final class ClimateView extends View {
         paint.setStyle(Paint.Style.STROKE);paint.setStrokeWidth(1.5f);paint.setColor(active(10)?palette.accentText:palette.text);float power=w*.24f;
         actual.drawArc(new RectF(power-7,top-7,power+7,top+7),-45,270,false,paint);actual.drawLine(power,top-9,power,top-1,paint);paint.setStyle(Paint.Style.FILL);
         chip(actual,"A/C",11,w*.76f,top,58);
-        int level=state!=null&&state.connected&&state.honda()&&state.number(21)!=null?state.number(21):-1;
+        int level=state!=null&&state.connected&&state.supportsClimate()&&state.number(21)!=null?state.number(21):-1;
         // Hardware recording confirms levels0..7; one segment per speed.
         int segments=state==null?0:state.fanSegments();
         paint.setColor(palette.button);actual.drawRoundRect(new RectF(barLeft-16,top-12,barRight+16,top+12),6,6,paint);

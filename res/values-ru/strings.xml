@@ -597,7 +597,7 @@
     <string name="aux_return_nothing">Ничего не делать</string>
     <string name="aux_playback_notes">По умолчанию возобновляется только музыка, которую Honda Box поставил на паузу при уходе с AUX. Уже приостановленная музыка не запускается. Плеер должен поддерживать медиакнопки Android. Переподключение службы и пробуждение сами по себе не включают музыку.</string>
     <string name="accord_compatibility_toggle">Обрабатывать как Honda Accord</string>
-    <string name="accord_compatibility_notes">Применять обработку и обходные решения Honda Accord (6291908) к любому CAN-профилю: питание климата и DUAL, определение источника и USB/iPod, данные плееров, меню и команды. По умолчанию выключено; для самого 6291908 эта обработка действует всегда. CAN-профиль магнитолы не меняется. При изменении настройки приложение переподключается к службе FYT.</string>
+    <string name="accord_compatibility_notes">Применять обработку и обходные решения Honda Accord (6291908) к любому CAN-профилю: питание климата и DUAL, определение источника и USB/iPod, данные плееров, меню и команды. По умолчанию выключено; для самого 6291908 эта обработка действует всегда. CAN-профиль магнитолы не меняется. При изменении настройки приложение переподключается к службе FYT. Известные профили LZ/HZ Civic используют собственный декодер климата; эта настройка не включает аудио Accord на Civic.</string>
     <string name="debug_data_title">Полученные данные CAN</string>
     <string name="debug_data_notes">Счётчики относятся к текущему подключению и работают без записи лога. Сброс лога их сохраняет, переподключение или смена профиля — очищает. Отсутствие пакетов не означает, что функция не поддерживается. Начальные нули FYT не подтверждают поддержку источника или плеера. len — длина последнего пакета; получение пакета само по себе не подтверждает расшифровку.</string>
     <string name="debug_data_live">Текущее подключение</string>
@@ -618,4 +618,21 @@
     <string name="debug_data_status">Статус (частичная расшифровка)</string>
     <string name="debug_data_identity">Идентификатор адаптера</string>
     <string name="debug_data_unassigned">Назначение не установлено</string>
+    <string name="debug_clock_title">"Штатные часы · эксперимент"</string>
+    <string name="debug_clock_notes">"Неподтверждённая расшифровка TYPE 0A: 01 F5 58 → 01 F5 59 → 01 F6 00 могут означать 5:58 → 5:59 → 6:00. Заголовок, AM/PM и часы 10–12 неизвестны. Показывает последний пакет, без хода часов и изменения времени Android. Работает без записи лога; сброс лога, переподключение или смена профиля очищают данные."</string>
+    <string name="debug_clock_candidate">"Предполагаемое время: "</string>
+    <string name="debug_clock_unknown">"неизвестный формат"</string>
+    <string name="debug_civic_notes">"Климат LZ/HZ Civic: температура FYT /10, TYPE 28. Питание определяется по AUTO, вентилятору или наличию температуры. Если отдельная температура справа не передаётся, обе стороны показывают одну заданную температуру. Аудио и непередаваемые флаги не подтверждены. HIGH использует тот же обработчик, но требует проверки на машине."</string>
+    <string name="debug_civic_distance">Расстояние Civic [98], км (TYPE 35)</string>
+    <string name="debug_civic_climate">Климат LZ/HZ Civic</string>
+    <string name="car_info_civic_distance">Расстояние</string>
+    <string name="car_info_civic_distance_note">Поле FYT 98 · км. Общий пробег или счётчик поездки — пока не подтверждено.</string>
+    <string name="car_info_km">км</string>
+    <string name="car_info_received_fields_general">Полученные поля</string>
+    <string name="android_media_listener">Honda Box · Музыка Android</string>
+    <string name="android_media_enabled">Трек Android в оверлеях</string>
+    <string name="android_media_notes">Показывать название трека и исполнителя Android-плеера в оверлеях громкости и смены трека на AUX или при неизвестном источнике. Нужен доступ к уведомлениям и плеер с медиасессией. Читаются только данные медиасессий; тексты уведомлений не читаются и не сохраняются.</string>
+    <string name="android_media_access">Доступ к уведомлениям</string>
+    <string name="android_media_access_on">Доступ разрешён · совместимые Android-плееры могут передавать данные трека</string>
+    <string name="android_media_access_off">Разреши доступ к уведомлениям для Honda Box, чтобы получать данные трека Android</string>
 </resources>

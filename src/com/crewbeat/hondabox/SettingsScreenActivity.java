@@ -23,7 +23,7 @@ public abstract class SettingsScreenActivity extends Activity {
     private final Handler ui = new Handler(Looper.getMainLooper());
     private int BG, CARD, TEXT, MUTED, ACCENT;
     private int languageRevision=-1; private ThemeSettings.Palette palette; private ThemeController themes; private ScrollView scroll;
-    private TextView status, detail, source, rawSource, volume, left, right, fan, climateFlags, radio, radioTextInfo, media, fields, commandStatus, profile, stats, menu, backend, log, audioRouteInfo, standbyInfo, vehiclePacket0EInfo, vehiclePacket10Info, steeringInfo, protocolInfo;
+    private TextView status, detail, source, rawSource, volume, left, right, fan, climateFlags, radio, radioTextInfo, media, fields, commandStatus, profile, stats, menu, backend, log, audioRouteInfo, standbyInfo, vehiclePacket0EInfo, vehiclePacket10Info, steeringInfo, protocolInfo, clockInfo;
     private final java.util.ArrayList<Button> commandButtons = new java.util.ArrayList<>();
     private Button connect, stop;
     private Spinner audioTransport,audioRoute,audioHold;
@@ -47,7 +47,7 @@ public abstract class SettingsScreenActivity extends Activity {
 
         LinearLayout title = column(); title.addView(label(debugScreen()?"HONDA  /  DEBUG":"HONDA  /  SETTINGS", 11, ACCENT));
         title.addView(label(I18n.t(debugScreen()?R.string.debug_title:R.string.ui_settings), 27, TEXT)); header.addView(title, new LinearLayout.LayoutParams(0,-2,1));
-        TextView version = label("BOX  0.8.35", 12, MUTED); header.addView(version);header.addView(spaceX(16));Button back=button(I18n.t(R.string.ui_back),false);back.setTag("settings-back");back.setOnClickListener(v->finish());header.addView(back,new LinearLayout.LayoutParams(-2,dp(48)));root.addView(header);
+        TextView version = label("BOX  0.8.36", 12, MUTED); header.addView(version);header.addView(spaceX(16));Button back=button(I18n.t(R.string.ui_back),false);back.setTag("settings-back");back.setOnClickListener(v->finish());header.addView(back,new LinearLayout.LayoutParams(-2,dp(48)));root.addView(header);
         root.addView(space(18));
         if(!debugScreen()){
             LinearLayout permissions=card();permissions.addView(label(I18n.t(R.string.settings_overlay_permission_title),14,ACCENT));
@@ -153,6 +153,7 @@ public abstract class SettingsScreenActivity extends Activity {
         CheckBox hideAux=new CheckBox(this);hideAux.setText(I18n.t(R.string.hide_player_on_aux));hideAux.setTextColor(TEXT);hideAux.setChecked(SourceSettings.hideOnAux(this));cdCard.addView(hideAux);
         hideAux.setOnCheckedChangeListener((toggle,checked)->{SourceSettings.hideOnAux(this,checked);overlayAction(false);});
         cdCard.addView(space(12));cdCard.addView(AuxPlaybackSettings.controls(this));
+        cdCard.addView(space(12));cdCard.addView(AndroidMediaSettings.controls(this));
         cdCard.addView(space(12));cdCard.addView(label(I18n.t(R.string.aux_name_title),13,TEXT));
         LinearLayout auxNameRow=row();auxNameRow.setGravity(Gravity.CENTER_VERTICAL);EditText auxName=new EditText(this);auxName.setSingleLine(true);auxName.setTextColor(TEXT);auxName.setHintTextColor(MUTED);auxName.setHint("AUX");auxName.setText(SourceSettings.auxName(this).equals("AUX")||SourceSettings.auxName(this).equals("Android")||SourceSettings.auxName(this).equals("Head Unit")?SourceSettings.auxCustomName(this):SourceSettings.auxName(this));auxName.setTextSize(14);auxName.setFilters(new android.text.InputFilter[]{new android.text.InputFilter.LengthFilter(32)});auxName.setInputType(android.text.InputType.TYPE_CLASS_TEXT|android.text.InputType.TYPE_TEXT_FLAG_CAP_WORDS);auxName.setContentDescription(I18n.t(R.string.aux_name_title));
         auxNameRow.addView(auxName,new LinearLayout.LayoutParams(dp(260),dp(48)));auxNameRow.addView(spaceX(10));Button saveAuxName=button(I18n.t(R.string.ui_save),false);auxNameRow.addView(saveAuxName);
@@ -230,6 +231,11 @@ public abstract class SettingsScreenActivity extends Activity {
             R.string.debug_standby_hypothesis_family,R.string.debug_standby_hypothesis_source};
         for(int hypothesis:standbyHypotheses){standbyCard.addView(space(8));standbyCard.addView(label(I18n.t(hypothesis),12,MUTED));}
         root.addView(standbyCard);root.addView(space(14));
+        LinearLayout clockCard=card();
+        clockCard.addView(label(I18n.t(R.string.debug_clock_title),11,ACCENT));
+        clockCard.addView(space(8));clockCard.addView(label(I18n.t(R.string.debug_clock_notes),12,MUTED));
+        clockInfo=label("",15,TEXT);clockInfo.setTextIsSelectable(true);
+        clockCard.addView(space(10));clockCard.addView(clockInfo);root.addView(clockCard);root.addView(space(14));
         LinearLayout vehicleCard=card();
         vehicleCard.addView(label(I18n.t(R.string.debug_vehicle_packets_title),11,ACCENT));
         vehicleCard.addView(space(8));vehicleCard.addView(label(I18n.t(R.string.debug_vehicle_packets_notes),12,MUTED));
@@ -287,12 +293,13 @@ public abstract class SettingsScreenActivity extends Activity {
         status.setText(I18n.stored(s.status)); status.setTextColor(s.connected && s.count>0 ? ACCENT : palette.warning);
         detail.setText(I18n.stored(s.detail)); connect.setEnabled(!s.running); connect.setAlpha(s.running ? .45f : 1f); stop.setEnabled(s.running); stop.setAlpha(s.running?1f:.45f);
         source.setText(s.source()); volume.setText(s.volume()); left.setText(s.temperature(27)); right.setText(s.temperature(28));
-        rawSource.setText(I18n.t(R.string.ui_source_98) + value(s,98) + I18n.t(R.string.ui_band_115) + value(s,115));
+        rawSource.setText(s.civic()?I18n.t(R.string.debug_civic_distance)+": "+value(s,98):I18n.t(R.string.ui_source_98) + value(s,98) + I18n.t(R.string.ui_band_115) + value(s,115));
         menu.setText(I18n.t(R.string.ui_menu) + s.menu()); fan.setText(I18n.t(R.string.ui_fan_21) + value(s,21)); climateFlags.setText(s.climate()+"\nDUAL: "+s.dual()
-            +"\n"+I18n.t(R.string.debug_climate_field16)+s.raw(16)+"\n"+I18n.t(R.string.debug_climate_field16_notes));
+            +(s.civic()?"\n"+I18n.t(R.string.debug_civic_notes):"")+"\n"+I18n.t(R.string.debug_climate_field16)+s.raw(16)+"\n"+I18n.t(R.string.debug_climate_field16_notes));
         radio.setText(RadioDebugInfo.fields(s));radioTextInfo.setText(RadioDebugInfo.textChannels(s));
         protocolInfo.setText(BsjDataInfo.describe(s));
         standbyInfo.setText(standbyDescription(s.standbyDisplay));
+        clockInfo.setText(clockDescription(s));
         vehiclePacket0EInfo.setText(vehiclePacketDescription(0x0E,s.vehiclePacket0E));
         vehiclePacket10Info.setText(vehiclePacketDescription(0x10,s.vehiclePacket10));
         steeringInfo.setText(steeringDescription(s));
@@ -301,10 +308,20 @@ public abstract class SettingsScreenActivity extends Activity {
         for (Button b : commandButtons) { b.setEnabled(canCommand); b.setAlpha(canCommand ? 1f : .45f); }
         commandStatus.setText(I18n.stored(s.commandStatus));
         Integer p=s.number(1000);
-        profile.setText(I18n.t(R.string.ui_profile_252) + (p==null?I18n.t(R.string.ui_not_received_yet):p) + (p==null?"":s.honda()?I18n.t(R.string.ui_honda_compatible_schema):I18n.t(R.string.ui_unknown_schema_raw_values))+(s.processAsHondaAccord?" · "+I18n.t(R.string.accord_compatibility_toggle):""));
+        profile.setText(I18n.t(R.string.ui_profile_252) + (p==null?I18n.t(R.string.ui_not_received_yet):p) + (p==null?"":s.supportsClimate()?I18n.t(R.string.ui_honda_compatible_schema):I18n.t(R.string.ui_unknown_schema_raw_values))+(s.processAsHondaAccord?" · "+I18n.t(R.string.accord_compatibility_toggle):""));
         String age=s.lastEvent==0?"—":String.format(Locale.getDefault(),"%tT",s.lastEvent);
         stats.setText("Callbacks: " + s.count + I18n.t(R.string.ui_last_event) + age + (s.connected?"":I18n.t(R.string.ui_current_values_unavailable)));
         backend.setText(I18n.stored(s.backend)); log.setText(s.log.isEmpty()?I18n.t(R.string.ui_connection_results_and_received_events):s.log);
+    }
+    private String clockDescription(ProbeState.Snapshot s){
+        BsjClock.Sample c=s.clockSample;
+        if(c==null)return "TYPE 0A · "+I18n.t(R.string.debug_vehicle_not_received);
+        String text=I18n.t(R.string.debug_clock_candidate)+(c.candidate==null?I18n.t(R.string.debug_clock_unknown):c.candidate)
+            +"\nTYPE 0A · RAW "+c.payloadHex+" · "+I18n.t(R.string.debug_vehicle_received)+c.count
+            +"\n"+I18n.t(R.string.debug_standby_received)+String.format(Locale.getDefault(),"%tF %tT",c.at,c.at)
+            +" · "+Math.max(0,(System.currentTimeMillis()-c.at)/1000)+I18n.t(R.string.debug_standby_age);
+        if(!s.connected)text+="\n"+I18n.t(R.string.debug_steering_disconnected);
+        return text;
     }
     private String steeringDescription(ProbeState.Snapshot s){
         ProbeState.Value value=s.values.get(1049);
@@ -409,7 +426,7 @@ public abstract class SettingsScreenActivity extends Activity {
     @Override protected void onActivityResult(int request,int result,Intent data) {
         super.onActivityResult(request,result,data);jsonExport.result(request,result,data);
     }
-    @Override protected void onStart() { super.onStart();if(!debugScreen()){stockOverlays.start();themes.start();}ui.removeCallbacks(refresh);ui.post(refresh); }
+    @Override protected void onStart() { super.onStart();AndroidMediaSettings.status(this,findViewById(android.R.id.content));AndroidMediaMonitor.refresh(this);if(!debugScreen()){stockOverlays.start();themes.start();}ui.removeCallbacks(refresh);ui.post(refresh); }
     @Override protected void onStop() { ui.removeCallbacks(refresh);themes.stop();super.onStop(); }
     @Override protected void onDestroy(){if(setupGuide!=null)setupGuide.close();stockOverlays.close();super.onDestroy();}
     @Override public void onRequestPermissionsResult(int code,String[] permissions,int[] grants){super.onRequestPermissionsResult(code,permissions,grants);themes.permissionResult(code);}

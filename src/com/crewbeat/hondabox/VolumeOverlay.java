@@ -27,6 +27,8 @@ public final class VolumeOverlay {
     public void demo(){demoUntil=SystemClock.uptimeMillis()+15000;failed=false;if(started)render();}
     private int dp(float x){return Math.round(x*context.getResources().getDisplayMetrics().density);}
     private String sourceTitle(ProbeState.Snapshot s){
+        AndroidTrack android=AndroidMediaMonitor.current();
+        if(AndroidMediaSettings.enabled(context)&&AndroidMediaRoute.allowed(s)&&android.usable())return AndroidMediaRoute.label(s)+" · "+android.display();
         AudioMode mode=AudioMode.reported(s);String title="—";
         if(mode==AudioMode.RADIO&&s.fresh(119)){
             Integer band=s.displayNumber(115);title=RadioFrequency.value(band,s.displayNumber(119),s.honda());
@@ -51,7 +53,7 @@ public final class VolumeOverlay {
         boolean show=test || pinned(context) || (volume!=null && now<changedUntil);
         if(!show){hide();state.overlay(false,s.connected?I18n.t(R.string.ui_waiting_for_a_volume_change):I18n.t(R.string.ui_waiting_for_can_connection),"");return;}
         String value=test?"17":volume==null?"—":String.valueOf(volume);
-        String subtitle=test?I18n.t(R.string.ui_test_audio_unchanged):!s.connected?I18n.t(R.string.ui_no_can_connection):volume==null?I18n.t(R.string.ui_waiting_for_volume_data):sourceTitle(s);
+        String subtitle=test?I18n.t(R.string.ui_test_audio_unchanged):AndroidMediaSettings.enabled(context)&&AndroidMediaRoute.allowed(s)&&AndroidMediaMonitor.current().usable()?sourceTitle(s):!s.connected?I18n.t(R.string.ui_no_can_connection):volume==null?I18n.t(R.string.ui_waiting_for_volume_data):sourceTitle(s);
         if(failed)return;
         try{
             if(view==null){

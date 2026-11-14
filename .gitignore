@@ -50,3 +50,4 @@
 !/tools/stock_overlay_adb.py
 !/tools/PrepareAppIcons.java
 !/tools/PrepareSplashIcons.java
+!/tools/prepare_civic_replay.py

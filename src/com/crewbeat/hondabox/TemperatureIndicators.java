@@ -10,10 +10,10 @@ public final class TemperatureIndicators {
     private final int[] direction=new int[2];
     private long session=Long.MIN_VALUE;private Integer profile;
     private Float value(ProbeState.Snapshot s,int code){
-        Integer n=s.number(code);
-        if(!s.connected||!s.honda()||n==null||n==0||n==-1)return null;
+        Integer n=s.temperatureNumber(code);
+        if(!s.connected||!s.supportsClimate()||n==null||n==0||n==-1)return null;
         if(n==-2)return Float.NEGATIVE_INFINITY;if(n==-3)return Float.POSITIVE_INFINITY;
-        return n>0?(n==20?18f:n/2f):null;
+        return n>0?(s.civic()?n/10f:n==20?18f:n/2f):null;
     }
     public void observe(ProbeState.Snapshot s,boolean animate,long now){
         Integer nextProfile=s.number(1000);

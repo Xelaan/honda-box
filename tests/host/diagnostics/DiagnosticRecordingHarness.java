@@ -7,7 +7,7 @@ public final class DiagnosticRecordingHarness {
   for(int i=0;i<1000;i++)frame(s,5,0,0,1,2,0,1,0,9);
   check(s.snapshot().rawCount==0,"raw history disabled");check(s.analyzer.snapshot().currentFrames().isEmpty(),"decoded history disabled");
   check(s.snapshot().cdNumber(101).equals("1")&&s.snapshot().cdTime().equals("00:09"),"playback decoded without recording");check(!s.snapshot().log.contains("RAW 1019"),"HEX event log disabled");
-  frame(s,6,0x32,0x22,0x22);check(s.snapshot().mediaDevice==ProbeState.MediaDevice.IPOD,"iPod detection stays live");
+  frame(s,6,0x32,0x22,0x22);check(s.snapshot().mediaDevice==ProbeState.MediaDevice.USB,"active USB counters prevent false iPod detection while logging is off");
   frame(s,12,0,0);check(!s.unknownMessages.latest().isEmpty(),"unknown overlay state stays live");
   s.recording(true);frame(s,5,0,0,1,2,0,1,0,0x10);
   check(s.snapshot().rawCount==1,"raw capture enabled");check(s.analyzer.snapshot().currentFrames().size()==1,"decoded capture enabled");check(s.snapshot().log.contains("RAW 1019"),"verbose event log enabled");

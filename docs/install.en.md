@@ -1,6 +1,6 @@
-# Honda Box 0.8.35 — FYT / DUDU installation
+# Honda Box 0.8.36 — FYT / DUDU installation
 
-Supported configuration: Honda Accord VIII / Spirior 2009–2013, FYT CAN profile **6291908**, BSJ V704. Requires **Android 7.0 / API 24+**. This is an Android companion for the original Honda audio/climate system, not a head-unit or CAN-adapter firmware update.
+Compatibility: Accord VIII / Acura TSX II / Spirior with XC(BSJ) profile **6291908**, BSJ V704; Civic 2006–2011 LZ(HZ) climate with **15729093 LOW** (capture-verified) / **15794629 HIGH** (shared handler, car test pending). XBS/Acura is partial. See [compatibility](compatibility.md). Requires Android 7 / API24+. This app does not update head-unit/CAN-box firmware.
 
 
 If an old **Probe** (`dev.alex.fyt.probe`) is still installed, save any logs you need, restore any stock-overlay permission it changed, then stop its service and remove that old app. It is a separate installation and can otherwise keep showing old settings and duplicate overlays. Updating an existing `com.crewbeat.hondabox` installation does not require uninstalling it.
@@ -9,7 +9,7 @@ If an old **Probe** (`dev.alex.fyt.probe`) is still installed, save any logs you
 
 | File | Purpose |
 | --- | --- |
-| `Honda-Box-0.8.35.apk` | Honda Box Service, UI and overlays |
+| `Honda-Box-0.8.36.apk` | Honda Box Service, UI and overlays |
 | `Honda-Box-Launcher-1.3.apk` | Honda Box selector icon |
 | `Honda-Radio-Launcher-1.5.apk` | Radio icon |
 | `Honda-CD-Launcher-1.5.apk` | CD icon |
@@ -34,15 +34,19 @@ Installing over the same new package with our release certificate keeps preferen
 ## Install on the head unit
 
 1. Extract the Setup Pack ZIP on your computer, copy its APKs to a USB drive and open them in Android's file manager. Do not use the firmware-update mechanism.
-2. Install **Honda-Box-0.8.35.apk** first. Allow installation from the file manager if requested.
+2. Install **Honda-Box-0.8.36.apk** first. Allow installation from the file manager if requested.
 3. Install **Honda-Box-Launcher-1.3.apk** and the desired Radio/CD/Honda USB launchers. All four may be installed. USB and iPod share one launcher.
-4. Open **Honda Box**. **Honda Box Service** starts headlessly; the separate Honda Box icon opens the UI. FYT connection starts automatically. Confirm the unit already uses profile 6291908; Honda Box does not change it.
+4. Open **Honda Box**. **Honda Box Service** starts headlessly; the separate Honda Box icon opens the UI. FYT connection starts automatically. Check the actual profile against the compatibility table. Do not change a Civic to the Accord profile; Honda Box never changes the head-unit profile.
 5. Settings → **Allow display over other apps**: grant overlay permission. On Android 13+, allow notifications if prompted.
 6. Allow background operation/battery-optimization exemption. Add **Honda Box Service** to DUDU's autostart and sleep retention/Keep alive list. Refresh/restart the launcher if the new icons have not appeared.
 7. Choose language, appearance and accent. Large climate and compact climate are enabled **independently**, with behavior notes and preview buttons. Set your location for sunrise/sunset mode; location permission is only needed to obtain your current location.
 8. Verify MODE switching, volume and climate in the car. If firmware does not support outgoing source/Previous/Next commands, use the car controls. Recording is off by default; enable/reset/export it from Debug when needed.
 
 iPod detection uses observed adapter markers and can take a few seconds after connection. Data not transmitted by the adapter cannot be recovered. This release is checked in an emulator; firmware-specific behavior and DUDU sleep retention require a head-unit check.
+
+## Android track metadata (optional)
+
+Settings → Players → **Android track in overlays** → grant **notification access** to Honda Box in the Android screen opened by its permission button. Return to Honda Box and check the permission status. The switch defaults to on but access requires your approval; ordinary OEM features work without it. Keep the volume and/or track overlays enabled and start a MediaSession-capable Android player. AUX or an unknown OEM source uses that track. Known OEM sources take priority; tapping an Android announcement opens its player. Only media metadata is read, not notification text. No root or Shizuku is needed. Disable the switch or revoke notification access to stop reading; AUX pause/resume settings are independent.
 
 ## Boot and sleep setup
 
@@ -78,6 +82,6 @@ The helper verifies SHA-256 and installs the five Honda APKs without incremental
 
 ## Verify downloads
 
-After extraction: `sha256sum -c SHA256SUMS.txt` (Linux) or `shasum -a 256 -c SHA256SUMS.txt` (macOS). Windows: `Get-FileHash .\Honda-Box-0.8.35.apk -Algorithm SHA256`, then compare with SHA256SUMS.txt. The release also supplies a `.zip.sha256` file for the archive.
+After extraction: `sha256sum -c SHA256SUMS.txt` (Linux) or `shasum -a 256 -c SHA256SUMS.txt` (macOS). Windows: `Get-FileHash .\Honda-Box-0.8.36.apk -Algorithm SHA256`, then compare with SHA256SUMS.txt. The release also supplies a `.zip.sha256` file for the archive.
 
 Source/releases: [Xelaan/honda-box](https://github.com/Xelaan/honda-box). Original code is MIT; third-party licenses and Shizuku provenance are included.

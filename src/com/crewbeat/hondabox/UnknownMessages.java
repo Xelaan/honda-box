@@ -37,8 +37,16 @@ public final class UnknownMessages {
    default:return "Unknown type";
   }
  }
+ private static String civicReason(int type,int[] p){
+  if(type==0x24)return null; // Door support intentionally omitted.
+  if(type==0x28)return p.length==6?null:"Civic climate / unexpected length";
+  // Only the distance bytes 6..8 are mapped; retain the rest for research.
+  if(type==0x35)return "Civic distance packet / other fields unassigned";
+  return "Unknown type for LZ Civic";
+ }
  private static String fields(int t,int[] p){return hex(p);}
- public synchronized void accept(int type,int[] p,long at){String reason=reason(type,p);if(reason==null)return;String fields=fields(type,p),key=type+"/"+p.length;Entry old=entries.remove(key);
+ public synchronized void accept(int type,int[] p,long at){accept(type,p,at,null);}
+ public synchronized void accept(int type,int[] p,long at,Integer profile){String reason=CivicClimate.supports(profile)?civicReason(type,p):reason(type,p);if(reason==null)return;String fields=fields(type,p),key=type+"/"+p.length;Entry old=entries.remove(key);
   boolean changed=old==null||!old.fields.equals(fields)||at-old.lastAt>=8000;
   if(changed)revision++;
   int[] full=new int[p.length+4];full[0]=46;full[1]=type;full[2]=p.length;int sum=type+p.length;for(int i=0;i<p.length;i++){full[i+3]=p[i];sum+=p[i];}full[full.length-1]=(~sum)&255;

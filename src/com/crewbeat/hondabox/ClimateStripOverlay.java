@@ -12,7 +12,7 @@ public final class ClimateStripOverlay {
  public ClimateStripOverlay(Context c,ClimateOverlay popup){context=c;this.popup=popup;windows=(WindowManager)c.getSystemService(Context.WINDOW_SERVICE);}
  public static boolean enabled(Context c){return c.getSharedPreferences("overlay",0).getBoolean("climateStrip",true);}
  public static void enabled(Context c,boolean on){c.getSharedPreferences("overlay",0).edit().putBoolean("climateStrip",on).apply();}
- public static boolean active(ProbeState.Snapshot s){return s.running&&s.connected&&s.honda()&&Integer.valueOf(1).equals(s.climatePower());}
+ public static boolean active(ProbeState.Snapshot s){return s.running&&s.connected&&s.supportsClimate()&&Integer.valueOf(1).equals(s.climatePower());}
  public static boolean alwaysAutoHide(Context c){return c.getSharedPreferences("overlay",0).getBoolean("climateStripAlwaysAutoHide",false);}
  public static void alwaysAutoHide(Context c,boolean on){c.getSharedPreferences("overlay",0).edit().putBoolean("climateStripAlwaysAutoHide",on).apply();}
  // The legacy preference now enables both side buttons; keep its key for installed users.

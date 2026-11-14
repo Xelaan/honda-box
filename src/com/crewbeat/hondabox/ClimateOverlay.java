@@ -25,7 +25,7 @@ public final class ClimateOverlay {
     public void start(){if(started)return;started=true;ui.post(tick);}
     public void refreshOptions(){failed=false;if(started)render();}
     public void demo(){demoUntil=SystemClock.uptimeMillis()+15000;until=0;failed=false;if(started)render();}
-    public void showFromStrip(boolean sample){ProbeState.Snapshot s=ProbeState.INSTANCE.overlaySnapshot();if(!sample&&(!s.connected||!s.honda()))return;manualDemo=sample;manualUntil=SystemClock.uptimeMillis()+DURATION;failed=false;if(started)render();}
+    public void showFromStrip(boolean sample){ProbeState.Snapshot s=ProbeState.INSTANCE.overlaySnapshot();if(!sample&&(!s.connected||!s.supportsClimate()))return;manualDemo=sample;manualUntil=SystemClock.uptimeMillis()+DURATION;failed=false;if(started)render();}
     private int dp(float n){return Math.round(n*context.getResources().getDisplayMetrics().density);}
     private void hide(){transition++;closing=false;if(windowView!=null){windowView.animate().cancel();try{windows.removeViewImmediate(windowView);}catch(RuntimeException ignored){}}windowView=null;view=null;settingsButton=null;settingsPalette=null;height=0;}
     private void hideAnimated(){if(view==null||closing)return;closing=true;final ClimatePopupView target=view;final int token=++transition;
@@ -46,7 +46,7 @@ public final class ClimateOverlay {
     private void render(){
         ProbeState state=ProbeState.INSTANCE;ProbeState.Snapshot s=state.overlaySnapshot();long now=SystemClock.uptimeMillis();boolean on=enabled(context);
         if(session!=s.sessionId||!s.connected||on!=lastEnabled){reset(s);lastEnabled=on;}
-        if(s.connected&&s.honda()){
+        if(s.connected&&s.supportsClimate()){
             if(!ready){if(baselineAt==0&&s.number(21)!=null)baselineAt=now;
                 revision=s.climateRevision;if(baselineAt>0&&now-baselineAt>=750)ready=true;
             }else if(revision!=s.climateRevision){revision=s.climateRevision;if(on)until=now+DURATION;}
@@ -55,7 +55,7 @@ public final class ClimateOverlay {
         boolean manual=now<manualUntil;boolean test=now<demoUntil||(manual&&manualDemo);temperatures.observe(s,ready&&on&&!test,now);
         if(!allowed){hide();state.climateOverlay(false,I18n.t(R.string.ui_overlay_permission_not_granted),"",0);return;}
         if(!on&&!test&&!manual){hideAnimated();state.climateOverlay(false,I18n.t(R.string.ui_climate_indicator_off),"",0);return;}
-        if(!test&&(!s.connected||!s.honda()||(!manual&&now>=until))){if(s.connected&&s.honda())hideAnimated();else hide();state.climateOverlay(false,!s.connected?I18n.t(R.string.ui_waiting_for_can_connection):!s.honda()?I18n.t(R.string.ui_climate_schema_unverified):I18n.t(R.string.ui_waiting_for_a_climate_change),"",0);return;}
+        if(!test&&(!s.connected||!s.supportsClimate()||(!manual&&now>=until))){if(s.connected&&s.supportsClimate())hideAnimated();else hide();state.climateOverlay(false,!s.connected?I18n.t(R.string.ui_waiting_for_can_connection):!s.supportsClimate()?I18n.t(R.string.ui_climate_schema_unverified):I18n.t(R.string.ui_waiting_for_a_climate_change),"",0);return;}
         if(failed)return;
         try{
             if(view==null){view=new ClimatePopupView(context,temperatures);view.setOnTouchListener((v,event)->{if(event.getAction()==MotionEvent.ACTION_UP){until=0;demoUntil=0;manualUntil=0;render();}return true;});

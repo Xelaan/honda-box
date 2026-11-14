@@ -1,10 +1,10 @@
 # Honda Box
 
-An Android companion for Honda's original audio and climate system on FYT head units with a BSJ CAN adapter. Native Java, built without Gradle or a cloud service. [Русский](README.ru.md).
+An Android companion for Honda's original audio and climate system on FYT head units, with profile-specific BSJ/XBS and LZ/HZ support. Native Java, built without Gradle or a cloud service. [Русский](README.ru.md).
 
-Developed against **Honda Accord VIII / Acura TSX II / Spirior 2009–2013**, FYT profile **6291908**, and BSJ V704. Compatibility with other profiles is not assumed. Requires **Android 7.0 / API 24+**. The main package is `com.crewbeat.hondabox`.
+Developed and tested on **Honda Accord VIII / Acura TSX II / Spirior 2009–2013**, FYT profile **6291908**, BSJ V704. Version **0.8.36** adds a separate **Civic 2006–2011 LZ(HZ) climate decoder** (LOW 15729093 verified against a capture; HIGH 15794629 shares the handler but needs a car check). The separately captured XBS profile9175479 remains partial, including the Acura capture. See the [supported cars / CAN boxes and evidence matrix](docs/compatibility.md). Requires **Android 7.0 / API 24+**. The main package is `com.crewbeat.hondabox`.
 
-At the bottom of Settings, **Process as Honda Accord** optionally applies the profile 6291908 processing/workarounds to any selected CAN profile. It is off by default; native 6291908 handling is always enabled. This covers fan-based climate power, inferred DUAL, BSJ source/media decoding, USB/iPod detection, menu/preset caches and player commands. The configured CAN profile stays unchanged, and received caches remain isolated by actual profile. Changing the setting reconnects read-only FYT subscriptions. Compatibility with another adapter still needs checking on the car.
+At the bottom of Settings, **Process as Honda Accord** optionally applies the profile 6291908 processing/workarounds to other selected CAN profiles, except the dedicated Civic LOW/HIGH profiles. It is off by default; native 6291908 handling is always enabled. This covers fan-based climate power, inferred DUAL, BSJ source/media decoding, USB/iPod detection, menu/preset caches and player commands. The configured CAN profile stays unchanged, and received caches remain isolated by actual profile. Changing the setting reconnects read-only FYT subscriptions. Compatibility with another adapter still needs checking on the car.
 
 ## Features
 
@@ -88,6 +88,16 @@ An independently enabled strip stays centered at the bottom while the climate is
 | --- | --- |
 | ![Persistent folded handle — light](docs/images/features/climate-folded-day.png) | ![Persistent folded handle — dark](docs/images/features/climate-folded-night.png) |
 
+### Android music on AUX
+
+Settings → Players → **Android track in overlays** is an independent switch, enabled by default. Grant **notification access** using the button beside it: Android requires this access to read other apps' MediaSessions. Honda Box reads media metadata, not notification text, and does not persist it.
+
+When AUX is active or the OEM source is unknown, the volume overlay shows the Android track and artist; the track overlay announces new playback and opens that Android player when tapped. Known OEM radio/CD/USB/iPod sources keep their own data. Players must publish a MediaSession; missing metadata is not invented. This does not replace the OEM volume measurement or enable Android playback controls. Pause/resume around AUX has separate settings.
+
+### Civic climate and Car Info
+
+Civic LOW/HIGH have their own temperature scaling and power inference. If only one setpoint is available, both sides show it; DUAL is hidden. The compact row shows an AUTO badge when no airflow direction is reported, without claiming a measured direction. Field98 is a distance in kilometres, **not an audio source**. Car Info uses a neutral Distance label because odometer versus trip meaning is unconfirmed; the supplied climate capture had no distance sample. See [Civic decoder evidence](docs/civic-lz-compatibility.md).
+
 ### Volume overlay
 
 A translucent top indicator shows OEM volume on a 0–40 scale, the current source and its current displayed title/frequency. It appears on volume changes and can optionally remain visible.
@@ -166,7 +176,7 @@ Day, night, Android system or automatic sunrise/sunset theme; accent presets/cus
 
 ### Diagnostics
 
-Debug separates FYT callbacks from decoded BSJ fields, retains the latest values and makes unconfirmed channels explicit. Recording is opt-in, with reset/export and packet analysis. Experimental outgoing commands are triggered manually; screenshots do not validate their support on a car.
+Debug separates FYT callbacks from decoded BSJ fields, retains the latest values and makes unconfirmed channels explicit. Recording is opt-in, with reset/export and packet analysis. Debug also retains the latest experimental TYPE0A clock candidate and raw bytes; this does not set the clock and unfamiliar formats stay unknown. Experimental outgoing commands are triggered manually; screenshots do not validate their support on a car.
 
 **Radio callback / BSJ diagnostics**
 
@@ -187,7 +197,7 @@ Download the complete **Setup Pack ZIP** from [GitHub Releases](https://github.c
 1. Install the main `Honda-Box-<version>.apk`.
 2. Install **Honda Box**, **Radio**, **CD** and **USB** launcher APKs as needed. One USB launcher covers both USB and iPod.
 3. Open Honda Box, allow **display over other apps**, and configure the large/compact climate panels independently.
-4. Confirm the head unit uses profile 6291908. Allow foreground/background operation; add Honda Box to DUDU's keep-alive list if needed.
+4. Check the actual CAN profile against the [compatibility matrix](docs/compatibility.md); do not select the Accord profile for a Civic. Allow foreground/background operation; add Honda Box to DUDU's keep-alive list if needed.
 5. Optional: install/start [Shizuku](https://shizuku.rikka.app/guide/setup/) via ADB and grant Honda Box access to manage the stock overlay setting.
 
 For boot/deep-sleep recovery, add **Honda Box Service** in FYT **Settings → User → Application Settings**. The app also handles FYT ACC events and provides an optional periodic recovery check. See [background operation](docs/background-operation.md) for settings, manual-stop behavior and firmware limits.

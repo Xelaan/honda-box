@@ -16,7 +16,7 @@ public final class ClimatePopupView extends View {
         dayCabin=BitmapFactory.decodeResource(getResources(),R.drawable.cabin_day,o);nightCabin=BitmapFactory.decodeResource(getResources(),R.drawable.cabin_night,o);
         setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
     }
-    public void content(ProbeState.Snapshot s,boolean test){state=s;demo=test;if(ownsTemperatures&&!test)temperatures.observe(s,true,SystemClock.uptimeMillis());setContentDescription((test?I18n.t(R.string.ui_test_306):"")+I18n.t(R.string.ui_climate)+s.temperature(27)+" / "+s.temperature(28)+", DUAL "+s.dual()+", "+s.climate()+I18n.t(R.string.ui_fan)+s.fanLabel());invalidate();}
+    public void content(ProbeState.Snapshot s,boolean test){state=s;demo=test;if(ownsTemperatures&&!test)temperatures.observe(s,true,SystemClock.uptimeMillis());setContentDescription((test?I18n.t(R.string.ui_test_306):"")+I18n.t(R.string.ui_climate)+s.temperature(27)+" / "+s.temperature(28)+(s.civic()?"":", DUAL "+s.dual())+", "+s.climate()+I18n.t(R.string.ui_fan)+s.fanLabel());invalidate();}
     private String flag(int code){
         if(state==null||!state.connected||((code==12||code==16||code==17||code==33||code==36||code==49)&&!state.optionalKnown(code)))return "—";
         Integer n=code==10?state.climatePower():state.number(code);if(n==null)return "—";
@@ -52,7 +52,7 @@ public final class ClimatePopupView extends View {
         for(int i=0;i<5;i++){float x=w*.5f+(i-2)*w*(wide?.065f:.115f);float glyphScale=i==3?1.06f:1f;float inkWidth=ClimateIcons.draw(getContext(),c,p,glyphs[i],x,wide?top:90,icon*glyphScale,airflowWidth*glyphScale,known&&mask==masks[i]?t.accent:t.muted);if(!known)text(c,"—",x+inkWidth/2+6,(wide?top:90)+5,10,t.muted);}
         // Unsupported recirculation and rear-defrost indicators are hidden.
         if(wide&&active(49))text(c,"AUTO",w*.5f,top+31,12,t.accent);
-        String dual=state==null?"—":state.dual();text(c,"DUAL"+(dual.equals("—")?" —":dual.equals("?")?" ?":""),w-(wide?112:94),top+5,wide?19:14,dual.equals(I18n.t(R.string.ui_on))?t.accent:t.muted);
+        if(state==null||!state.civic()){String dual=state==null?"—":state.dual();text(c,"DUAL"+(dual.equals("—")?" —":dual.equals("?")?" ?":""),w-(wide?112:94),top+5,wide?19:14,dual.equals(I18n.t(R.string.ui_on))?t.accent:t.muted);}
         long now=SystemClock.uptimeMillis();
         temperatures.draw(c,p,state==null?"—":state.temperature(27),0,w*.12f,h*.67f,wide?50:38,t,now);
         temperatures.draw(c,p,state==null?"—":state.temperature(28),1,w*.88f,h*.67f,wide?50:38,t,now);
